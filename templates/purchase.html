@@ -1,0 +1,101 @@
+{% extends "account/base.html" %}
+{% load bootstrap4 %}
+{% load humanize %}
+{% load i18n %}
+
+{% block head_title %}{% trans "Purchase" %}{% endblock %}
+
+
+
+{% block content %}
+<h1>{% trans "Purchase Crypto" %}</h1>
+
+    {% if has_bank_accounts %}
+
+    <a href="{% url 'bank_accounts_create' %}" class="btn btn-link">Add Another Bank Account</a>
+
+    {% else %}
+    <div class="card card-block">
+        <h4 class="card-title">Please Add A Bank Account</h4>
+        <div class="card-text">
+            <p><strong>Before making a purchase, you must first add a bank account</strong></p>
+            <a href="{% url 'bank_accounts_create' %}" class="btn btn-primary">Add Bank Account</a>
+        </div>
+    </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-12">
+
+        <div class="card card-block">
+            <h4 class="card-title">Purchase Gas ( Current Price:  ${{ gas_price|floatformat:2 }} )</h4>
+            <form action="{% url 'purchase'%}" method="post">
+                {% csrf_token %}
+
+                <fieldset {% if not has_bank_accounts %}disabled{% endif %}>
+                <div class="row">
+                    <div class="col-sm-6">
+                        {% bootstrap_field form.sender_account_id %}
+                        {% bootstrap_field form.amount %}
+                        {% bootstrap_field form.neo_address %}
+
+                    </div>
+                    <div class="col-sm-6">
+
+
+
+                        <div class="form-group">
+                            <label for="id_gas_total">Total Gas Price</label>
+                            <input id="id_gas_total"  class="form-control" type="number" readonly value="{{ gas_price|floatformat:2 }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="id_fee_total">Total Fee <strong>5%</strong></label>
+                            <input id="id_fee_total"  class="form-control" type="number" readonly value="">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_total">Estimated Total</label>
+                            <input id="id_total" class="form-control" type="number" readonly value="">
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" id="id_purchase_btn" class="btn btn-primary">Purchase 1 Gas</button>
+                </fieldset>
+
+            </form>
+
+        </div>
+    </div>
+
+{% endblock %}
+
+
+
+
+{% block footer_js %}
+
+    {{ block.super }}
+
+    <script type="text/javascript">
+        var gas_price = {{ gas_price|floatformat:2 }};
+
+        var fee_total = (gas_price * .05).toFixed(2);
+        $('#id_fee_total').val(fee_total);
+
+        var total = (gas_price + (gas_price * .05)).toFixed(2);
+        $('#id_total').val(total);
+
+        $(document).ready(function(){
+           $('#id_amount').on('change keyup',function(){
+                var purchase_total = $(this).val();
+                var gas_total = (purchase_total * gas_price).toFixed(2);
+                $('#id_gas_total').val(gas_total);
+                fee_total = (gas_total * .05).toFixed(2);
+                $('#id_fee_total').val(fee_total);
+                total = ((purchase_total * gas_price) + (gas_total * .05)).toFixed(2);
+                $('#id_total').val(total);
+                $('#id_purchase_btn').text('Purchase ' + purchase_total + ' Gas')
+           });
+        });
+    </script>
+
+{% endblock %}

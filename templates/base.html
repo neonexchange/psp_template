@@ -1,0 +1,71 @@
+{% load i18n static bootstrap4%}<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+<head>
+<title>{% block title %}{% endblock %}</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+{% block extrastyle %}
+
+    <style>
+        .content-container {
+            padding: 20px 0;
+        }
+        .card {
+            margin: 10px 0;
+        }
+    </style>
+
+{% endblock %}
+{% block extrahead %}{% endblock %}
+{% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock %}
+</head>
+{% load i18n %}
+<body>
+
+
+    {% include 'nav.html' %}
+
+<div class="container">
+    {% block messages %}
+        {% if messages %}
+            {% bootstrap_messages  %}
+        {% endif %}
+    {% endblock messages %}
+
+    <!-- Content -->
+        <div class="content-container">
+
+        {% block content %}
+
+            <h2>Payment service provider template dapp</h2>
+
+            {% if request.user.pk %}
+                <a href="{% url 'purchase' %}" class="btn btn-primary">Purchase Crypto</a>
+            {% else %}
+                <a href="{% url 'signup' %}" class="btn btn-primary">Sign up!</a>
+            {% endif %}
+
+
+
+        {% endblock %}
+        </div>
+
+    <!-- END Content -->
+
+    {% block footer %}<div id="footer"></div>{% endblock %}
+</div>
+<!-- END Container -->
+
+{% block footer_js %}
+
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
+
+{% endblock %}
+</body>
+
+</html>

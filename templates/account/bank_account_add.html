@@ -1,0 +1,63 @@
+{% extends "account/base.html" %}
+{% load bootstrap4 %}
+{% load i18n %}
+
+{% block head_title %}{% trans "Bank Accounts" %}{% endblock %}
+
+{% block extrahead %}
+    <script src="https://cdn.dwolla.com/1/dwolla.js" xmlns="http://www.w3.org/1999/html"></script>
+
+
+{% endblock %}
+
+
+{% block content %}
+<h1>{% trans "Add Bank Account" %}</h1>
+
+
+
+    <div class="row">
+        <div class="col-12">
+            <hr/>
+            <div id="iavContainer">
+
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block footer_js %}
+
+    {{ block.super }}
+
+    <script type="text/javascript">
+        dwolla.configure('sandbox');
+
+        dwolla.iav.start('{{ funding_token }}', {
+          container: 'iavContainer',
+          stylesheets: [
+            'https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext',
+          ],
+          microDeposits: false,
+          fallbackToMicroDeposits: true,
+          backButton: true,
+          subscriber: function( currentPageObj, error ) {
+              console.log('currentPage:', currentPageObj, 'error:', JSON.stringify(error));
+              if(currentPageObj.currentPage=='SuccessIAV') {
+                  console.log("redirecting to customer accounts!");
+                  setTimeout(function(){
+
+                      window.location.href = '/customer/accounts'
+                  }, 3000)
+              }
+            }
+        }, function(err, res) {
+          console.log('Error: ' + JSON.stringify(err) + ' -- Response: ' + JSON.stringify(res));
+        });
+
+    </script>
+
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "account/base.html" %}
+{% load bootstrap4 %}
+{% load i18n %}
+
+{% block head_title %}{% trans "Profile" %}{% endblock %}
+
+{% block content %}
+<h1>{% trans "Profile" %}</h1>
+
+<div class="row">
+    <div class="col-sm-8">
+
+        <h3>My Account Details</h3>
+        <hr/>
+        <form class="signup" id="signup_form" method="post" action="{% url 'profile' %}">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <button type="submit" class="btn btn-primary">{% trans "Update Account" %} &raquo;</button>
+        </form>
+
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <hr/>
+        <h6>Dwolla url: {{ request.user.dwolla_url }}</h6>
+        <h6>Dwolla id: {{ request.user.dwolla_id }}</h6>
+        <h6>To json!</h6>
+        <pre>{{ request.user.to_json }}</pre>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "account/base.html" %}
+{% load bootstrap4 %}
+{% load humanize %}
+{% load i18n %}
+
+{% block head_title %}{% trans "Bank Accounts" %}{% endblock %}
+
+
+
+{% block content %}
+<h1>{% trans "Bank Accounts" %}</h1>
+
+
+    <a href="{% url 'bank_accounts_create' %}" class="btn btn-link">Add Bank Account</a>
+
+    <div class="row">
+        <div class="col-12">
+            <hr/>
+            <h4>Your accounts</h4>
+            {% for item in funding_sources %}
+
+                {% if item.type == 'bank' %}
+
+                <div class="card">
+                    <div class="card-block">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <h4 class="card-title">{{ item.name }}</h4>
+                                <div class="card-text">
+                                    <p>{{ item.bankName }}</p>
+                                    <p>Status: {{ item.status }}</p>
+                                    <p>Id: {{ item.id }}</p>
+                                    <button type="button" class="btn btn-secondary">Manage</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+            {% empty %}
+                <div class="card card-block">
+
+                    <h4 class="card-title">No verified accounts at this time.</h4>
+                    <div class="card-text">
+                    <a href="{% url 'bank_accounts_create' %}" class="btn btn-success">Add a Bank Account</a>
+                    </div>
+
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block footer_js %}
+
+    {{ block.super }}
+
+
+{% endblock %}
