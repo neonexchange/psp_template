@@ -2,3 +2,4 @@ venv
 .idea
 Chains
 db.sqlite3
+__pycache__/
