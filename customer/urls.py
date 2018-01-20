@@ -1,7 +1,7 @@
 from django.urls import path,include
 
 from django.contrib.auth import views
-from .views import ProfileView,SignupView,BankAccountView,BankAccountListView,PurchaseView,TransactionView
+from .views import ProfileView,SignupView,BankAccountView,BankAccountListView,PurchaseView,TransactionView,SellView
 from django.urls import path
 
 urlpatterns = [
@@ -27,6 +27,8 @@ urlpatterns = [
 #    path('accounts/transfer/', TransferView.as_view(), name='bank_account_transfer'),
 
     path('purchase/', PurchaseView.as_view(), name='purchase'),
+
+    path('sell/', SellView.as_view(), name='sell'),
 
     path('transactions/', TransactionView.as_view(), name='transactions'),
 ]

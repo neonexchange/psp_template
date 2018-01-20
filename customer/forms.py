@@ -1,9 +1,10 @@
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from customer.models import PSPUser,Purchase
+from customer.models import PSPUser,Purchase,Deposit
 from neo.Core.Helper import Helper
 from neocore.Cryptography.Crypto import Crypto
-
+from localflavor.us.us_states import STATE_CHOICES
+from localflavor.us.forms import USStateField
 from django.forms import ValidationError
 
 class PSPUserCreationForm(forms.ModelForm):
@@ -15,6 +16,15 @@ class PSPUserCreationForm(forms.ModelForm):
     class Meta:
         model = PSPUser
         fields = ('email','first_name','last_name','address1','city','state','postal_code','ssn_lastfour','date_of_birth',)
+
+
+    def __init__(self, *args, **kwargs):
+        super(PSPUserCreationForm, self).__init__(*args, **kwargs)
+
+        choices = list(STATE_CHOICES)
+        choices[0] = ('', 'Select a State')
+        self.fields['state'] = USStateField(widget=forms.Select(choices=choices))
+
 
     def clean_password2(self):
         # Check that the two password entries match
@@ -83,18 +93,11 @@ class PurchaseForm(forms.ModelForm):
 
         super(PurchaseForm, self).__init__(*args, **kwargs)
 
-
         if accounts:
             choices = []
-
             for acct in accounts:
-
                 choices.append( (acct['id'], acct['name']))
-
-
             self.fields['sender_account_id'] = forms.ChoiceField(choices=choices, label='Bank Account')
-
-#        print("choises %s " % choices)
 
         self.fields['neo_address'].widget.attrs = {'placeholder':'Axxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'}
 
@@ -102,8 +105,6 @@ class PurchaseForm(forms.ModelForm):
     def clean_neo_address(self):
 
         addr = self.cleaned_data['neo_address']
-
-        print("address: %s " % addr)
 
         try:
             shash = Helper.AddrStrToScriptHash(addr)
@@ -116,3 +117,17 @@ class PurchaseForm(forms.ModelForm):
             raise ValidationError("Invalid NEO Blockchain Address")
 
         return self.cleaned_data['neo_address']
+
+
+    def clean_amount(self):
+        amt = self.cleaned_data['amount']
+        if amt <= 0:
+            raise ValidationError('Must purchase more than 0 amount')
+        return amt
+
+
+class DepositForm(forms.ModelForm):
+
+    class Meta:
+        model = Deposit
+        fields = ['amount','receiver_account_id',]

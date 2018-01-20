@@ -7,13 +7,15 @@ from django.contrib import messages
 from .forms import PSPUserCreationForm,PSPProfileForm,BankAccountForm,PurchaseForm
 from .dwolla import *
 from .models import ReceiveableAccount
+from blockchain.models import DepositWallet
 import requests
+from logzero import logger
 
 def get_gas_price():
     try:
         return requests.get('https://api.coinmarketcap.com/v1/ticker/GAS/').json()[0]['price_usd']
     except Exception as e:
-        print("Could not determine gas price")
+        logger.error("Could not determine gas price %s " % e)
     return 60.0
 
 
@@ -101,7 +103,6 @@ class SignupView(View):
             messages.add_message(request, messages.INFO, 'Already logged in!')
             return HttpResponseRedirect('/customer/profile')
 
-
         form = self.form_class()
         return render(request, self.template_name, {'form': form})
 
@@ -109,12 +110,36 @@ class SignupView(View):
         form = self.form_class(request.POST)
         if form.is_valid():
             new_user = form.save()
-            # <process form cleaned data>
-            messages.add_message(request, messages.INFO, 'Account Created! Please sign in')
+            messages.add_message(request, messages.INFO, 'Welcome %s! Please sign in' % new_user.first_name)
 
             return HttpResponseRedirect('/customer/login')
 
         return render(request, self.template_name, {'form': form})
+
+
+class SellView(View):
+
+    template_name = 'sell.html'
+
+    @method_decorator(login_required)
+    def get(self, request, *args, **kwargs):
+
+        bank_accounts = dwolla_get_user_bank_accounts(request.user)
+
+        has_bank_accounts = False
+
+        if len(bank_accounts) > 0:
+            has_bank_accounts = True
+
+        if DepositWallet.objects.filter(depositor=request.user).count() > 0:
+            deposit_wallet = DepositWallet.objects.filter(depositor=request.user).first()
+            print("using existing deposit wallet!")
+        else:
+            deposit_wallet = DepositWallet.create(request.user)
+
+        return render(request, self.template_name, {'gas_price':get_gas_price(),
+                                                    'has_bank_accounts':has_bank_accounts,
+                                                    'deposit_wallet':deposit_wallet} )
 
 
 class PurchaseView(View):
@@ -128,7 +153,6 @@ class PurchaseView(View):
         bank_accounts = dwolla_get_user_bank_accounts(request.user)
 
         has_bank_accounts = False
-
         if len(bank_accounts) > 0:
             has_bank_accounts = True
 
@@ -140,6 +164,10 @@ class PurchaseView(View):
     def post(self, request, *args, **kwargs):
 
         bank_accounts = dwolla_get_user_bank_accounts(request.user)
+
+        has_bank_accounts = False
+        if len(bank_accounts) > 0:
+            has_bank_accounts = True
 
         form = self.form_class(request.POST, accounts=bank_accounts)
 
@@ -163,4 +191,4 @@ class PurchaseView(View):
             except Exception as e:
                 messages.add_message(request, messages.ERROR, 'Could not initiate purchase: %s ' % e)
 
-        return render(request, self.template_name, {'form':form,'gas_price':get_gas_price()} )
+        return render(request, self.template_name, {'form':form,'gas_price':get_gas_price(),'has_bank_accounts':has_bank_accounts} )

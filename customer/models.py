@@ -80,7 +80,7 @@ class PSPUser(AbstractBaseUser, PermissionsMixin):
     postal_code = USZipCodeField()
     state = USStateField()
     ssn_lastfour = models.CharField(max_length=4)
-    date_of_birth = models.DateField(help_text='Format YYYY-MM-DD')
+    date_of_birth = models.DateField()
 
     is_seller = models.BooleanField(default=False)
 
@@ -231,6 +231,43 @@ class Purchase(models.Model):
 
     blockchain_transfer = models.OneToOneField('blockchain.BlockchainTransfer', blank=True,null=True, on_delete=models.CASCADE)
 
+
+    class Meta:
+        ordering = ['-date_created',]
+
+
+class Deposit(models.Model):
+
+    asset = models.CharField(choices=ASSET_CHOICES,default='GAS', max_length=3)
+    amount = models.FloatField(default=1.00)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    sender_account_id = models.CharField(max_length=128)
+
+    receiver_account_id = models.CharField(max_length=128)
+
+    neo_address = models.CharField(max_length=34)
+
+    gas_price = models.FloatField()
+
+    fee = models.FloatField(default=.05)
+
+    total_gas = models.FloatField()
+    total_fee = models.FloatField()
+
+    total = models.FloatField()
+
+    status = models.CharField(max_length=32, choices=PURCHASE_STATUS, default='pending')
+
+    transfer_url = models.CharField(max_length=128)
+
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    failure_reason = models.CharField(max_length=1024, blank=True, null=True)
+
+    blockchain_transfer = models.OneToOneField('blockchain.BlockchainTransfer', blank=True,null=True, on_delete=models.CASCADE)
+
+    deposit_wallet = models.OneToOneField('blockchain.DepositWallet', on_delete=models.CASCADE)
 
     class Meta:
         ordering = ['-date_created',]

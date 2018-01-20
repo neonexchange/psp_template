@@ -135,6 +135,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
 
 
 AUTH_USER_MODEL = 'customer.PSPUser'
@@ -144,3 +147,8 @@ LOGIN_REDIRECT_URL = '/customer/profile'
 LOGOUT_REDIRECT_URL = '/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+NEOSCAN_URL = 'https://nex.neoscan-testnet.io/'
+
+WALLET_DEPOSIT_PATH = '%s/Data/deposits' % BASE_DIR

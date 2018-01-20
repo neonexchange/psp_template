@@ -23,6 +23,13 @@
                     <p>Transaction Id: {{ tx.blockchain_transfer.transaction_id }}</p>
                     {% if tx.blockchain_transfer.confirmed_block %}
                     <p>Completed on block {{ tx.blockchain_transfer.confirmed_block }}</p>
+
+                    <button type="button" class="btn btn-secondary toggle-tx-details">View Details</button>
+
+                    <div class="transaction-details">
+                        <pre>{{ tx.blockchain_transfer.tx_json }}</pre>
+                    </div>
+
                     {% else %}
                     <p><em>Pending</em> Submitted on block {{ tx.blockchain_transfer.start_block }}</p>
                     {% endif %}
@@ -50,4 +57,15 @@
 {% endblock %}
 
 
+{% block footer_js %}
 
+
+    {{ block.super }}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('.toggle-tx-details').click(function(){
+                $(this).next('.transaction-details').toggle();
+            });
+        });
+    </script>
+{% endblock %}

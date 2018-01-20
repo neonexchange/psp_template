@@ -12,6 +12,7 @@ from neocore.Fixed8 import Fixed8
 from neo.Implementations.Wallets.peewee.UserWallet import UserWallet
 from neocore.Fixed8 import Fixed8
 from neo.Core.TX.Transaction import TransactionOutput,ContractTransaction
+from neo.Core.TX.TransactionAttribute import TransactionAttribute,TransactionAttributeUsage
 from neo.Core.Helper import Helper
 from neo.Core.Blockchain import Blockchain
 from neo.SmartContract.ContractParameterContext import ContractParametersContext
@@ -29,7 +30,7 @@ class BlockchainConfig(AppConfig):
     name = 'blockchain'
 
     def ready(self):
-        print("init Blockchain!!")
+        logger.info("init Blockchain!!")
         start_blockchain()
 
 
@@ -50,53 +51,62 @@ def start_blockchain():
         wallet_loop = task.LoopingCall(wallet.ProcessBlocks)
         wallet_loop.start(.1)
 
-        update = task.LoopingCall(update_loop, wallet)
-        update.start(30)
-        print("Starting blockchain!!")
 
-        transfer_loop = task.LoopingCall(process_transfers, wallet)
-        transfer_loop.start(20)
+        sync_bank_transfer_loop = task.LoopingCall(process_bank_transfers)
+        sync_bank_transfer_loop.start(2)
+
+        crypto_transfer_loop = task.LoopingCall(process_crypto_purchases, wallet)
+        crypto_transfer_loop.start(3)
+
+        pending_crypto_tx_loop = task.LoopingCall(process_pending_blockchain_transactions)
+        pending_crypto_tx_loop.start(4)
 
     except Exception as e:
-        print("Could not start blockchain: %s " % e)
-
-def update_loop(wallet):
-    print("Current Height %s " % Blockchain.Default().Height)
-    print("wallet: %s " % json.dumps(wallet.ToJson(), indent=4))
+        logger.error("Could not start blockchain: %s " % e)
 
 
 
-def process_transfers(wallet):
+
+def process_bank_transfers():
     from customer.models import Purchase
     from customer.dwolla import dwolla_get_url
-    from .models import BlockchainTransfer
 
-    current_height = Blockchain.Default().Height
     # loop through incomplete purchases
     for purchase in Purchase.objects.filter(status='pending'):
         try:
             transfer = dwolla_get_url(purchase.transfer_url)
+            # if this transfer status has changed, update the database status
             if transfer['status'] != purchase.status:
-                print("change status!!!")
                 purchase.status = transfer['status']
                 purchase.save()
         except Exception as e:
-            print("could not process transfer %s " % e)
+            logger.error("could not process transfer %s " % e)
 
-    print("process transfers..")
+
+def process_crypto_purchases(wallet):
+
+    from customer.models import Purchase
+    from .models import BlockchainTransfer
+
+    # below here requires the blockchain.  If there are no connected peers we won't do anything
     if len(NodeLeader.Instance().Peers) < 1:
-        print("Not connected yet")
+        logger.info("Not connected yet")
         return
 
+    current_height = Blockchain.Default().Height
+
+    # loop though the purchases that are processed and the ones that dont have a blockchain
+    # transfer associated with them
     for purchase in Purchase.objects.filter(status='processed', blockchain_transfer__amount__isnull=True):
-        print("looking over purchase %s " % purchase)
+
         try:
+            # we try to create a transaction with the purchase information
             transaction = create_transaction(wallet, purchase)
         except Exception as e:
-            print("could not create transaction %s " % e)
+            logger.info("could not create transaction %s " % e)
 
+        # if the transaction was created we make BlockchainTransfer model object
         if transaction:
-            print("creating transfer1111")
             bc = BlockchainTransfer.objects.create(
                 to_address = purchase.neo_address,
                 from_address = UserWallet.ToAddress( wallet.GetStandardAddress().Data),
@@ -110,25 +120,29 @@ def process_transfers(wallet):
             purchase.save()
 
 
+def process_pending_blockchain_transactions():
+
+    from .models import BlockchainTransfer
+
+    # Loop through BlockchainTransfer model objects that haven't been
+    # confirmed on the blockchain, and check if they've been synced
+    # if so, we'll mark the BlockchainTransfer as complete and save the current block
     for transfer in BlockchainTransfer.objects.filter(status='pending'):
-        print("looknig for transaction id %s " % transfer.transaction_id)
         txid,height = Blockchain.Default().GetTransaction(transfer.transaction_id)
         if txid is not None:
-            print("TX ID %s, height %s " % (txid, height))
             transfer.status = 'complete'
             transfer.confirmed_block = height
             transfer.save()
 
 
-def create_transaction(wallet, purchase):
 
+def create_transaction(wallet, purchase):
 
     asset_id = Blockchain.Default().SystemCoin().Hash
     amount = Fixed8.FromDecimal(purchase.amount)
-    print("amount: %s %s " % (amount.ToString(), amount.value))
 
     to_script_hash = Helper.AddrStrToScriptHash(purchase.neo_address)
-    print("to script hash %s " % to_script_hash)
+
     output = TransactionOutput(
         AssetId=asset_id,
         Value=amount,
@@ -138,22 +152,21 @@ def create_transaction(wallet, purchase):
     tx = ContractTransaction()
     tx.outputs = [output]
     tx = wallet.MakeTransaction(tx)
-    print("hello11")
+
+    tx.Attributes = [
+        TransactionAttribute(TransactionAttributeUsage.Remark1, b'Sent by Payment Service Provider'),
+        TransactionAttribute(TransactionAttributeUsage.Remark2, ('Purchase Price USD %0.2f' % (purchase.total,)).encode('utf-8'))
+    ]
+
     context = ContractParametersContext(tx)
+
     wallet.Sign(context)
-    print("hello...")
+
     if context.Completed:
-        print("Hellooo")
         tx.scripts = context.GetScripts()
-
-        #            print("will send tx: %s " % json.dumps(tx.ToJson(),indent=4))
-
         relayed = NodeLeader.Instance().Relay(tx)
-        print("elayed?? %s" % relayed)
         if relayed:
-
             wallet.SaveTransaction(tx)
-
             return tx
 
     return None

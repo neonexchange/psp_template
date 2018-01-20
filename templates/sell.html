@@ -1,0 +1,72 @@
+{% extends "account/base.html" %}
+{% load bootstrap4 %}
+{% load humanize %}
+{% load i18n %}
+
+{% block head_title %}{% trans "Sell" %}{% endblock %}
+
+
+
+{% block content %}
+<h1>{% trans "Sell Crypto" %}</h1>
+
+    {% if has_bank_accounts %}
+
+    <a href="{% url 'bank_accounts_create' %}" class="btn btn-link">Add Another Bank Account</a>
+
+    {% else %}
+    <div class="card card-block">
+        <h4 class="card-title">Please Add A Bank Account</h4>
+        <div class="card-text">
+            <p><strong>Before making a deposit, you must first add a bank account</strong></p>
+            <a href="{% url 'bank_accounts_create' %}" class="btn btn-primary">Add Bank Account</a>
+        </div>
+    </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-12">
+
+        <div class="card card-block">
+            <h4 class="card-title">Sell Gas ( Current Price:  ${{ gas_price|floatformat:2 }} )</h4>
+
+            <div class="card-text">
+
+                <p>Any GAS sent to the following address within the next 100 blocks will be converted</p>
+                <p>{{ deposit_wallet.address }}</p>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+
+
+{% block footer_js %}
+
+    {{ block.super }}
+
+    <script type="text/javascript">
+        var gas_price = {{ gas_price|floatformat:2 }};
+
+        var fee_total = (gas_price * .05).toFixed(2);
+        $('#id_fee_total').val(fee_total);
+
+        var total = (gas_price + (gas_price * .05)).toFixed(2);
+        $('#id_total').val(total);
+
+        $(document).ready(function(){
+           $('#id_amount').on('change keyup',function(){
+                var purchase_total = $(this).val();
+                var gas_total = (purchase_total * gas_price).toFixed(2);
+                $('#id_gas_total').val(gas_total);
+                fee_total = (gas_total * .05).toFixed(2);
+                $('#id_fee_total').val(fee_total);
+                total = ((purchase_total * gas_price) + (gas_total * .05)).toFixed(2);
+                $('#id_total').val(total);
+                $('#id_purchase_btn').text('Purchase ' + purchase_total + ' Gas')
+           });
+        });
+    </script>
+
+{% endblock %}

@@ -1,0 +1,67 @@
+body,html {
+
+    background-color: #efefef;
+}
+
+
+.content-container {
+    padding: 20px 0;
+}
+
+.card {
+    margin: 10px 0;
+}
+
+.transaction-details {
+    display: none;
+}
+.transaction-details pre {
+    background-color: black;
+    color: whitesmoke;
+    padding:20px;
+    font-size:70%;
+}
+
+
+/* nav bar */
+
+nav {
+    background-color: black;
+}
+
+
+nav .navbar-brand {
+    font-weight: bold;
+    color:white;
+}
+
+.navbar-nav .nav-link {
+    color: #efefef;
+}
+.navbar-nav .nav-link:hover, .navbar-nav .nav-link.active {
+    text-decoration: underline;
+}
+
+
+
+/* forms */
+
+.is-invalid input {
+    border-color: #cc1111;
+}
+
+.invalid-feedback {
+    font-weight: bold;
+}
+
+
+form.signup .form-group label {
+    display: none;
+}
+
+
+/* add bank account */
+
+#iavContainer {
+    background:white;
+}
