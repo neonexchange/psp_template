@@ -81,11 +81,13 @@ def dwolla_get_user_balance(user):
 def dwolla_get_user_bank_accounts(user):
 
     items = dwolla_get_funding_sources(user)
+
     to_return = []
-    for item in items:
-        logger.debug("ITEM: %s " % item['type'])
-        if item['type'] == 'bank':
-            to_return.append(item)
+    if items:
+        for item in items:
+            logger.debug("ITEM: %s " % item['type'])
+            if item['type'] == 'bank':
+                to_return.append(item)
 
     return to_return
 
@@ -99,11 +101,8 @@ def dwolla_get_funding_sources(user):
         try:
             results = app_token.get(sources_url)
 
-#            pdb.set_trace()
-
             items = []
 
-#            for fsource in results.body['_embedded']['funding_sources']
             sources = results.body['_embedded']['funding-sources']
 
             for item in sources:
@@ -111,8 +110,6 @@ def dwolla_get_funding_sources(user):
 
                     if item['type'] == 'balance':
                         item['balance'] = dwolla_get_balance(item, app_token)
-
-#                    item['transfer_form'] = TransferForm(initial={'from_id':item['id']})
 
                     items.append(item)
 

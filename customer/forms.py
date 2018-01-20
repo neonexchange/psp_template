@@ -128,6 +128,24 @@ class PurchaseForm(forms.ModelForm):
 
 class DepositForm(forms.ModelForm):
 
+    deposit_wallet = None
     class Meta:
         model = Deposit
         fields = ['amount','receiver_account_id',]
+
+    def __init__(self, *args, **kwargs):
+        accounts = None
+        self.deposit_wallet = None
+        if 'accounts' in kwargs:
+            accounts = kwargs.pop('accounts')
+        if 'deposit_wallet' in kwargs:
+            self.deposit_wallet = kwargs.pop('deposit_wallet')
+
+        super(DepositForm, self).__init__(*args, **kwargs)
+
+        if accounts:
+            choices = []
+            for acct in accounts:
+                choices.append( (acct['id'], acct['name']))
+            self.fields['receiver_account_id'] = forms.ChoiceField(choices=choices, label='Deposit To Bank Account:')
+

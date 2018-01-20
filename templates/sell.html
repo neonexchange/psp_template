@@ -29,11 +29,49 @@
         <div class="card card-block">
             <h4 class="card-title">Sell Gas ( Current Price:  ${{ gas_price|floatformat:2 }} )</h4>
 
-            <div class="card-text">
-
-                <p>Any GAS sent to the following address within the next 100 blocks will be converted</p>
-                <p>{{ deposit_wallet.address }}</p>
+            {% if can_sell %}
+            <div class="alert alert-info">
+                <p>Please select a bank account to use to deposit to. The amount below is an estimate of the total you will receive.<br/>The final amount will be determined by how much GAS is sent to the deposit address and the GAS price at the exact time of receipt.</p>
             </div>
+            {% elif has_pending_deposit %}
+                <div class="alert alert-warning">
+                    <p>You currently have a deposit in progress. Please complete or cancel that deposit before starting a new one.</p>
+                </div>
+            {% elif not has_bank_account %}
+                <div class="alert alert-warning">
+                    <p>You must have a bank account in order to sell your crypto.</p>
+                </div>
+            {% endif %}
+            <form action="{% url 'purchase'%}" method="post">
+                {% csrf_token %}
+
+                <fieldset {% if not can_sell %}disabled{% endif %}>
+                <div class="row">
+                    <div class="col-sm-6">
+                        {% bootstrap_field form.receiver_account_id %}
+                        {% bootstrap_field form.amount %}
+                    </div>
+                    <div class="col-sm-6">
+
+                        <div class="form-group">
+                            <label for="id_gas_total">Total Gas Price</label>
+                            <input id="id_gas_total"  class="form-control" type="number" readonly value="{{ gas_price|floatformat:2 }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="id_fee_total">Total Fee <strong>5%</strong></label>
+                            <input id="id_fee_total"  class="form-control" type="number" readonly value="">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_total">Estimated Payout</label>
+                            <input id="id_total" class="form-control" type="number" readonly value="">
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" id="id_purchase_btn" class="btn btn-success btn-lg">Begin Deposit of 1 Gas</button>
+                </fieldset>
+
+            </form>
         </div>
     </div>
 
@@ -52,7 +90,7 @@
         var fee_total = (gas_price * .05).toFixed(2);
         $('#id_fee_total').val(fee_total);
 
-        var total = (gas_price + (gas_price * .05)).toFixed(2);
+        var total = (gas_price - (gas_price * .05)).toFixed(2);
         $('#id_total').val(total);
 
         $(document).ready(function(){
@@ -62,9 +100,9 @@
                 $('#id_gas_total').val(gas_total);
                 fee_total = (gas_total * .05).toFixed(2);
                 $('#id_fee_total').val(fee_total);
-                total = ((purchase_total * gas_price) + (gas_total * .05)).toFixed(2);
+                total = ((purchase_total * gas_price) - (gas_total * .05)).toFixed(2);
                 $('#id_total').val(total);
-                $('#id_purchase_btn').text('Purchase ' + purchase_total + ' Gas')
+                $('#id_purchase_btn').text('Begin deposit of ' + purchase_total + ' Gas')
            });
         });
     </script>

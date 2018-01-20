@@ -4,7 +4,7 @@ from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib import messages
-from .forms import PSPUserCreationForm,PSPProfileForm,BankAccountForm,PurchaseForm
+from .forms import PSPUserCreationForm,PSPProfileForm,BankAccountForm,PurchaseForm,DepositForm
 from .dwolla import *
 from .models import ReceiveableAccount
 from blockchain.models import DepositWallet
@@ -120,6 +120,7 @@ class SignupView(View):
 class SellView(View):
 
     template_name = 'sell.html'
+    form_class = DepositForm
 
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
@@ -127,19 +128,25 @@ class SellView(View):
         bank_accounts = dwolla_get_user_bank_accounts(request.user)
 
         has_bank_accounts = False
+        has_pending_deposit = False
 
         if len(bank_accounts) > 0:
             has_bank_accounts = True
 
         if DepositWallet.objects.filter(depositor=request.user).count() > 0:
-            deposit_wallet = DepositWallet.objects.filter(depositor=request.user).first()
-            print("using existing deposit wallet!")
-        else:
-            deposit_wallet = DepositWallet.create(request.user)
+            has_pending_deposit = True
+
+        can_sell = has_bank_accounts and not has_pending_deposit
+
+        form = self.form_class(accounts=bank_accounts)
 
         return render(request, self.template_name, {'gas_price':get_gas_price(),
                                                     'has_bank_accounts':has_bank_accounts,
-                                                    'deposit_wallet':deposit_wallet} )
+                                                    'has_pending_deposit':has_pending_deposit,
+                                                    'can_sell':can_sell,
+                                                    'form':form} )
+
+
 
 
 class PurchaseView(View):
