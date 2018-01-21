@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .forms import PSPUserCreationForm,PSPUserChangeForm
-from .models import PSPUser,ReceiveableAccount,Purchase
+from .models import PSPUser,ReceiveableAccount,Purchase,Deposit
 
 class PSPUserAdmin(BaseUserAdmin):
     # The forms to add and change user instances
@@ -40,10 +40,15 @@ class PurchaseAdmin(admin.ModelAdmin):
     model = Purchase
     list_display = ('user','transfer_url','amount')
 
+class DepositAdmin(admin.ModelAdmin):
+    model = Deposit
+    list_display = ('user','date_created','status',)
+
 # Now register the new UserAdmin...
 admin.site.register(PSPUser, PSPUserAdmin)
 admin.site.register(ReceiveableAccount, ReceiveableAdmin)
 admin.site.register(Purchase, PurchaseAdmin)
+admin.site.register(Deposit, DepositAdmin)
 
 # ... and, since we're not using Django's built-in permissions,
 # unregister the Group model from admin.

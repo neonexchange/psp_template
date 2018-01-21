@@ -71,7 +71,6 @@ class BlockchainTransfer(models.Model):
 
     confirmed_block = models.IntegerField(blank=True,null=True)
 
-
     @property
     def transaction(self):
         if self.transaction_id:
@@ -103,6 +102,8 @@ class BlockchainTransfer(models.Model):
         if self.transaction_id:
             return '%stransaction/%s' % (settings.NEOSCAN_URL, self.transaction_id)
         return None
+
+
 
 
 

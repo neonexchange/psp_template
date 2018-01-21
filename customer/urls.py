@@ -1,7 +1,7 @@
 from django.urls import path,include
 
 from django.contrib.auth import views
-from .views import ProfileView,SignupView,BankAccountView,BankAccountListView,PurchaseView,TransactionView,SellView
+from .views import ProfileView,SignupView,BankAccountView,BankAccountListView,PurchaseView,TransactionView,SellView,DepositCryptoView,CancelDepositCryptoView
 from django.urls import path
 
 urlpatterns = [
@@ -29,6 +29,8 @@ urlpatterns = [
     path('purchase/', PurchaseView.as_view(), name='purchase'),
 
     path('sell/', SellView.as_view(), name='sell'),
+    path('sell/deposit/', DepositCryptoView.as_view(), name='deposit-crypto'),
+    path('sell/deposit/cancel', CancelDepositCryptoView.as_view(), name='deposit-crypto-cancel'),
 
     path('transactions/', TransactionView.as_view(), name='transactions'),
 ]

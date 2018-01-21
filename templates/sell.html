@@ -35,24 +35,23 @@
             </div>
             {% elif has_pending_deposit %}
                 <div class="alert alert-warning">
-                    <p>You currently have a deposit in progress. Please complete or cancel that deposit before starting a new one.</p>
+                    <p>You currently have a <a href="{% url 'deposit-crypto' %}">deposit in progress.</a> Please complete or cancel that deposit before starting a new one.</p>
                 </div>
             {% elif not has_bank_account %}
                 <div class="alert alert-warning">
                     <p>You must have a bank account in order to sell your crypto.</p>
                 </div>
             {% endif %}
-            <form action="{% url 'purchase'%}" method="post">
+            <form action="{% url 'sell'%}" method="post">
                 {% csrf_token %}
 
                 <fieldset {% if not can_sell %}disabled{% endif %}>
-                <div class="row">
-                    <div class="col-sm-6">
+                <div class="row justify-content-between">
+                    <div class="col-sm-7">
                         {% bootstrap_field form.receiver_account_id %}
                         {% bootstrap_field form.amount %}
                     </div>
-                    <div class="col-sm-6">
-
+                    <div class="col-sm-4">
                         <div class="form-group">
                             <label for="id_gas_total">Total Gas Price</label>
                             <input id="id_gas_total"  class="form-control" type="number" readonly value="{{ gas_price|floatformat:2 }}">

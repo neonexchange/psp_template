@@ -32,14 +32,14 @@
                 {% csrf_token %}
 
                 <fieldset {% if not has_bank_accounts %}disabled{% endif %}>
-                <div class="row">
-                    <div class="col-sm-6">
+                <div class="row justify-content-between">
+                    <div class="col-sm-7">
                         {% bootstrap_field form.sender_account_id %}
                         {% bootstrap_field form.amount %}
                         {% bootstrap_field form.neo_address %}
 
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-4">
 
 
 

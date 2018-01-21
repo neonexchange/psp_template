@@ -149,3 +149,7 @@ class DepositForm(forms.ModelForm):
                 choices.append( (acct['id'], acct['name']))
             self.fields['receiver_account_id'] = forms.ChoiceField(choices=choices, label='Deposit To Bank Account:')
 
+
+class CancelDepositForm(forms.Form):
+
+    deposit_id = forms.IntegerField()

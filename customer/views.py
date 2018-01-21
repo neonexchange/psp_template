@@ -1,12 +1,14 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect,HttpResponseForbidden
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
 from django.views import View
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.contrib import messages
-from .forms import PSPUserCreationForm,PSPProfileForm,BankAccountForm,PurchaseForm,DepositForm
+from .forms import PSPUserCreationForm,PSPProfileForm,BankAccountForm,PurchaseForm,DepositForm,CancelDepositForm
 from .dwolla import *
-from .models import ReceiveableAccount
+from .models import ReceiveableAccount,Deposit
 from blockchain.models import DepositWallet
 import requests
 from logzero import logger
@@ -126,27 +128,94 @@ class SellView(View):
     def get(self, request, *args, **kwargs):
 
         bank_accounts = dwolla_get_user_bank_accounts(request.user)
-
         has_bank_accounts = False
-        has_pending_deposit = False
 
         if len(bank_accounts) > 0:
             has_bank_accounts = True
 
-        if DepositWallet.objects.filter(depositor=request.user).count() > 0:
-            has_pending_deposit = True
-
-        can_sell = has_bank_accounts and not has_pending_deposit
+        can_sell = has_bank_accounts and request.user.pending_deposit is None
 
         form = self.form_class(accounts=bank_accounts)
 
         return render(request, self.template_name, {'gas_price':get_gas_price(),
                                                     'has_bank_accounts':has_bank_accounts,
-                                                    'has_pending_deposit':has_pending_deposit,
+                                                    'has_pending_deposit':request.user.pending_deposit,
                                                     'can_sell':can_sell,
                                                     'form':form} )
 
 
+    @method_decorator(login_required)
+    def post(self, request, *args, **kwargs):
+
+        bank_accounts = dwolla_get_user_bank_accounts(request.user)
+
+        form = self.form_class(request.POST,accounts=bank_accounts)
+
+        if form.is_valid():
+
+            deposit = form.save(commit=False) # type: Deposit
+            deposit.user = request.user
+            deposit.sender_account_id = ReceiveableAccount.Default().customer_url
+            deposit.deposit_wallet = DepositWallet.create(request.user)
+            deposit.save()
+
+            request.user.pending_deposit = deposit
+            request.user.save()
+
+            messages.add_message(request, messages.INFO, 'Crypto Sale Initiated...')
+            return HttpResponseRedirect('/customer/sell/deposit/')
+
+        has_bank_accounts = False
+        if len(bank_accounts) > 0:
+            has_bank_accounts = True
+        can_sell = has_bank_accounts and request.user.pending_deposit is None
+
+        return render(request, self.template_name, {'gas_price':get_gas_price(),
+                                                    'has_bank_accounts':has_bank_accounts,
+                                                    'has_pending_deposit':request.user.pending_deposit,
+                                                    'can_sell':can_sell,
+                                                    'form':form} )
+
+
+class DepositCryptoView(View):
+    template_name = 'deposit_crypto.html'
+    form_class = DepositForm
+
+    @method_decorator(login_required)
+    def get(self, request, *args, **kwargs):
+
+        if not request.user.pending_deposit:
+            messages.add_message(request, messages.INFO, 'Please initiate a deposit before depositing crypto')
+            return HttpResponseRedirect('/customer/sell/')
+
+        deposit = request.user.pending_deposit
+        deposit_wallet = deposit.deposit_wallet
+
+        return render(request, self.template_name, {'gas_price':get_gas_price(),
+                                                    'deposit':deposit,
+                                                    'deposit_wallet':deposit_wallet} )
+
+class CancelDepositCryptoView(View):
+    form_class = CancelDepositForm
+
+    @method_decorator(login_required)
+    def post(self, request, *args, **kwargs):
+
+        form = CancelDepositForm(request.POST)
+
+        if form.is_valid():
+
+            deposit = get_object_or_404(Deposit, pk=form.cleaned_data['deposit_id'])
+            if deposit.user != request.user:
+                raise PermissionDenied
+
+            request.user.pending_deposit = None
+            request.user.save()
+            deposit.deposit_wallet.delete()
+            deposit.delete()
+            messages.add_message(request, messages.INFO, 'Deposit cancelled')
+
+        return HttpResponseRedirect('/customer/sell')
 
 
 class PurchaseView(View):

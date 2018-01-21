@@ -86,7 +86,7 @@ class PSPUser(AbstractBaseUser, PermissionsMixin):
 
     objects = PSPUserManager()
 
-
+    pending_deposit = models.ForeignKey('customer.Deposit', blank=True,null=True, on_delete=models.CASCADE)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name','last_name','address1','city','postal_code','state','ssn_lastfour','date_of_birth']
@@ -195,6 +195,7 @@ ASSET_CHOICES = [
 
 PURCHASE_STATUS = [
     ('pending','pending'),
+    ('gas_received','gas_received'),
     ('processed','processed'),
     ('failed', 'failed'),
     ('complete','complete')
@@ -238,28 +239,29 @@ class Purchase(models.Model):
 
 class Deposit(models.Model):
 
-    asset = models.CharField(choices=ASSET_CHOICES,default='GAS', max_length=3)
-    amount = models.FloatField(default=1.00)
+
+    amount = models.FloatField(default=1.00, blank=True,null=True)
+
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     sender_account_id = models.CharField(max_length=128)
 
     receiver_account_id = models.CharField(max_length=128)
 
-    neo_address = models.CharField(max_length=34)
+    neo_sender_address = models.CharField(max_length=34, blank=True, null=True)
 
-    gas_price = models.FloatField()
 
+    asset = models.CharField(choices=ASSET_CHOICES,default='GAS', max_length=3)
+    gas_price = models.FloatField(blank=True,null=True)
     fee = models.FloatField(default=.05)
+    total_gas = models.FloatField(blank=True,null=True)
+    total_fee = models.FloatField(blank=True,null=True)
+    total = models.FloatField(blank=True,null=True)
 
-    total_gas = models.FloatField()
-    total_fee = models.FloatField()
-
-    total = models.FloatField()
 
     status = models.CharField(max_length=32, choices=PURCHASE_STATUS, default='pending')
 
-    transfer_url = models.CharField(max_length=128)
+    transfer_url = models.CharField(max_length=128, blank=True,null=True)
 
     date_created = models.DateTimeField(auto_now_add=True)
 
@@ -269,5 +271,14 @@ class Deposit(models.Model):
 
     deposit_wallet = models.OneToOneField('blockchain.DepositWallet', on_delete=models.CASCADE)
 
+    invoice_id = models.UUIDField(auto_created=True)
+
     class Meta:
         ordering = ['-date_created',]
+
+
+    @property
+    def receiver_account(self):
+
+        url = 'https://api-sandbox.dwolla.com/funding-sources/%s' % self.receiver_account_id
+        return dwolla_get_url(url)

@@ -11,12 +11,18 @@ from neo.Settings import settings
 from neocore.Fixed8 import Fixed8
 from neo.Implementations.Wallets.peewee.UserWallet import UserWallet
 from neocore.Fixed8 import Fixed8
-from neo.Core.TX.Transaction import TransactionOutput,ContractTransaction
+from neocore.Cryptography.Crypto import Crypto
+from neo.Core.TX.Transaction import TransactionOutput,ContractTransaction,Transaction,TransactionType
 from neo.Core.TX.TransactionAttribute import TransactionAttribute,TransactionAttributeUsage
 from neo.Core.Helper import Helper
 from neo.Core.Blockchain import Blockchain
+from neo.Core.Block import Block
 from neo.SmartContract.ContractParameterContext import ContractParametersContext
+from customer.dwolla import DwollaClient
+
 import json
+import pdb
+import binascii
 
 setup()
 
@@ -47,6 +53,8 @@ def start_blockchain():
         dbloop.start(.1)
         NodeLeader.Instance().Start()
 
+        Blockchain.PersistCompleted.on_change += on_blockchain_new_block
+
         wallet = UserWallet.Open(wallet_file, wallet_password)
         wallet_loop = task.LoopingCall(wallet.ProcessBlocks)
         wallet_loop.start(.1)
@@ -60,6 +68,12 @@ def start_blockchain():
 
         pending_crypto_tx_loop = task.LoopingCall(process_pending_blockchain_transactions)
         pending_crypto_tx_loop.start(4)
+
+        # every 10 minutes, refresh dwolla client token
+        refresh_time = 60 * 10
+        dwolla_client_refresh_loop = task.LoopingCall(refresh_dwolla_client_token)
+        dwolla_client_refresh_loop.start(refresh_time)
+
 
     except Exception as e:
         logger.error("Could not start blockchain: %s " % e)
@@ -170,3 +184,73 @@ def create_transaction(wallet, purchase):
             return tx
 
     return None
+
+
+def refresh_dwolla_client_token():
+    logger.info("Refreshing Dwolla client token")
+    DwollaClient.instance().refresh()
+
+
+
+
+def on_blockchain_new_block(block):
+    print("on blockchain new block! %s " % block.Index)
+    contract_tx_type = int.from_bytes(TransactionType.ContractTransaction, 'little')
+    for tx in block.FullTransactions:
+        if tx.Type == contract_tx_type:
+            if len(tx.Attributes) > 0:
+                for attr in tx.Attributes:
+                    if attr.Usage == TransactionAttributeUsage.Remark3:
+                        process_possible_transaction_match(tx)
+
+def process_possible_transaction_match(transaction):
+    from customer.models import Deposit
+
+    for attr in transaction.Attributes:
+        if attr.Usage == TransactionAttributeUsage.Remark3:
+            try:
+                invoice_id = attr.Data.decode('utf-8')
+                deposit = Deposit.objects.get(invoice_id=invoice_id, status='pending')
+                check_deposit_and_tx(deposit, transaction)
+            except Deposit.DoesNotExist:
+                logger.info("Could not find deposit with invoice %s " % attr.Data)
+            except Exception as e:
+                logger.info("Could not decode data into utf-8 %s %s" % (attr.Data,e))
+
+
+def check_deposit_and_tx(deposit, transaction):
+
+    from blockchain.models import BlockchainTransfer
+
+    deposit_total = Fixed8.Zero()
+    sender_addr = transaction.G
+    for output in transaction.outputs:
+
+        if output.ScriptHash == deposit.deposit_wallet.wallet.GetStandardAddress():
+            deposit_total += output.Value
+        else:
+            sender_addr = output.ScriptHash
+
+    if deposit_total > Fixed8.Zero():
+
+        current_block = Blockchain.Default().Height
+        amount = deposit_total.value / Fixed8.D
+        try:
+            bc_transfer = BlockchainTransfer.objects.create(
+                to_address = deposit.deposit_wallet.address,
+                from_address = Crypto.ToAddress(sender_addr),
+                amount = amount,
+                transaction_id = transaction.Hash.ToString(),
+                status = 'gas_received',
+                start_block = current_block,
+                confirmed_block = current_block
+            )
+            deposit.status = 'gas_received'
+            deposit.blockchain_transfer = bc_transfer
+            deposit.neo_sender_address = bc_transfer.from_address
+            deposit.amount = amount
+            deposit.save()
+        except Exception as e:
+            logger.error("Could not create transfer... %s " % e)
+
+

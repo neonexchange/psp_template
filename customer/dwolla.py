@@ -7,17 +7,46 @@ DWOLLA_KEY='AhsM66nKvorWWIwJL9WNCE3wO0FNIg0ajsB7v4lOQlUvnNGNyY'
 DWOLLA_SECRET='o5863B3xHXYA60DQo1Gnsrl9zKKoOyGdOrayJTOQWNRm2a18Pd'
 
 
-client = dwollav2.Client(key = DWOLLA_KEY,
-                         secret = DWOLLA_SECRET,
-                         environment = 'sandbox') # optional - defaults to production
 
-app_token = client.Auth.client()
+class DwollaClient():
+    
+    __instance = None
+    
+    _client = None
+    
+    _token = None
+    
+    
+    @property
+    def token(self):
+        return self._token
+    
+    @property
+    def client(self):
+        return self._client
+
+    def refresh(self):
+        self._token = self.client.Auth.client()
+
+        
+    def __init__(self):
+        self._client = dwollav2.Client(key = DWOLLA_KEY,
+                                        secret = DWOLLA_SECRET,
+                                        environment = 'sandbox') # optional - defaults to production
+        self.refresh()
+        
+    @staticmethod
+    def instance():
+        if not DwollaClient.__instance:
+            DwollaClient.__instance = DwollaClient()
+        return DwollaClient.__instance
+
+
 
 
 def dwolla_get_url(url):
-
     try:
-        result = app_token.get(url)
+        result = DwollaClient.instance().token.get(url)
         return result.body
     except Exception as e:
         logger.error("Could not get url: %s %s " % (url, e))
@@ -28,7 +57,7 @@ def dwolla_create_user(user):
     json = user.to_json()
 
     try:
-        customer = app_token.post('customers',json)
+        customer = DwollaClient.instance().token.post('customers',json)
         url = customer.headers['location']
         user.dwolla_url = url
         user.save()
@@ -43,7 +72,7 @@ def dwolla_update_user(user):
     json = user.to_update_json()
 
     try:
-        customer = app_token.post('customers/%s' % user.dwolla_id, json)
+        customer = DwollaClient.instance().token.post('customers/%s' % user.dwolla_id, json)
 
         if customer.status == 200:
             return True
@@ -58,8 +87,7 @@ def dwolla_generate_funding_source_token(user):
         funding_token_req = '%s/iav-token' % user.dwolla_url
         logger.debug("funding token %s " % funding_token_req)
         try:
-            request = app_token.post(funding_token_req)
-#            pdb.set_trace()
+            request = DwollaClient.instance().token.post(funding_token_req)
             return request.body['token']
         except Exception as e:
             logger.error("could not get dwolla account funding token %s " % e)
@@ -99,7 +127,7 @@ def dwolla_get_funding_sources(user):
     if user.dwolla_url:
         sources_url = '%s/funding-sources' % user.dwolla_url
         try:
-            results = app_token.get(sources_url)
+            results = DwollaClient.instance().token.get(sources_url)
 
             items = []
 
@@ -109,7 +137,7 @@ def dwolla_get_funding_sources(user):
                 if item['status'] == 'verified':
 
                     if item['type'] == 'balance':
-                        item['balance'] = dwolla_get_balance(item, app_token)
+                        item['balance'] = dwolla_get_balance(item)
 
                     items.append(item)
 
@@ -121,12 +149,12 @@ def dwolla_get_funding_sources(user):
     return None
 
 
-def dwolla_get_balance(funding_source, app_token):
+def dwolla_get_balance(funding_source):
 
     try:
         balance_url = funding_source['_links']['balance']['href']
         logger.info("balance url %s " % balance_url)
-        results = app_token.get(balance_url)
+        results = DwollaClient.instance().token.get(balance_url)
 
         return results.body
 
@@ -138,7 +166,6 @@ def dwolla_get_balance(funding_source, app_token):
 
 
 def dwolla_create_transfer(purchase):
-
 
     request_body = {
         '_links': {
@@ -156,7 +183,7 @@ def dwolla_create_transfer(purchase):
         'correlationId': purchase.id,
     }
 
-    transfer = app_token.post('transfers',request_body)
+    transfer = DwollaClient.instance().token.post('transfers',request_body)
 
 
 
@@ -166,7 +193,7 @@ def dwolla_get_transfers(user):
 
     url = '%s/transfers' % user.dwolla_url
     try:
-        transferlist = app_token.get(url)
+        transferlist = DwollaClient.instance().token.get(url)
         return transferlist.body['_embedded']['transfers']
 
     except Exception as e:
