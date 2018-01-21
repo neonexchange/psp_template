@@ -1,0 +1,27 @@
+        <div class="card card-block">
+            <h4 class="card-title"><i class="fa fa-long-arrow-right"></i> Bought {{ tx.amount }} {{ tx.asset }} for ${{ tx.total|floatformat:2 }}</h4>
+            <div class="card-text">
+                <p>On {{ tx.date_created|date:'Y-m-d' }} {{ tx.date_created|time }}</p>
+                <p>Payment Status <em>{{ tx.status }}</em></p>
+
+                <hr/>
+                {% if tx.blockchain_transfer %}
+                    <p>Sent {{ tx.amount }} {{ tx.asset }} to {{ tx.neo_address }}</p>
+                    <p>Transaction Id: {{ tx.blockchain_transfer.transaction_id }}</p>
+                    {% if tx.blockchain_transfer.confirmed_block %}
+                    <p>Completed on block {{ tx.blockchain_transfer.confirmed_block }}</p>
+
+                    <button type="button" class="btn btn-secondary toggle-tx-details">View Details</button>
+
+                    <div class="transaction-details">
+                        <pre>{{ tx.blockchain_transfer.tx_json }}</pre>
+                    </div>
+
+                    {% else %}
+                    <p><em>Pending</em> Submitted on block {{ tx.blockchain_transfer.start_block }}</p>
+                    {% endif %}
+                {% else %}
+                <p>Will send {{ tx.amount }} {{ tx.asset }} to {{ tx.neo_address }}</p>
+                {% endif %}
+            </div>
+        </div>

@@ -27,7 +27,7 @@
         <div class="col-12">
 
         <div class="card card-block">
-            <h4 class="card-title">Purchase Gas ( Current Price:  ${{ gas_price|floatformat:2 }} )</h4>
+            <h4 class="card-title">Purchase Gas ( Current Price:  ${{ price_GAS|floatformat:2 }} )</h4>
             <form action="{% url 'purchase'%}" method="post">
                 {% csrf_token %}
 
@@ -45,7 +45,7 @@
 
                         <div class="form-group">
                             <label for="id_gas_total">Total Gas Price</label>
-                            <input id="id_gas_total"  class="form-control" type="number" readonly value="{{ gas_price|floatformat:2 }}">
+                            <input id="id_gas_total"  class="form-control" type="number" readonly value="{{ price_GAS|floatformat:2 }}">
                         </div>
                         <div class="form-group">
                             <label for="id_fee_total">Total Fee <strong>5%</strong></label>
@@ -76,7 +76,7 @@
     {{ block.super }}
 
     <script type="text/javascript">
-        var gas_price = {{ gas_price|floatformat:2 }};
+        var gas_price = {{ price_GAS|floatformat:2 }};
 
         var fee_total = (gas_price * .05).toFixed(2);
         $('#id_fee_total').val(fee_total);

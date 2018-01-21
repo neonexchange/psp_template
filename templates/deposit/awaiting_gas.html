@@ -18,6 +18,7 @@
                     <pre>
 {
     to_addr: "{{ deposit_wallet.address }}",
+    assetId: "602c79718b16e442de58778e148d0b1084e3b2dffd5de6b7b16cee7969282de7",
     transactionAttributes: [
         {
             usage: 243,
@@ -35,8 +36,8 @@
                         <input type="number" name="amount" value="{{ deposit.amount }}" id="id_amount" placeholder="Amount" title="" class="form-control" step="any">
                     </div>
                     <div class="form-group">
-                        <label for="id_gas_total">Total Gas Price @ ${{ gas_price|floatformat:2 }}</label>
-                        <input id="id_gas_total"  class="form-control" type="number" readonly value="{{ gas_price|floatformat:2 }}">
+                        <label for="id_gas_total">Total Gas Price @ ${{ price_GAS|floatformat:2 }}</label>
+                        <input id="id_gas_total"  class="form-control" type="number" readonly value="{{ price_GAS|floatformat:2 }}">
                     </div>
                     <div class="form-group">
                         <label for="id_fee_total">Total Fee <strong>5%</strong></label>

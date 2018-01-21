@@ -17,16 +17,26 @@
             <h4 class="card-title">Convert GAS to USD</h4>
 
 
-            {% if deposit.status == 'pending' %}
+            {% if deposit.status == 'awaiting_deposit' %}
 
-                {% include 'deposit/deposit_pending.html' %}
+                {% include 'deposit/awaiting_gas.html' %}
 
             {% elif deposit.status == 'gas_received' %}
 
-                {% include 'deposit/deposit_gas_received.html' %}
+                {% include 'deposit/gas_received.html' %}
 
-            {% else %}
+            {% elif deposit.status == 'pending' %}
 
+                {% include 'deposit/pending_bank_transfer.html' %}
+
+            {% elif deposit.status == 'processed' %}
+
+                {% include 'deposit/deposit_complete.html' %}
+
+
+            {% elif deposit.status == 'failed' %}
+
+                {% include 'deposit/failed.html' %}
             {% endif %}
 
         </div>
@@ -42,7 +52,7 @@
     {{ block.super }}
 
     <script type="text/javascript">
-        var gas_price = {{ gas_price|floatformat:2 }};
+        var gas_price = {{ price_GAS|floatformat:2 }};
         var receiver_addr = '{{ deposit_wallet.address }}';
         var invoice_id = '{{ deposit.invoice_id }}';
         var update_price_ui = function(){
@@ -68,6 +78,7 @@
                var actualGasAmount = currenttotal * tenToEigth;
                var message = {
                    to_addr: receiver_addr,
+                   assetId: '602c79718b16e442de58778e148d0b1084e3b2dffd5de6b7b16cee7969282de7',
                    amount: actualGasAmount,
                    transactionAttributes:[
                        {

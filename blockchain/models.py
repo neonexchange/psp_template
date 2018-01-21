@@ -10,6 +10,17 @@ from neo.Implementations.Wallets.peewee.UserWallet import UserWallet
 from uuid import uuid4
 
 
+
+class Price(models.Model):
+
+    asset = models.CharField(max_length=3, choices=ASSET_CHOICES, unique=True)
+    usd = models.FloatField(default=0)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return '[%s] $%0.2f  at %s' % (self.asset, float(self.usd), self.updated_at)
+
+
 class DepositWallet(models.Model):
 
     depositor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -19,6 +30,8 @@ class DepositWallet(models.Model):
     wallet_pass = models.CharField(max_length=64)
 
     start_height = models.IntegerField()
+
+    transfer = models.OneToOneField('blockchain.BlockchainTransfer', blank=True,null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return "%s deposit wallet %s " % (self.depositor.email, self.wallet_file)

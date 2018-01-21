@@ -1,0 +1,57 @@
+{% extends "account/base.html" %}
+{% load bootstrap4 %}
+{% load i18n %}
+{% load customer_tags %}
+
+{% block head_title %}{% trans "Transactions" %}{% endblock %}
+
+{% block content %}
+<h1>{% trans "My Transactions" %}</h1>
+
+<div class="row">
+    <div class="col-sm-12">
+        {% for tx in all_tx %}
+
+        {% if tx|get_type == 'Deposit' %}
+
+            {% with tx as deposit %}
+            {% include 'transaction/sale.html' %}
+            {% endwith %}
+
+        {% elif tx|get_type == 'Purchase' %}
+
+            {% include 'transaction/purchase.html' %}
+        {% else %}
+            <p>Could not determin type {{ tx|get_type }} </p>
+        {% endif %}
+
+        {% empty %}
+            <div class="card card-block">
+                <h4 class="card-title">No Transactions Yet</h4>
+                <div class="card-text">
+                    <a href="{% url 'bank_accounts_create' %}" class="btn btn-primary">Add Bank Account</a>
+                    <a href="{% url 'purchase' %}" class="btn btn-secondary">Make A purchase</a>
+                </div>
+
+            </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+
+{% endblock %}
+
+
+{% block footer_js %}
+
+
+    {{ block.super }}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('.toggle-tx-details').click(function(){
+                $(this).next('.transaction-details').toggle();
+            });
+        });
+    </script>
+{% endblock %}

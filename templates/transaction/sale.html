@@ -1,0 +1,45 @@
+        <div class="card card-block">
+
+
+            {% if deposit.status == 'awaiting_deposit' %}
+
+            <h4 class="card-title"><i class="fa fa-long-arrow-left"></i> Awaiting deposit of gas</h4>
+
+
+            {% elif deposit.status == 'gas_received' %}
+
+            <h4 class="card-title"><i class="fa fa-long-arrow-left"></i> Recieved {{ deposit.amount }} GAS, initiating payment to {{ deposit.receiver_account.name }} at {{ deposit.receiver_account.bankName }} ({{ deposit.receiver_account.bankAccountType }})</h4>
+
+
+            {% elif deposit.status == 'pending' %}
+
+            <h4 class="card-title"><i class="fa fa-long-arrow-left"></i> Sold {{ deposit.amount }} GAS for ${{ deposit.total|floatformat:2 }}</h4>
+
+
+            {% elif deposit.status == 'processed' %}
+
+            <h4 class="card-title"><i class="fa fa-long-arrow-left"></i> Sold {{ deposit.amount }} GAS for ${{ deposit.total|floatformat:2 }}</h4>
+
+
+            {% elif deposit.status == 'failed' %}
+
+            <h4 class="card-title">Error processing deposit.</h4>
+            {% endif %}
+
+
+            <div class="card-text">
+                <p>On {{ deposit.date_updated|date:'Y-m-d' }} {{ deposit.date_updated|time }}</p>
+                <p>Payment Status <em>{{ deposit.status }}</em></p>
+
+                {% if deposit.blockchain_transfer.transaction_id %}
+                    <hr/>
+                    <p>Received {{ deposit.amount }} {{ deposit.asset }} from {{ deposit.neo_sender_address }}</p>
+                    <p>Transaction Id: {{ deposit.blockchain_transfer.transaction_id }}</p>
+                    <p>Completed on block {{ deposit.blockchain_transfer.confirmed_block }}</p>
+
+                {% else %}
+                    <a class="btn btn-primary" href="{% url 'deposit-crypto' %}"><i class="fa fa-bank"></i> Complete this deposit</a>
+                    <p>Once GAS is received, payment will be credited to <strong>{{ deposit.receiver_account.name }}</strong> at {{ deposit.receiver_account.bankName }} ({{ deposit.receiver_account.bankAccountType }})
+                {% endif %}
+            </div>
+        </div>

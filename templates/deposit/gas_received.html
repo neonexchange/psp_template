@@ -1,0 +1,54 @@
+            <div class="row">
+                <div class="col-sm-7">
+                    <div class="alert alert-success">
+                        Your gas has been received!
+                    </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-between">
+
+                <div class="col-sm-7">
+
+                    <div class="form-group">
+                        <label for="id_receiver_bank_account_id">A deposit of USD to the following account is being prepared.</label>
+                        <input id="id_receiver_bank_account_id"  class="form-control" type="text" readonly value="{{ deposit.receiver_account.name }} at {{ deposit.receiver_account.bankName }} ({{ deposit.receiver_account.bankAccountType }})">
+                    </div>
+
+                    <p>Below are the details of the transaction received:</p>
+                    <pre class="tx-json">
+{{ deposit.blockchain_transfer.tx_json }}
+                    </pre>
+                </div>
+
+                <div class="col-sm-4">
+
+
+                    <div class="form-group">
+                        <label for="id_transaction_id">Transaction ID</label>
+                        <input type="text" name="transaction_id" readonly value="{{ deposit.blockchain_transfer.transaction_id }}" id="id_transaction_id" placeholder="TransactionId" title="" class="form-control" step="any">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_amount">Amount GAS Received</label>
+                        <input type="number" name="amount" readonly value="{{ deposit.amount }}" id="id_amount" placeholder="Amount" title="" class="form-control" step="any">
+                    </div>
+                    <div class="form-group">
+                        <label for="id_gas_total">Total Gas @ ${{ deposit.gas_price|floatformat:2 }}</label>
+                        <input id="id_gas_total"  class="form-control" type="number" readonly value="{{ deposit.total_gas|floatformat:2 }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="id_fee_total">Total Fee <strong>5%</strong></label>
+                        <input id="id_fee_total"  class="form-control" type="number" readonly value="{{ deposit.total_fee }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_total">Total Payout</label>
+                        <input id="id_total" class="form-control" type="number" readonly value="{{ deposit.total }}">
+                    </div>
+                </div>
+
+
+
+            </div>
+

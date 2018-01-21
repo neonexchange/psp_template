@@ -16,7 +16,7 @@ class PSPUserAdmin(BaseUserAdmin):
     list_filter = ('is_admin',)
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Personal info', {'fields': ('first_name','last_name', 'customer_type','is_seller',)}),
+        ('Personal info', {'fields': ('first_name','last_name', 'customer_type','is_seller','pending_deposit',)}),
         ('Permissions', {'fields': ('is_admin',)}),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin

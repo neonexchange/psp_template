@@ -27,11 +27,11 @@
         <div class="col-12">
 
         <div class="card card-block">
-            <h4 class="card-title">Sell Gas ( Current Price:  ${{ gas_price|floatformat:2 }} )</h4>
+            <h4 class="card-title">Sell Gas ( Current Price:  ${{ price_GAS|floatformat:2 }} )</h4>
 
             {% if can_sell %}
             <div class="alert alert-info">
-                <p>Please select a bank account to use to deposit to. The amount below is an estimate of the total you will receive.<br/>The final amount will be determined by how much GAS is sent to the deposit address and the GAS price at the exact time of receipt.</p>
+                Please select a bank account to use to deposit to. The amount below is an estimate of the total you will receive.<br/>The final amount will be determined by how much GAS is sent to the deposit address and the GAS price at the exact time of receipt.
             </div>
             {% elif has_pending_deposit %}
                 <div class="alert alert-warning">
@@ -54,7 +54,7 @@
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label for="id_gas_total">Total Gas Price</label>
-                            <input id="id_gas_total"  class="form-control" type="number" readonly value="{{ gas_price|floatformat:2 }}">
+                            <input id="id_gas_total"  class="form-control" type="number" readonly value="{{ price_GAS|floatformat:2 }}">
                         </div>
                         <div class="form-group">
                             <label for="id_fee_total">Total Fee <strong>5%</strong></label>
@@ -84,7 +84,7 @@
     {{ block.super }}
 
     <script type="text/javascript">
-        var gas_price = {{ gas_price|floatformat:2 }};
+        var gas_price = {{ price_GAS|floatformat:2 }};
 
         var fee_total = (gas_price * .05).toFixed(2);
         $('#id_fee_total').val(fee_total);

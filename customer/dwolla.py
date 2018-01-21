@@ -1,5 +1,6 @@
 import dwollav2
 from logzero import logger
+import json
 
 # Navigate to https://www.dwolla.com/applications (production) or https://dashboard-sandbox.dwolla.com/applications (Sandbox) for your application key and secret.
 
@@ -15,8 +16,21 @@ class DwollaClient():
     _client = None
     
     _token = None
-    
-    
+
+    @property
+    def api_url(self):
+        if self._client.environment == 'sandbox':
+            return 'https://api-sandbox.dwolla.com/'
+        return 'https://api.dwolla.com/'
+
+    @property
+    def funding_source_url(self):
+        return '%sfunding-sources/' % self.api_url
+
+    @property
+    def customer_url(self):
+        return '%scustomers/' % self.api_url
+
     @property
     def token(self):
         return self._token
@@ -85,7 +99,6 @@ def dwolla_generate_funding_source_token(user):
 
     if user.dwolla_url:
         funding_token_req = '%s/iav-token' % user.dwolla_url
-        logger.debug("funding token %s " % funding_token_req)
         try:
             request = DwollaClient.instance().token.post(funding_token_req)
             return request.body['token']
@@ -113,7 +126,6 @@ def dwolla_get_user_bank_accounts(user):
     to_return = []
     if items:
         for item in items:
-            logger.debug("ITEM: %s " % item['type'])
             if item['type'] == 'bank':
                 to_return.append(item)
 
@@ -170,7 +182,7 @@ def dwolla_create_transfer(purchase):
     request_body = {
         '_links': {
             'source': {
-                'href': 'https://api-sandbox.dwolla.com/funding-sources/%s' % purchase.sender_account_id
+                'href': '%s%s' % (DwollaClient.instance().funding_source_url,purchase.sender_account_id)
             },
             'destination': {
                 'href': purchase.receiver_account_id
@@ -185,9 +197,31 @@ def dwolla_create_transfer(purchase):
 
     transfer = DwollaClient.instance().token.post('transfers',request_body)
 
+    return transfer
 
+def dwolla_send_to_user(deposit):
+
+    request_body = {
+        '_links': {
+            'source': {
+                'href': '%s%s' % (DwollaClient.instance().funding_source_url,deposit.sender_account_id)
+            },
+            'destination': {
+                'href': '%s%s' % (DwollaClient.instance().funding_source_url,deposit.receiver_account_id)
+            }
+        },
+        'amount': {
+            'currency': 'USD',
+            'value': "%0.2f" % (deposit.total,),
+        },
+        'correlationId': deposit.id,
+    }
+
+    transfer = DwollaClient.instance().token.post('transfers',request_body)
 
     return transfer
+
+
 
 def dwolla_get_transfers(user):
 

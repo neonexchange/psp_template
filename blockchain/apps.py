@@ -5,10 +5,8 @@ from logzero import logger
 from twisted.internet import reactor, task
 
 from neo.Network.NodeLeader import NodeLeader
-from neo.Core.Blockchain import Blockchain
 from neo.Implementations.Blockchains.LevelDB.LevelDBBlockchain import LevelDBBlockchain
 from neo.Settings import settings
-from neocore.Fixed8 import Fixed8
 from neo.Implementations.Wallets.peewee.UserWallet import UserWallet
 from neocore.Fixed8 import Fixed8
 from neocore.Cryptography.Crypto import Crypto
@@ -16,13 +14,10 @@ from neo.Core.TX.Transaction import TransactionOutput,ContractTransaction,Transa
 from neo.Core.TX.TransactionAttribute import TransactionAttribute,TransactionAttributeUsage
 from neo.Core.Helper import Helper
 from neo.Core.Blockchain import Blockchain
-from neo.Core.Block import Block
 from neo.SmartContract.ContractParameterContext import ContractParametersContext
-from customer.dwolla import DwollaClient
+from customer.dwolla import DwollaClient,dwolla_send_to_user
+import requests
 
-import json
-import pdb
-import binascii
 
 setup()
 
@@ -47,33 +42,48 @@ def start_blockchain():
         settings.setup('protocol.nex.json')
         settings.set_log_smart_contract_events(False)
 
+        # Start `neo-python`
         blockchain = LevelDBBlockchain(settings.LEVELDB_PATH)
         Blockchain.RegisterBlockchain(blockchain)
         dbloop = task.LoopingCall(Blockchain.Default().PersistBlocks)
         dbloop.start(.1)
         NodeLeader.Instance().Start()
 
+        # subscribe to on new block created event
         Blockchain.PersistCompleted.on_change += on_blockchain_new_block
 
+        # open the wallet and start sync
         wallet = UserWallet.Open(wallet_file, wallet_password)
         wallet_loop = task.LoopingCall(wallet.ProcessBlocks)
         wallet_loop.start(.1)
 
 
+        # start loop to process bank transfers that have been received
         sync_bank_transfer_loop = task.LoopingCall(process_bank_transfers)
         sync_bank_transfer_loop.start(2)
 
+        # start loop to send out gas for bank transfers that have been received
         crypto_transfer_loop = task.LoopingCall(process_crypto_purchases, wallet)
         crypto_transfer_loop.start(3)
 
+        # start loop to check for gas that has been sent to make sure it actually gets confirmed
         pending_crypto_tx_loop = task.LoopingCall(process_pending_blockchain_transactions)
         pending_crypto_tx_loop.start(4)
+
+
+        # start loop to create bank transfers for deposits of crypto
+        process_gas_received_tranfer = task.LoopingCall(process_crypto_received_bank_transfers)
+        process_gas_received_tranfer.start(5)
 
         # every 10 minutes, refresh dwolla client token
         refresh_time = 60 * 10
         dwolla_client_refresh_loop = task.LoopingCall(refresh_dwolla_client_token)
         dwolla_client_refresh_loop.start(refresh_time)
 
+        #every 3 minutes, update gas price
+        refresh_time = 60 * 3
+        price_update_looop = task.LoopingCall(update_crypto_prices)
+        price_update_looop.start(refresh_time)
 
     except Exception as e:
         logger.error("Could not start blockchain: %s " % e)
@@ -82,7 +92,7 @@ def start_blockchain():
 
 
 def process_bank_transfers():
-    from customer.models import Purchase
+    from customer.models import Purchase,Deposit
     from customer.dwolla import dwolla_get_url
 
     # loop through incomplete purchases
@@ -96,6 +106,17 @@ def process_bank_transfers():
         except Exception as e:
             logger.error("could not process transfer %s " % e)
 
+    # loop through incomplete deposits
+    for deposit in Deposit.objects.filter(status='pending'):
+        try:
+            transfer = dwolla_get_url(deposit.transfer_url)
+            if transfer['status'] != deposit.status:
+                deposit.status = transfer['status']
+                deposit.save()
+                deposit.user.pending_deposit = None
+                deposit.user.save()
+        except Exception as e:
+            logger.error("Could not process deposit transfer %s " % e)
 
 def process_crypto_purchases(wallet):
 
@@ -191,10 +212,20 @@ def refresh_dwolla_client_token():
     DwollaClient.instance().refresh()
 
 
-
+def update_crypto_prices():
+    from blockchain.models import Price
+    req = requests.get('https://api.coinmarketcap.com/v1/ticker/?limit=0', json=True)
+    prices_wanted = ['NEO', 'GAS', 'RPX', ]
+    for item in req.json():
+        if item['symbol'] in prices_wanted:
+            symbol = item['symbol']
+            usd_price = item['price_usd']
+            price,created = Price.objects.get_or_create(asset=symbol)
+            price.usd = usd_price
+            price.save()
 
 def on_blockchain_new_block(block):
-    print("on blockchain new block! %s " % block.Index)
+#    print("on blockchain new block! %s " % block.Index)
     contract_tx_type = int.from_bytes(TransactionType.ContractTransaction, 'little')
     for tx in block.FullTransactions:
         if tx.Type == contract_tx_type:
@@ -210,20 +241,20 @@ def process_possible_transaction_match(transaction):
         if attr.Usage == TransactionAttributeUsage.Remark3:
             try:
                 invoice_id = attr.Data.decode('utf-8')
-                deposit = Deposit.objects.get(invoice_id=invoice_id, status='pending')
+                deposit = Deposit.objects.get(invoice_id=invoice_id, status='awaiting_deposit')
                 check_deposit_and_tx(deposit, transaction)
             except Deposit.DoesNotExist:
                 logger.info("Could not find deposit with invoice %s " % attr.Data)
             except Exception as e:
-                logger.info("Could not decode data into utf-8 %s %s" % (attr.Data,e))
+                logger.info("Could not generate deposit/tx %s %s" % (attr.Data,e))
 
 
 def check_deposit_and_tx(deposit, transaction):
 
-    from blockchain.models import BlockchainTransfer
-
+    from blockchain.models import BlockchainTransfer,Price
+    price_gas = float(Price.objects.get(asset='GAS').usd)
     deposit_total = Fixed8.Zero()
-    sender_addr = transaction.G
+    sender_addr = None
     for output in transaction.outputs:
 
         if output.ScriptHash == deposit.deposit_wallet.wallet.GetStandardAddress():
@@ -249,8 +280,26 @@ def check_deposit_and_tx(deposit, transaction):
             deposit.blockchain_transfer = bc_transfer
             deposit.neo_sender_address = bc_transfer.from_address
             deposit.amount = amount
+            deposit.gas_price = price_gas
+            deposit.total_gas = price_gas * amount
+            deposit.total_fee = deposit.fee * deposit.total_gas
+            deposit.total = deposit.total_gas - deposit.total_fee
+            deposit.deposit_wallet.transfer = bc_transfer
+            deposit.deposit_wallet.save()
             deposit.save()
         except Exception as e:
             logger.error("Could not create transfer... %s " % e)
 
+
+
+def process_crypto_received_bank_transfers():
+    from customer.models import Deposit
+    for deposit in Deposit.objects.filter(status='gas_received'):
+        try:
+            transfer = dwolla_send_to_user(deposit)
+            deposit.transfer_url = transfer.headers['location']
+            deposit.status = 'pending'
+            deposit.save()
+        except Exception as e:
+            logger.error("Could not create transfer %s " % e)
 

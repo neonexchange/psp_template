@@ -1,3 +1,4 @@
+from logzero import logger
 from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser, PermissionsMixin
@@ -5,11 +6,10 @@ from django.contrib.auth.models import (
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-import json
 from localflavor.us.models import USZipCodeField,USStateField
 from django.conf import settings
 
-from .dwolla import dwolla_create_user,dwolla_update_user,dwolla_get_url
+from .dwolla import dwolla_create_user,dwolla_update_user,dwolla_get_url,DwollaClient
 
 
 class PSPUserManager(BaseUserManager):
@@ -86,7 +86,7 @@ class PSPUser(AbstractBaseUser, PermissionsMixin):
 
     objects = PSPUserManager()
 
-    pending_deposit = models.ForeignKey('customer.Deposit', blank=True,null=True, on_delete=models.CASCADE)
+    pending_deposit = models.ForeignKey('customer.Deposit', blank=True,null=True, on_delete=models.SET_NULL)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name','last_name','address1','city','postal_code','state','ssn_lastfour','date_of_birth']
@@ -129,7 +129,6 @@ class PSPUser(AbstractBaseUser, PermissionsMixin):
 
     def to_json(self):
         datetostr = self.date_of_birth.strftime('%Y-%m-%d')
-        print("datestr: %s " % datetostr)
 
         return {
             'email':self.email,
@@ -160,7 +159,7 @@ def on_pspuser_saved(sender, instance, created,**kwargs):
     else:
         dwolla_sync_result = dwolla_update_user(instance)
 
-    print("dwolla sync result: %s " % dwolla_sync_result)
+    logger.info("dwolla sync result: %s " % dwolla_sync_result)
 
 
 class ReceiveableAccount(models.Model):
@@ -177,6 +176,10 @@ class ReceiveableAccount(models.Model):
     def customer_url(self):
         return self.user.dwolla_url
 
+    @property
+    def funding_url(self):
+        return '%s%s' % (DwollaClient.instance().funding_source_url, self.account_id)
+
     @staticmethod
     def Default():
         try:
@@ -191,11 +194,13 @@ ASSET_CHOICES = [
     ('GAS','GAS'),
     ('NEO','NEO'),
     ('NEX','NEX'),
+    ('RPX','RPX')
 ]
 
 PURCHASE_STATUS = [
-    ('pending','pending'),
+    ('awaiting_deposit','awaiting_deposit'),
     ('gas_received','gas_received'),
+    ('pending', 'pending'),
     ('processed','processed'),
     ('failed', 'failed'),
     ('complete','complete')
@@ -227,6 +232,7 @@ class Purchase(models.Model):
     transfer_url = models.CharField(max_length=128)
 
     date_created = models.DateTimeField(auto_now_add=True)
+    date_updated = models.DateTimeField(auto_now=True)
 
     failure_reason = models.CharField(max_length=1024, blank=True, null=True)
 
@@ -242,7 +248,7 @@ class Deposit(models.Model):
 
     amount = models.FloatField(default=1.00, blank=True,null=True)
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
 
     sender_account_id = models.CharField(max_length=128)
 
@@ -259,11 +265,12 @@ class Deposit(models.Model):
     total = models.FloatField(blank=True,null=True)
 
 
-    status = models.CharField(max_length=32, choices=PURCHASE_STATUS, default='pending')
+    status = models.CharField(max_length=32, choices=PURCHASE_STATUS, default='awaiting_deposit')
 
     transfer_url = models.CharField(max_length=128, blank=True,null=True)
 
     date_created = models.DateTimeField(auto_now_add=True)
+    date_updated = models.DateTimeField(auto_now=True)
 
     failure_reason = models.CharField(max_length=1024, blank=True, null=True)
 
@@ -279,6 +286,15 @@ class Deposit(models.Model):
 
     @property
     def receiver_account(self):
-
-        url = 'https://api-sandbox.dwolla.com/funding-sources/%s' % self.receiver_account_id
+        url = '%s%s' % (DwollaClient.instance().funding_source_url,self.receiver_account_id)
         return dwolla_get_url(url)
+
+
+    @property
+    def transfer_id(self):
+        if self.transfer_url:
+            try:
+                return self.transfer_url.split('/')[-1]
+            except Exception as e:
+                logger.info("Could not construct tranfer id %s " % e)
+        return None

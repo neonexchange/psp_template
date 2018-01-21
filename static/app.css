@@ -15,7 +15,7 @@ body,html {
 .transaction-details {
     display: none;
 }
-.transaction-details pre {
+.transaction-details pre, pre.tx-json {
     background-color: black;
     color: whitesmoke;
     padding:20px;

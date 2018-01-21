@@ -9,26 +9,24 @@ from django.contrib import messages
 from .forms import PSPUserCreationForm,PSPProfileForm,BankAccountForm,PurchaseForm,DepositForm,CancelDepositForm
 from .dwolla import *
 from .models import ReceiveableAccount,Deposit
-from blockchain.models import DepositWallet
+from blockchain.models import DepositWallet,Price
+from uuid import uuid4
 import requests
 from logzero import logger
 
-def get_gas_price():
-    try:
-        return requests.get('https://api.coinmarketcap.com/v1/ticker/GAS/').json()[0]['price_usd']
-    except Exception as e:
-        logger.error("Could not determine gas price %s " % e)
-    return 60.0
-
 
 class TransactionView(View):
-    template_name = 'account/transactions.html'
+    template_name = 'transactions.html'
 
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
 
-
+        purchases = request.user.purchase_set.all()
+        deposits = request.user.deposit_set.all()
+        pending_deposit = request.user.pending_deposit
+        all_tx = list(purchases) + list(deposits)
+        all_tx = sorted(all_tx,key=lambda x: x.date_created, reverse=True)
+        return render(request, self.template_name,{ 'all_tx':all_tx,'pending_deposit': pending_deposit})
 
 class ProfileView(View):
     form_class = PSPProfileForm
@@ -43,9 +41,8 @@ class ProfileView(View):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST, instance=request.user)
         if form.is_valid():
-            updated = form.save()
+            form.save()
             messages.add_message(request, messages.INFO, 'Profile Updated!')
-
             return HttpResponseRedirect('/customer/profile/')
 
         return render(request, self.template_name, {'form': form})
@@ -137,8 +134,7 @@ class SellView(View):
 
         form = self.form_class(accounts=bank_accounts)
 
-        return render(request, self.template_name, {'gas_price':get_gas_price(),
-                                                    'has_bank_accounts':has_bank_accounts,
+        return render(request, self.template_name, {'has_bank_accounts':has_bank_accounts,
                                                     'has_pending_deposit':request.user.pending_deposit,
                                                     'can_sell':can_sell,
                                                     'form':form} )
@@ -155,8 +151,9 @@ class SellView(View):
 
             deposit = form.save(commit=False) # type: Deposit
             deposit.user = request.user
-            deposit.sender_account_id = ReceiveableAccount.Default().customer_url
+            deposit.sender_account_id = ReceiveableAccount.Default().account_id
             deposit.deposit_wallet = DepositWallet.create(request.user)
+            deposit.invoice_id = uuid4()
             deposit.save()
 
             request.user.pending_deposit = deposit
@@ -170,8 +167,7 @@ class SellView(View):
             has_bank_accounts = True
         can_sell = has_bank_accounts and request.user.pending_deposit is None
 
-        return render(request, self.template_name, {'gas_price':get_gas_price(),
-                                                    'has_bank_accounts':has_bank_accounts,
+        return render(request, self.template_name, {'has_bank_accounts':has_bank_accounts,
                                                     'has_pending_deposit':request.user.pending_deposit,
                                                     'can_sell':can_sell,
                                                     'form':form} )
@@ -191,8 +187,7 @@ class DepositCryptoView(View):
         deposit = request.user.pending_deposit
         deposit_wallet = deposit.deposit_wallet
 
-        return render(request, self.template_name, {'gas_price':get_gas_price(),
-                                                    'deposit':deposit,
+        return render(request, self.template_name, {'deposit':deposit,
                                                     'deposit_wallet':deposit_wallet} )
 
 class CancelDepositCryptoView(View):
@@ -234,7 +229,7 @@ class PurchaseView(View):
 
         form = self.form_class(accounts=bank_accounts)
 
-        return render(request, self.template_name, {'form':form,'gas_price':get_gas_price(),'has_bank_accounts':has_bank_accounts} )
+        return render(request, self.template_name, {'form':form,'has_bank_accounts':has_bank_accounts} )
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
@@ -250,7 +245,7 @@ class PurchaseView(View):
         if form.is_valid():
             try:
                 purchase = form.save(commit=False)
-                purchase.gas_price = float(get_gas_price())
+                purchase.gas_price = float(Price.objects.get(asset='GAS').usd)
                 purchase.total_gas = purchase.gas_price * purchase.amount
                 purchase.total_fee = .05 * purchase.total_gas
                 purchase.total = purchase.total_gas + purchase.total_fee
@@ -267,4 +262,4 @@ class PurchaseView(View):
             except Exception as e:
                 messages.add_message(request, messages.ERROR, 'Could not initiate purchase: %s ' % e)
 
-        return render(request, self.template_name, {'form':form,'gas_price':get_gas_price(),'has_bank_accounts':has_bank_accounts} )
+        return render(request, self.template_name, {'form':form,'has_bank_accounts':has_bank_accounts} )
