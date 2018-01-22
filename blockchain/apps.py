@@ -54,8 +54,11 @@ def start_blockchain():
         settings.setup('protocol.nex.json')
         settings.set_log_smart_contract_events(False)
 
+        data_path = "%s/Data/nexnet" % BASE_DIR
+        logger.info("Data path: %s " % data_path)
+
         # Start `neo-python`
-        blockchain = LevelDBBlockchain(settings.LEVELDB_PATH)
+        blockchain = LevelDBBlockchain(data_path)
         Blockchain.RegisterBlockchain(blockchain)
         dbloop = task.LoopingCall(Blockchain.Default().PersistBlocks)
         dbloop.start(.1)
