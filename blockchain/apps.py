@@ -19,6 +19,15 @@ from neo.SmartContract.ContractParameterContext import ContractParametersContext
 from customer.dwolla import DwollaClient,dwolla_send_to_user
 import requests
 import json
+import os
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Logfile settings & setup
+LOGFILE_FN = os.path.join(BASE_DIR, 'psp.log')
+LOGFILE_MAX_BYTES = 5e7  # 50 MB
+LOGFILE_BACKUP_COUNT = 3  # 3 logfiles history
+settings.set_logfile(LOGFILE_FN, LOGFILE_MAX_BYTES, LOGFILE_BACKUP_COUNT)
 
 
 setup()
