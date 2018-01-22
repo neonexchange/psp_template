@@ -77,7 +77,7 @@
                var tenToEigth = 100000000;
                var actualGasAmount = currenttotal * tenToEigth;
                var message = {
-                   to_addr: receiver_addr,
+                   toAddr: receiver_addr,
                    assetId: '602c79718b16e442de58778e148d0b1084e3b2dffd5de6b7b16cee7969282de7',
                    amount: actualGasAmount,
                    transactionAttributes:[
@@ -87,8 +87,10 @@
                        }
                    ]
                };
+
+               window.postMessage({ type: "NEO_EXTENSION_START_TX", payload:message},"*");
                console.log("Message to send: ", message);
-               alert(JSON.stringify(message))
+//               alert(JSON.stringify(message))
            });
         });
     </script>

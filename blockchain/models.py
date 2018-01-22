@@ -33,8 +33,11 @@ class DepositWallet(models.Model):
 
     transfer = models.OneToOneField('blockchain.BlockchainTransfer', blank=True,null=True, on_delete=models.SET_NULL)
 
+    transfer_to_main = models.OneToOneField('blockchain.BlockchainTransfer', related_name='main_transfer', blank=True,null=True, on_delete=models.SET_NULL)
+
     def __str__(self):
         return "%s deposit wallet %s " % (self.depositor.email, self.wallet_file)
+
 
     @property
     def wallet(self):
@@ -43,6 +46,13 @@ class DepositWallet(models.Model):
     @property
     def address(self):
         return UserWallet.ToAddress( self.wallet.GetStandardAddress().Data)
+
+    @staticmethod
+    def next_available_for_retrieval():
+        available = DepositWallet.objects.filter(transfer__isnull=False,transfer_to_main__isnull=True)
+        if available.count():
+            return available.first()
+        return None
 
     @staticmethod
     def create(user):

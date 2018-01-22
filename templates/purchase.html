@@ -36,7 +36,17 @@
                     <div class="col-sm-7">
                         {% bootstrap_field form.sender_account_id %}
                         {% bootstrap_field form.amount %}
-                        {% bootstrap_field form.neo_address %}
+                        <div class="row">
+                            <div class="col-sm-7">
+                                {% bootstrap_field form.neo_address %}
+                            </div>
+                            <div class="col-sm-5">
+                                <div class="form-grop">
+                                    <label style="visibility: hidden">Copy from NEX Extension</label>
+                                    <button type="button" id="copy_addr_from_extension" class="btn btn-primary btn-block">Copy from NEX Extension</button>
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
                     <div class="col-sm-4">
@@ -78,24 +88,28 @@
     <script type="text/javascript">
         var gas_price = {{ price_GAS|floatformat:2 }};
 
-        var fee_total = (gas_price * .05).toFixed(2);
-        $('#id_fee_total').val(fee_total);
-
-        var total = (gas_price + (gas_price * .05)).toFixed(2);
-        $('#id_total').val(total);
+        var update_prices = function(){
+            var purchase_total = $('#id_amount').val();
+            var gas_total = (purchase_total * gas_price).toFixed(2);
+            $('#id_gas_total').val(gas_total);
+            var fee_total = (gas_total * .05).toFixed(2);
+            $('#id_fee_total').val(fee_total);
+            var total = ((purchase_total * gas_price) + (gas_total * .05)).toFixed(2);
+            $('#id_total').val(total);
+            $('#id_purchase_btn').text('Purchase ' + purchase_total + ' Gas')
+        };
 
         $(document).ready(function(){
            $('#id_amount').on('change keyup',function(){
-                var purchase_total = $(this).val();
-                var gas_total = (purchase_total * gas_price).toFixed(2);
-                $('#id_gas_total').val(gas_total);
-                fee_total = (gas_total * .05).toFixed(2);
-                $('#id_fee_total').val(fee_total);
-                total = ((purchase_total * gas_price) + (gas_total * .05)).toFixed(2);
-                $('#id_total').val(total);
-                $('#id_purchase_btn').text('Purchase ' + purchase_total + ' Gas')
+               update_prices()
+           });
+           update_prices();
+
+           $('#copy_addr_from_extension').click(function(){
+               alert("Copy address from nex")
            });
         });
+
     </script>
 
 {% endblock %}

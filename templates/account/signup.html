@@ -38,10 +38,27 @@
           {% if redirect_field_value %}
           <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
           {% endif %}
+
           <button type="submit" class="btn btn-success btn-lg">{% trans "Sign Up" %} <i class="fa fa-sign-in"></i></button>
         </form>
 
     </div>
 </div>
+
+{% endblock %}
+
+{% block footer_js %}
+    {{ block.super }}
+    <script src="https://cdn.jsdelivr.net/gh/atatanasov/gijgo@1.7.3/dist/combined/js/gijgo.min.js" type="text/javascript"></script>
+    <link href="https://cdn.jsdelivr.net/gh/atatanasov/gijgo@1.7.3/dist/combined/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#id_date_of_birth').datepicker({
+                uiLibrary:'bootstrap4',
+                format:'yyyy-mm-dd'
+            })
+        });
+    </script>
 
 {% endblock %}

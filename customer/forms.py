@@ -24,7 +24,7 @@ class PSPUserCreationForm(forms.ModelForm):
         choices = list(STATE_CHOICES)
         choices[0] = ('', 'Select a State')
         self.fields['state'] = USStateField(widget=forms.Select(choices=choices))
-
+        self.fields['date_of_birth'].widget.attrs = {'placeholder':'Date of birth: YYYY-MM-DD'}
 
     def clean_password2(self):
         # Check that the two password entries match

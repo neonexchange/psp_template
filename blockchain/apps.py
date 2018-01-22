@@ -9,6 +9,7 @@ from neo.Implementations.Blockchains.LevelDB.LevelDBBlockchain import LevelDBBlo
 from neo.Settings import settings
 from neo.Implementations.Wallets.peewee.UserWallet import UserWallet
 from neocore.Fixed8 import Fixed8
+from neocore.UInt160 import UInt160
 from neocore.Cryptography.Crypto import Crypto
 from neo.Core.TX.Transaction import TransactionOutput,ContractTransaction,Transaction,TransactionType
 from neo.Core.TX.TransactionAttribute import TransactionAttribute,TransactionAttributeUsage
@@ -17,6 +18,7 @@ from neo.Core.Blockchain import Blockchain
 from neo.SmartContract.ContractParameterContext import ContractParametersContext
 from customer.dwolla import DwollaClient,dwolla_send_to_user
 import requests
+import json
 
 
 setup()
@@ -25,7 +27,8 @@ setup()
 
 wallet_file = 'psp_wallet.db3'
 wallet_password = 'passwordpassword'
-
+wallet_str_addr = 'AXv5hfEmQiKKiSrfSHyQXVh7XjLLFrMiw3'
+wallet_addr_uint = UInt160(data=bytearray(b'\xb1\x0fg 9n~\xfb\x0e\x17\xbe\x07\x05F\x04n\x14^\xf6\xf5'))
 
 class BlockchainConfig(AppConfig):
     name = 'blockchain'
@@ -57,6 +60,8 @@ def start_blockchain():
         wallet_loop = task.LoopingCall(wallet.ProcessBlocks)
         wallet_loop.start(.1)
 
+        monitor_loop = task.LoopingCall(monitor_wallet_loop, wallet)
+        monitor_loop.start(30)
 
         # start loop to process bank transfers that have been received
         sync_bank_transfer_loop = task.LoopingCall(process_bank_transfers)
@@ -80,16 +85,25 @@ def start_blockchain():
         dwolla_client_refresh_loop = task.LoopingCall(refresh_dwolla_client_token)
         dwolla_client_refresh_loop.start(refresh_time)
 
-        #every 3 minutes, update gas price
+        # every 3 minutes, update gas price
         refresh_time = 60 * 3
         price_update_looop = task.LoopingCall(update_crypto_prices)
         price_update_looop.start(refresh_time)
+
+
+        # start loop to move assets sold to the system to deposit wallets into the main wallet
+        refresh_time = 60
+        move_deposits_to_main_wallet = task.LoopingCall(move_deposits_to_wallet)
+        move_deposits_to_main_wallet.start(refresh_time)
 
     except Exception as e:
         logger.error("Could not start blockchain: %s " % e)
 
 
-
+def monitor_wallet_loop(wallet):
+    available_gas = wallet.GetBalance(Blockchain.SystemCoin().Hash)
+    available_neo = wallet.GetBalance(Blockchain.SystemShare().Hash)
+    logger.info("%s [GAS]: %s   [NEO] %s " % (wallet.Addresses[0], available_gas, available_neo))
 
 def process_bank_transfers():
     from customer.models import Purchase,Deposit
@@ -303,3 +317,73 @@ def process_crypto_received_bank_transfers():
         except Exception as e:
             logger.error("Could not create transfer %s " % e)
 
+
+
+def move_deposits_to_wallet():
+
+    from blockchain.models import DepositWallet,BlockchainTransfer
+
+    if len(NodeLeader.Instance().Peers) < 1:
+        return
+
+    to_move = DepositWallet.next_available_for_retrieval() # type:DepositWallet
+
+    if to_move:
+
+        print("deposit to move %s %s " % (to_move, to_move.transfer))
+
+        wallet = UserWallet.Open(to_move.wallet_file, to_move.wallet_pass)
+        transfer = to_move.transfer
+
+        tx, height = Blockchain.Default().GetTransaction(transfer.transaction_id)
+        block = Blockchain.Default().GetBlockByHeight(height)
+        wallet.ProcessNewBlock(block)
+
+        move_tx = create_move_to_main_tx(wallet,transfer,to_move.deposit)
+
+        if move_tx:
+            print("move tx!")
+            try:
+                bc_transfer = BlockchainTransfer.objects.create(
+                    to_address = wallet_str_addr,
+                    from_address = to_move.address,
+                    amount = transfer.amount,
+                    transaction_id = move_tx.Hash.ToString(),
+                    status = 'pending',
+                    start_block = Blockchain.Default().Height,
+                )
+                to_move.transfer_to_main = bc_transfer
+                to_move.save()
+            except Exception as e:
+                logger.error("Could not transfer funds from deposit wallet %s" % e)
+
+        wallet.Close()
+
+def create_move_to_main_tx(deposit_wallet, transfer, deposit):
+    tx = ContractTransaction()
+
+    amount = Fixed8.FromDecimal(transfer.amount)
+    tx.outputs = [TransactionOutput(
+        AssetId=Blockchain.SystemCoin().Hash,
+        Value=amount,
+        script_hash=wallet_addr_uint,
+    )]
+    tx.Attributes = [
+        TransactionAttribute(TransactionAttributeUsage.Remark1,
+        ('For deposit invoice %s' % deposit.invoice_id).encode('utf-8')),
+        TransactionAttribute(TransactionAttributeUsage.Remark2,
+        ('Sale price USD %0.2f ' % deposit.total).encode('utf-8'))
+    ]
+
+    tx = deposit_wallet.MakeTransaction(tx)
+    context = ContractParametersContext(tx)
+    deposit_wallet.Sign(context)
+
+    if context.Completed:
+        tx.scripts = context.GetScripts()
+        relayed = NodeLeader.Instance().Relay(tx)
+        if relayed:
+            deposit_wallet.SaveTransaction(tx)
+            return tx
+
+    return None
