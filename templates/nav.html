@@ -1,38 +1,38 @@
-<nav class="navbar navbar-toggleable-md">
+<nav class="navbar navbar-toggleable-md fixed-top">
   <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <a class="navbar-brand" href="/">Payment Service Provider</a>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
+    <ul class="navbar-nav ml-auto">
 
         {% if request.user.pk %}
       <li class="nav-item">
-        <a class="nav-link {% if '/purchase' in request.path%}active{% endif %}" href="{% url 'purchase' %}">Purchase</a>
+        <a class="nav-link purchase-link {% if '/purchase' in request.path%}active{% endif %}" href="{% url 'purchase' %}"><i class="icon-arrow-down-circle icon"></i>Purchase</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if '/sell' in request.path%}active{% endif %}" href="{% url 'sell' %}">Sell</a>
+        <a class="nav-link {% if '/sell' in request.path%}active{% endif %}" href="{% url 'sell' %}"><i class="icon-arrow-up-circle icon"></i>Sell</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if '/transactions' in request.path%}active{% endif %}" href="{% url 'transactions' %}">Transactions</a>
+        <a class="nav-link {% if '/transactions' in request.path%}active{% endif %}" href="{% url 'transactions' %}"><i class="icon-paper-plane icon"></i>Account activity</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if '/profile' in request.path%}active{% endif %}" href="{% url 'profile' %}">Profile</a>
+        <a class="nav-link {% if '/accounts' in request.path%}active{% endif %}" href="{% url 'bank_accounts' %}"><i class="icon-wallet icon"></i>Bank accounts</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if '/accounts' in request.path%}active{% endif %}" href="{% url 'bank_accounts' %}">My Bank Accounts</a>
+        <a class="nav-link {% if '/profile' in request.path%}active{% endif %}" href="{% url 'profile' %}"><i class="icon-user icon"></i>Profile</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+        <a class="nav-link" href="{% url 'logout' %}"><i class="icon-logout icon"></i>Sign out</a>
       </li>
 
         {% else %}
       <li class="nav-item">
-        <a class="nav-link {% if 'signup' in request.path%}active{% endif %}" href="{% url 'signup' %}">Signup</a>
+        <a class="nav-link {% if 'signup' in request.path%}active{% endif %}" href="{% url 'signup' %}"><i class="icon-logout icon"></i>Create an account</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if 'login' in request.path%}active{% endif %}" href="{% url 'login' %}">Login</a>
+        <a class="nav-link {% if 'login' in request.path%}active{% endif %}" href="{% url 'login' %}"><i class="icon-login icon"></i>Sign in</a>
       </li>
 
         {% endif %}

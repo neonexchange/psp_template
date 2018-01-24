@@ -1,15 +1,44 @@
 body,html {
-
-    background-color: #efefef;
+    font-family: 'Hind Madurai', sans-serif;
+    background-color: #F2F4F6;
+    -webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale; 
 }
 
 
+/*********************************************
+
+Content container
+
+**********************************************/
+
+.container {
+    max-width: 700px;
+    margin-top: 60px;
+}
+
 .content-container {
-    padding: 20px 0;
+    padding: 50px 0;
+}
+
+
+/*********************************************
+
+General styles
+
+**********************************************/
+
+h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    text-align: center;
+    color: #0B124E;
 }
 
 .card {
     margin: 10px 0;
+    border: none;
+    border-radius: 0.5rem;
 }
 
 .transaction-details {
@@ -22,29 +51,59 @@ body,html {
     font-size:70%;
 }
 
-
-/* nav bar */
-
-nav {
-    background-color: black;
+.form-group label {
+    color: #212C90;
+    font-weight: 600;
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
 }
 
+p {
+    color: #3A4077;
+}
+
+/*********************************************
+
+Main navigation
+
+**********************************************/
+
+nav {
+    background-color: #1B2792; 
+    border-bottom: 3px solid #7298FF;
+}
+
+.navbar {
+    padding: 0.75rem 1rem;
+}
+
+.navbar-toggleable-md .navbar-nav .nav-link {
+    padding: 0 0.75rem;
+}
 
 nav .navbar-brand {
     font-weight: bold;
-    color:white;
+    color: white;
 }
 
 .navbar-nav .nav-link {
-    color: #efefef;
+    color: #8895EA;
 }
-.navbar-nav .nav-link:hover, .navbar-nav .nav-link.active {
-    text-decoration: underline;
+.navbar-nav .nav-link:hover{
+    color: #ffffff;
+}
+
+.navbar-nav .nav-link.active {
+    font-weight: 500;
+    color: #ffffff;
 }
 
 
+/*********************************************
 
-/* forms */
+Forms
+
+**********************************************/
 
 .is-invalid input {
     border-color: #cc1111;
@@ -59,9 +118,99 @@ form.signup .form-group label {
     display: none;
 }
 
+.form-control {
+  color: #6A6C7E;
+  border: 1px solid rgba(204, 211, 209, 1.0);
+  border-radius: 0.25rem;
+  font-family: 'Hind Madurai', sans-serif;
+}
 
-/* add bank account */
+.form-control::-ms-expand {
+  background-color: transparent;
+  border: 0;
+}
+
+.form-control:focus {
+  color: #0B124E;
+  background-color: #fff;
+  border-color: #7298FF;
+  outline: none;
+}
+
+.form-control::-webkit-input-placeholder {
+  color: #6A6C7E;
+  opacity: 1;
+}
+
+.form-control::-moz-placeholder {
+  color: #6A6C7E;
+  opacity: 1;
+}
+
+.form-control:-ms-input-placeholder {
+  color: #6A6C7E;
+  opacity: 1;
+}
+
+.form-control::placeholder {
+  color: #6A6C7E;
+  opacity: 1;
+}
+
+.form-control:disabled, .form-control[readonly] {
+  background-color: #eceeef;
+  opacity: 1;
+}
+
+.form-control:disabled {
+  cursor: not-allowed;
+}
+
+.form-group .total-label {
+    font-size: 1rem;
+    font-weight: 300;
+}
+
+
+/*********************************************
+
+Add a bank account
+
+**********************************************/
 
 #iavContainer {
     background:white;
+}
+
+
+/*********************************************
+
+Total containers
+
+**********************************************/
+
+.total-container {
+    background-color: #F7F8FC;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+
+/*********************************************
+
+Primary / secondary buttons
+
+**********************************************/
+
+.btn-primary {
+    font-weight: 500;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #212C90;
+    font-family: 'Hind Madurai', sans-serif;
+}
+
+.btn-primary:hover {
+    color: #fff;
+    background-color: #2D3AB2;
 }
