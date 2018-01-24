@@ -36,17 +36,17 @@
                         <input type="number" name="amount" value="{{ deposit.amount }}" id="id_amount" placeholder="Amount" title="" class="form-control" step="any">
                     </div>
                     <div class="form-group">
-                        <label for="id_gas_total">Total Gas Price @ ${{ price_GAS|floatformat:2 }}</label>
-                        <input id="id_gas_total"  class="form-control" type="number" readonly value="{{ price_GAS|floatformat:2 }}">
+                        <label for="id_gas_total">Total Gas Price</label>
+                        <p id="id_gas_total"  class="form-control">{{ price_GAS|floatformat:2 }}</p>
                     </div>
                     <div class="form-group">
                         <label for="id_fee_total">Total Fee <strong>5%</strong></label>
-                        <input id="id_fee_total"  class="form-control" type="number" readonly value="">
+                        <p id="id_fee_total"  class="form-control"></p>
                     </div>
 
                     <div class="form-group">
                         <label for="id_total">Estimated Payout</label>
-                        <input id="id_total" class="form-control" type="number" readonly value="">
+                        <p id="id_total" class="form-control"></p>
                     </div>
                 </div>
             </div>

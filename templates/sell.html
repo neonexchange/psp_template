@@ -40,6 +40,9 @@
                     <p>You must have a bank account in order to sell your crypto.</p>
                 </div>
             {% endif %}
+
+            {% if has_bank_accounts %}
+
             <form action="{% url 'sell'%}" method="post">
                 {% csrf_token %}
 
@@ -52,16 +55,16 @@
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label for="id_gas_total">Total Gas Price</label>
-                            <input id="id_gas_total"  class="form-control" type="number" readonly value="{{ price_GAS|floatformat:2 }}">
+                            <p id="id_gas_total"  class="form-control">{{ price_GAS|floatformat:2 }}</p>
                         </div>
                         <div class="form-group">
                             <label for="id_fee_total">Total Fee <strong>5%</strong></label>
-                            <input id="id_fee_total"  class="form-control" type="number" readonly value="">
+                            <p id="id_fee_total"  class="form-control"></p>
                         </div>
 
                         <div class="form-group">
                             <label for="id_total">Estimated Payout</label>
-                            <input id="id_total" class="form-control" type="number" readonly value="">
+                            <p id="id_total" class="form-control"></p>
                         </div>
                     </div>
                 </div>
@@ -69,6 +72,7 @@
                 </fieldset>
 
             </form>
+            {% endif %}
         </div>
     </div>
 
@@ -85,20 +89,20 @@
         var gas_price = {{ price_GAS|floatformat:2 }};
 
         var fee_total = (gas_price * .05).toFixed(2);
-        $('#id_fee_total').val(fee_total);
+        $('#id_fee_total').text(fee_total);
 
         var total = (gas_price - (gas_price * .05)).toFixed(2);
-        $('#id_total').val(total);
+        $('#id_total').text(total);
 
         $(document).ready(function(){
            $('#id_amount').on('change keyup',function(){
                 var purchase_total = $('#id_amount').val();
                 var gas_total = (purchase_total * gas_price).toFixed(2);
-                $('#id_gas_total').val(gas_total);
+                $('#id_gas_total').text(gas_total);
                 fee_total = (gas_total * .05).toFixed(2);
-                $('#id_fee_total').val(fee_total);
+                $('#id_fee_total').text(fee_total);
                 total = ((purchase_total * gas_price) - (gas_total * .05)).toFixed(2);
-                $('#id_total').val(total);
+                $('#id_total').text(total);
                 $('#id_purchase_btn').text('Begin deposit of ' + purchase_total + ' Gas')
            });
         });
