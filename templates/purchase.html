@@ -9,10 +9,9 @@
 
 {% block content %}
 <h1>{% trans "Purchase Crypto" %}</h1>
+<p class="text-center">{% trans "Purchase a cryptocurrency below using one of your linked bank accounts" %}</p>
 
     {% if has_bank_accounts %}
-
-    <a href="{% url 'bank_accounts_create' %}" class="btn btn-link">Add Another Bank Account</a>
 
     {% else %}
     <div class="card card-block">
@@ -36,42 +35,43 @@
 
                 <fieldset {% if not has_bank_accounts %}disabled{% endif %}>
                 <div class="row justify-content-between">
-                    <div class="col-sm-7">
+                    <div class="col-sm-12">
                         {% bootstrap_field form.sender_account_id %}
                         {% bootstrap_field form.amount %}
                         <div class="row">
-                            <div class="col-sm-7">
+                            <div class="col-sm-8">
                                 {% bootstrap_field form.neo_address %}
                             </div>
-                            <div class="col-sm-5">
-                                <div class="form-grop">
-                                    <label style="visibility: hidden">Copy from NEX Extension</label>
-                                    <button type="button" id="copy_addr_from_extension" class="btn btn-primary btn-block">Copy from NEX Extension</button>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label style="visibility: hidden">Copy from NEX</label>
+                                    <button type="button" id="copy_addr_from_extension" class="btn btn-primary btn-block">Copy from NEX</button>
                                 </div>
                             </div>
                         </div>
 
                     </div>
-                    <div class="col-sm-4">
+                    
+                    <!-- Total denoter -->
+                    <div class="col-sm-12 total-container">
+                        <div class="row">
+                            <div class="form-group col-sm-4">
+                                <label for="id_gas_total" class="total-label text-center">Total Gas Price</label>
+                                <input id="id_gas_total"  class="form-control" readonly value="{{ price_GAS|floatformat:2 }}">
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label for="id_fee_total" class="total-label text-center">Total Fee <strong>5%</strong></label>
+                                <input id="id_fee_total"  class="form-control" readonly value="">
+                            </div>
 
-
-
-                        <div class="form-group">
-                            <label for="id_gas_total">Total Gas Price</label>
-                            <input id="id_gas_total"  class="form-control" type="number" readonly value="{{ price_GAS|floatformat:2 }}">
-                        </div>
-                        <div class="form-group">
-                            <label for="id_fee_total">Total Fee <strong>5%</strong></label>
-                            <input id="id_fee_total"  class="form-control" type="number" readonly value="">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="id_total">Estimated Total</label>
-                            <input id="id_total" class="form-control" type="number" readonly value="">
+                            <div class="form-group col-sm-4">
+                                <label for="id_total" class="total-label text-center">Estimated Total</label>
+                                <input id="id_total" class="form-control" readonly value="">
+                            </div>
                         </div>
                     </div>
                 </div>
-                <button type="submit" id="id_purchase_btn" class="btn btn-success btn-lg">Purchase 1 Gas</button>
+                <button type="submit" id="id_purchase_btn" class="btn btn-primary">Purchase 1 Gas</button>
                 </fieldset>
 
             </form>
