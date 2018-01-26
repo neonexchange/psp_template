@@ -27,6 +27,7 @@
 
   "ApplicationConfiguration": {
     "DataDirectoryPath": "/Users/thomassaunders/Workshop/nex_psp/Data/nexnet",
+    "RPCPort": 20332,
     "NodePort": 20333,
     "WsPort": 20334,
     "UriPrefix": [ "http://*:20332"],

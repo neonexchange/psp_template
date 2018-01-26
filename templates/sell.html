@@ -67,6 +67,7 @@
                                 <p class="text-center total-label total-important">You will recieve</p>
                                 <p id="id_total" class="text-center total-amount total-important"></p>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -112,6 +113,7 @@
                 total = ((purchase_total * gas_price) - (gas_total * .05)).toFixed(2);
                 $('#id_total').text('$' + (total));
                 $('#id_purchase_btn').text('Sell ' + purchase_total + ' Gas')
+
            });
         });
     </script>

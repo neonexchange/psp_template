@@ -101,12 +101,12 @@ class BlockchainTransfer(models.Model):
                tx,height = Blockchain.Default().GetTransaction(self.transaction_id)
                return tx
             except Exception as e:
-                logger.debug("Could not get transaction %s " % e)
+                print("Could not get transaction %s " % e)
         return None
 
     @property
     def tx_json(self):
-        if self.transaction_id:
+        if self.transaction:
 
             jsn = self.transaction.ToJson()
 
@@ -118,6 +118,7 @@ class BlockchainTransfer(models.Model):
                     logger.debug("Could not unhex attribute data: %s %s " % (e, attr_data))
 
             return json.dumps(jsn, indent=4)
+
         return {}
 
     @property
