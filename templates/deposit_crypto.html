@@ -92,28 +92,44 @@
 //               alert(JSON.stringify(message))
            });
 
-            window.addEventListener('message', function(event) {
-                switch (event.type) {
-                  case 'NEO_EXTENSION_TX_STATUS': {
-                    switch (event.meta.status) {
-                      case 'REJECTED':
-                        console.log('Update the UI to refelect it is rejected with the error:' + event.error);
+            window.addEventListener(
+              "message",
+              function(event) {
+                var type = event.data.type;
+                var status = event.data.meta.status;
+                var error = event.data.error;
+                var payload = event.data.payload;
+
+                switch (type) {
+                  case "NEO_EXTENSION_TX_STATUS": {
+                    switch (status) {
+                      case "REJECTED":
+                        console.log(
+                          "Update the UI to refelect it is rejected with the error:", error
+                        );
                         break;
-                      case 'PENDING':
-                        console.log('Update the UI to refelect it is pending with the payload' + event.payload);
+                      case "PENDING":
+                        console.log(
+                          "Update the UI to refelect it is pending with the payload",
+                            payload
+                        );
                         break;
-                      case 'COMPLETED':
-                        console.log('Update the UI to refelect it is completed with the payload' + event.payload);
+                      case "COMPLETED":
+                        console.log(
+                          "Update the UI to refelect it is completed with the payload",
+                            payload
+                        );
                         break;
                       default:
                     }
-                    break
+                    break;
                   }
                   default:
                 }
               },
               false
-            )
+            );
+           
         });
     </script>
 
