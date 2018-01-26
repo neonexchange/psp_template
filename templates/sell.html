@@ -8,7 +8,9 @@
 
 
 {% block content %}
-<h1>{% trans "Sell Crypto" %}</h1>
+<h1>{% trans "Sell cryptocurrency" %}</h1>
+<p class="text-center larger-body-copy">{% trans "Deposit your cryptocurrencies and receive fiat back" %}</p>
+<!--<hr class="dividing-line">-->
 
     {% if has_bank_accounts %}
 
@@ -25,12 +27,9 @@
         <div class="col-12">
 
         <div class="card card-block">
-            <h4 class="card-title">Sell Gas ( Current Price:  ${{ price_GAS|floatformat:2 }} )</h4>
+<!--            <h4 class="card-title">Sell Gas ( Current Price:  ${{ price_GAS|floatformat:2 }} )</h4>-->
 
             {% if can_sell %}
-            <div class="alert alert-info">
-                Please select a bank account to use to deposit to. The amount below is an estimate of the total you will receive.<br/>The final amount will be determined by how much GAS is sent to the deposit address and the GAS price at the exact time of receipt.
-            </div>
             {% elif has_pending_deposit %}
                 <div class="alert alert-warning">
                     <p>You currently have a <a href="{% url 'deposit-crypto' %}">deposit in progress.</a> Please complete or cancel that deposit before starting a new one.</p>
@@ -40,35 +39,48 @@
                     <p>You must have a bank account in order to sell your crypto.</p>
                 </div>
             {% endif %}
+
+            {% if has_bank_accounts %}
+
             <form action="{% url 'sell'%}" method="post">
                 {% csrf_token %}
 
                 <fieldset {% if not can_sell %}disabled{% endif %}>
                 <div class="row justify-content-between">
-                    <div class="col-sm-7">
+                    <div class="col-sm-12">
                         {% bootstrap_field form.receiver_account_id %}
                         {% bootstrap_field form.amount %}
                     </div>
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label for="id_gas_total">Total Gas Price</label>
-                            <input id="id_gas_total"  class="form-control" type="number" readonly value="{{ price_GAS|floatformat:2 }}">
-                        </div>
-                        <div class="form-group">
-                            <label for="id_fee_total">Total Fee <strong>5%</strong></label>
-                            <input id="id_fee_total"  class="form-control" type="number" readonly value="">
-                        </div>
+                    <!-- Total denoter -->
+                    <div class="col-sm-12 total-container">
+                        <div class="row no-gutters">
+                            <div class="col-sm-4 total-losenge total-losenge-left">
+                                <p class="text-center total-label">Initial Price</p>
+                                <p id="id_gas_total" class="text-center total-amount">{{ price_GAS|floatformat:2 }}</p>
+                            </div>
+                            <div class="col-sm-4 total-losenge total-losenge-middle">
+                                <p class="text-center total-label">Our 5% fee</p>
+                                <p id="id_fee_total" class="text-center total-amount"></p>
+                            </div>
 
-                        <div class="form-group">
-                            <label for="id_total">Estimated Payout</label>
-                            <input id="id_total" class="form-control" type="number" readonly value="">
+                            <div class="col-sm-4 total-losenge total-losenge-right">
+                                <p class="text-center total-label total-important">You will recieve</p>
+                                <p id="id_total" class="text-center total-amount total-important"></p>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <button type="submit" id="id_purchase_btn" class="btn btn-success btn-lg">Begin Deposit of 1 Gas</button>
+                    
+                <p class="alert alert-info text-center">The amount you receive may slightly differ depending on what the GAS price is when it is sold</p>
+                
+                <div class="col-sm centered-button">
+                    <button type="submit" id="id_purchase_btn" class="btn btn-primary">Sell 1 Gas</button>
+                </div>
+                    
                 </fieldset>
 
             </form>
+            {% endif %}
         </div>
     </div>
 
@@ -82,24 +94,24 @@
     {{ block.super }}
 
     <script type="text/javascript">
-        var gas_price = {{ price_GAS|floatformat:2 }};
+        var gas_price = 40.00;
 
         var fee_total = (gas_price * .05).toFixed(2);
-        $('#id_fee_total').val(fee_total);
+        $('#id_fee_total').text(fee_total);
 
         var total = (gas_price - (gas_price * .05)).toFixed(2);
-        $('#id_total').val(total);
+        $('#id_total').text(total);
 
         $(document).ready(function(){
            $('#id_amount').on('change keyup',function(){
                 var purchase_total = $('#id_amount').val();
                 var gas_total = (purchase_total * gas_price).toFixed(2);
-                $('#id_gas_total').val(gas_total);
+                $('#id_gas_total').text('$' + (gas_total));
                 fee_total = (gas_total * .05).toFixed(2);
-                $('#id_fee_total').val(fee_total);
+                $('#id_fee_total').text('$' + (fee_total));
                 total = ((purchase_total * gas_price) - (gas_total * .05)).toFixed(2);
-                $('#id_total').val(total);
-                $('#id_purchase_btn').text('Begin deposit of ' + purchase_total + ' Gas')
+                $('#id_total').text('$' + (total));
+                $('#id_purchase_btn').text('Sell ' + purchase_total + ' Gas')
            });
         });
     </script>

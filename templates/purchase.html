@@ -8,8 +8,9 @@
 
 
 {% block content %}
-<h1>{% trans "Purchase Crypto" %}</h1>
-<p class="text-center">{% trans "Purchase a cryptocurrency below using one of your linked bank accounts" %}</p>
+<h1>{% trans "Purchase cryptocurrency" %}</h1>
+<p class="text-center larger-body-copy">{% trans "Purchasing cryptocurrencies has never been safer, quicker, or easier" %}</p>
+<!--<hr class="dividing-line">-->
 
     {% if has_bank_accounts %}
 
@@ -29,8 +30,8 @@
         <div class="col-12">
 
         <div class="card card-block">
-            <h4 class="card-title">Purchase Gas ( Current Price:  ${{ price_GAS|floatformat:2 }} )</h4>
-            <form action="{% url 'purchase'%}" method="post">
+<!--            <h4 class="card-title">Purchase Gas ( Current Price:  ${{ price_GAS|floatformat:2 }} )</h4>-->
+            <form action="{% url 'purchase'%}" method="post" class="center">
                 {% csrf_token %}
 
                 <fieldset {% if not has_bank_accounts %}disabled{% endif %}>
@@ -45,7 +46,7 @@
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label style="visibility: hidden">Copy from NEX</label>
-                                    <button type="button" id="copy_addr_from_extension" class="btn btn-primary btn-block">Copy from NEX</button>
+                                    <button type="button" id="copy_addr_from_extension" class="btn btn-secondary btn-block">Copy from NEX</button>
                                 </div>
                             </div>
                         </div>
@@ -54,28 +55,28 @@
                     
                     <!-- Total denoter -->
                     <div class="col-sm-12 total-container">
-                        <div class="row">
-                            <div class="form-group col-sm-4">
-                                <label for="id_gas_total" class="total-label text-center">Total Gas Price</label>
-                                <input id="id_gas_total"  class="form-control" readonly value="{{ price_GAS|floatformat:2 }}">
+                        <div class="row no-gutters">
+                            <div class="col-sm-4 total-losenge total-losenge-left">
+                                <p class="text-center total-label">Initial price</p>
+                                <p id="id_gas_total" class="text-center total-amount">{{ price_GAS|floatformat:2 }}</p>
                             </div>
-                            <div class="form-group col-sm-4">
-                                <label for="id_fee_total" class="total-label text-center">Total Fee <strong>5%</strong></label>
-                                <input id="id_fee_total"  class="form-control" readonly value="">
+                            <div class="col-sm-4 total-losenge total-losenge-middle">
+                                <p class="text-center total-label">Our 5% fee</p>
+                                <p id="id_fee_total" class="text-center total-amount"></p>
                             </div>
 
-                            <div class="form-group col-sm-4">
-                                <label for="id_total" class="total-label text-center">Estimated Total</label>
-                                <input id="id_total" class="form-control" readonly value="">
+                            <div class="col-sm-4 total-losenge total-losenge-right">
+                                <p class="text-center total-label total-important">Total to pay</p>
+                                <p id="id_total" class="text-center total-amount total-important"></p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <button type="submit" id="id_purchase_btn" class="btn btn-primary">Purchase 1 Gas</button>
+                <div class="col-sm centered-button">
+                    <button type="submit" id="id_purchase_btn btn-lg" class="btn btn-primary">Purchase 1 Gas</button>
+                </div>
                 </fieldset>
-
             </form>
-
         </div>
     </div>
     {% endif %}    
@@ -95,12 +96,12 @@
         var update_prices = function(){
             var purchase_total = $('#id_amount').val();
             var gas_total = (purchase_total * gas_price).toFixed(2);
-            $('#id_gas_total').val(gas_total);
+            $('#id_gas_total').text('$' + (gas_total));
             var fee_total = (gas_total * .05).toFixed(2);
-            $('#id_fee_total').val(fee_total);
-            var total = ((purchase_total * gas_price) + (gas_total * .05)).toFixed(2);
-            $('#id_total').val(total);
-            $('#id_purchase_btn').text('Purchase ' + purchase_total + ' Gas')
+            $('#id_fee_total').text('$' + (fee_total)) ;
+            var total = ('$' + ((purchase_total * gas_price) + (gas_total * .05)).toFixed(2));
+            $('#id_total').text(total);
+            $('#id_purchase_btn').text('Buy ' + purchase_total + ' Gas instantly')
         };
 
         $(document).ready(function(){

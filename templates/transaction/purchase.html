@@ -5,7 +5,7 @@
                 <p>Payment Status <em>{{ tx.status }}</em></p>
 
                 <hr/>
-                {% if tx.blockchain_transfer %}
+                {% if tx.blockchain_transfer_id > 0 %}
                     <p>Sent {{ tx.amount }} {{ tx.asset }} to {{ tx.neo_address }}</p>
                     <p>Transaction Id: {{ tx.blockchain_transfer.transaction_id }}</p>
                     {% if tx.blockchain_transfer.confirmed_block %}

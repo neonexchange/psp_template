@@ -19,7 +19,7 @@
 {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock %}
 </head>
 {% load i18n humanize %}
-<body>
+<body {% if request.user.pk %}class="loggedin"{%endif%}>
 
 
     {% include 'nav.html' %}
@@ -35,13 +35,13 @@
         <div class="content-container">
 
         {% block content %}
-
-            <h2>Payment service provider template dapp</h2>
-
+            
+            <div class="card card-block">
+                <h2 class="text-center">Payment service provider template</h2>
             {% if request.user.pk %}
                 <a href="{% url 'purchase' %}" class="btn btn-primary">Purchase Crypto</a>
             {% else %}
-                <a href="{% url 'signup' %}" class="btn btn-primary">Sign up!</a>
+                <a href="{% url 'signup' %}" class="btn btn-primary">Sign up now</a>
             {% endif %}
 
             <h4>Current prices</h4>
@@ -49,8 +49,9 @@
                 <li>NEO ${{ price_NEO|floatformat:2 }}</li>
                 <li>GAS ${{ price_GAS|floatformat:2 }}</li>
                 <li>RPX ${{ price_RPX|floatformat:2 }}</li>
-
             </ul>
+                
+            </div>
 
         {% endblock %}
         </div>

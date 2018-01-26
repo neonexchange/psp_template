@@ -58,11 +58,11 @@
         var update_price_ui = function(){
             var purchase_total = $('#id_amount').val();
             var gas_total = (purchase_total * gas_price).toFixed(2);
-            $('#id_gas_total').val(gas_total);
+            $('#id_gas_total').text(gas_total);
             fee_total = (gas_total * .05).toFixed(2);
-            $('#id_fee_total').val(fee_total);
+            $('#id_fee_total').text(fee_total);
             total = ((purchase_total * gas_price) - (gas_total * .05)).toFixed(2);
-            $('#id_total').val(total);
+            $('#id_total').text(total);
         };
 
         $(document).ready(function(){

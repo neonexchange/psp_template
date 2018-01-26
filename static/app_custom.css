@@ -1,8 +1,20 @@
-body,html {
-    font-family: 'Hind Madurai', sans-serif;
-    background-color: #F2F4F6;
-    -webkit-font-smoothing: antialiased;
+body,
+html {
 	-moz-osx-font-smoothing: grayscale; 
+}
+
+body {
+    font-family: 'Hind Madurai', sans-serif;
+    background: url('bootstrapv4/images/sign-in-image-02.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+body.loggedin {
+    font-family: 'Hind Madurai', sans-serif;
+    background: #f2f5f8;
+    background-color: #f2f5f8;
+    background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ecf0f4' fill-opacity='0.91' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: auto;
 }
 
 
@@ -18,7 +30,7 @@ Content container
 }
 
 .content-container {
-    padding: 50px 0;
+    padding: 40px 0;
 }
 
 
@@ -33,12 +45,31 @@ h1 {
     font-weight: 600;
     text-align: center;
     color: #0B124E;
+    margin-bottom: 0.25rem;
+}
+
+p {
+    color: #3A4077;
+}
+
+.larger-body-copy {
+    font-size: 1.05rem;
+    margin-bottom: 2rem;
+}
+
+.larger-icon {
+    font-size: 1.75rem;
+    margin-right: 5px;
+}
+
+.dividing-line {
+    border-top: 1px solid #DBE1E8;
 }
 
 .card {
-    margin: 10px 0;
     border: none;
     border-radius: 0.5rem;
+    box-shadow: 0 4px 12px #E4E9EE;
 }
 
 .transaction-details {
@@ -58,8 +89,8 @@ h1 {
     margin-bottom: 0.25rem;
 }
 
-p {
-    color: #3A4077;
+.card-block {
+    padding: 1.75rem;
 }
 
 /*********************************************
@@ -78,7 +109,11 @@ nav {
 }
 
 .navbar-toggleable-md .navbar-nav .nav-link {
-    padding: 0 0.75rem;
+    padding: 0 1.15rem;
+}
+
+.navbar-toggleable-md .navbar-nav .nav-link i {
+    margin-right: 8px;
 }
 
 nav .navbar-brand {
@@ -88,6 +123,7 @@ nav .navbar-brand {
 
 .navbar-nav .nav-link {
     color: #8895EA;
+    padding-left:5px;
 }
 .navbar-nav .nav-link:hover{
     color: #ffffff;
@@ -98,6 +134,57 @@ nav .navbar-brand {
     color: #ffffff;
 }
 
+
+/*********************************************
+
+Purchase.html
+
+**********************************************/
+
+.total-container {
+    overflow: hidden;
+    margin-bottom: 1.75rem;
+    margin-top: 0.5rem;
+}
+
+.total-losenge {
+    background-color: #F7F8FC;
+    padding: 0.7rem 0;
+}
+
+.total-losenge-left {
+    border: 1px solid #DCE0EB;
+    border-radius: 0.5rem 0 0 0.5rem;
+}
+
+.total-losenge-middle {
+    border-top: 1px solid #DCE0EB;
+    border-bottom: 1px solid #DCE0EB;
+}
+
+.total-losenge-right {
+    border: 1px solid #DCE0EB;
+    border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.total-label,
+.total-amount {
+    margin-bottom: 0rem;
+}
+
+.total-label {
+    color: #212C90;
+}
+
+.total-amount {
+    font-size: 20px;
+    font-weight: 400;
+    color: #0B124E;
+}
+
+.total-important {
+    font-weight: 600;
+}
 
 /*********************************************
 
@@ -113,6 +200,9 @@ Forms
     font-weight: bold;
 }
 
+.form-group {
+    margin-bottom: 1.5rem;
+}
 
 form.signup .form-group label {
     display: none;
@@ -183,24 +273,16 @@ Add a bank account
 }
 
 
-/*********************************************
-
-Total containers
-
-**********************************************/
-
-.total-container {
-    background-color: #F7F8FC;
-    overflow: hidden;
-    box-sizing: border-box;
-}
-
 
 /*********************************************
 
 Primary / secondary buttons
 
 **********************************************/
+
+.centered-button {
+    text-align: center;
+}
 
 .btn-primary {
     font-weight: 500;
@@ -213,4 +295,10 @@ Primary / secondary buttons
 .btn-primary:hover {
     color: #fff;
     background-color: #2D3AB2;
+}
+
+.btn-secondary {
+    background: none;
+    border: 1px solid #212C90;
+    font-family: 'Hind Madurai', sans-serif;
 }
