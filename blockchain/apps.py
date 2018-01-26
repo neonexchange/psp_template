@@ -34,10 +34,10 @@ setup()
 
 
 
-wallet_file = 'psp_wallet.db3'
-wallet_password = 'passwordpassword'
-wallet_str_addr = 'AXv5hfEmQiKKiSrfSHyQXVh7XjLLFrMiw3'
-wallet_addr_uint = UInt160(data=bytearray(b'\xb1\x0fg 9n~\xfb\x0e\x17\xbe\x07\x05F\x04n\x14^\xf6\xf5'))
+wallet_file = 'myprovider.db3'
+wallet_password = 'mypassword'
+wallet_str_addr = 'AJnpZkx8HE7qSYNgbzvRuKMBDfBS1x9KvS'
+wallet_addr_uint = UInt160(data=bytearray(b'!\x168\x87\xdb\xcb\x82\x82y\x13\xd4\xc8\x07\xc1\x1f\xb45\x89\xea\r'))
 
 class BlockchainConfig(AppConfig):
     name = 'blockchain'
@@ -51,10 +51,10 @@ class BlockchainConfig(AppConfig):
 def start_blockchain():
 
     try:
-        settings.setup('protocol.nex.json')
+        settings.setup('protocol.coz.json')
         settings.set_log_smart_contract_events(False)
 
-        data_path = "%s/Data/nexnet" % BASE_DIR
+        data_path = "%s/Data/pspnet" % BASE_DIR
         logger.info("Data path: %s " % data_path)
 
         # Start `neo-python`
@@ -115,7 +115,7 @@ def start_blockchain():
 def monitor_wallet_loop(wallet):
     available_gas = wallet.GetBalance(Blockchain.SystemCoin().Hash)
     available_neo = wallet.GetBalance(Blockchain.SystemShare().Hash)
-    logger.info("%s [GAS]: %s   [NEO] %s " % (wallet.Addresses[0], available_gas, available_neo))
+    logger.info("[%s] %s [GAS]: %s   [NEO] %s " % (Blockchain.Default().Height,wallet.Addresses[0], available_gas, available_neo))
 
 def process_bank_transfers():
     from customer.models import Purchase,Deposit
@@ -341,8 +341,6 @@ def move_deposits_to_wallet():
     to_move = DepositWallet.next_available_for_retrieval() # type:DepositWallet
 
     if to_move:
-
-        print("deposit to move %s %s " % (to_move, to_move.transfer))
 
         wallet = UserWallet.Open(to_move.wallet_file, to_move.wallet_pass)
         transfer = to_move.transfer
