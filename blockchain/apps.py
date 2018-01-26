@@ -109,6 +109,8 @@ def start_blockchain():
         move_deposits_to_main_wallet.start(refresh_time)
 
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         logger.error("Could not start blockchain: %s " % e)
 
 
