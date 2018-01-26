@@ -95,7 +95,7 @@
     {{ block.super }}
 
     <script type="text/javascript">
-        var gas_price = 40.00;
+        var gas_price = {{ price_GAS|floatformat:2 }};
 
         var fee_total = (gas_price * .05).toFixed(2);
         $('#id_fee_total').text(fee_total);
