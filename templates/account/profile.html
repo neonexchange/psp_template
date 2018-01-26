@@ -5,39 +5,56 @@
 {% block head_title %}{% trans "Profile" %}{% endblock %}
 
 {% block content %}
-<h1>{% trans "Profile" %}</h1>
+<h1><i class="icon icon-user larger-icon"></i>{% trans "Profile" %}</h1>
+<p class="text-center larger-body-copy">{% trans "Edit your personal account details below" %}</p>
+<hr class="dividing-line">
 
-<div class="row">
-    <div class="col-sm-12">
+    <div class="row">
+        <div class="col-sm-12">
+            <form class="update-profile" method="post" action="{% url 'profile' %}">
+                {% csrf_token %}
 
-        <h3>My Account Details</h3>
-        <hr/>
-        <form class="update-profile" method="post" action="{% url 'profile' %}">
-            {% csrf_token %}
-
-            <div class="row">
-                <div class="col-sm-6">
-                    {% bootstrap_field form.email %}
-                    {% bootstrap_field form.first_name %}
-                    {% bootstrap_field form.last_name %}
-                    {% bootstrap_field form.ssn_lastfour %}
-                    {% bootstrap_field form.date_of_birth %}
-
+                <div class="row">
+                    
+                    <div class="card card-block col-sm-12">
+                        <h4>Account details</h4>
+                        <div class="col-sm-12">
+                            {% bootstrap_field form.email %}
+                            {% bootstrap_field form.email %}
+                        </div>
+                    </div>
+                    
+                    <div class="card card-block col-sm-12">
+                        <h4>General details</h4>
+                        <div class="col-sm-6">
+                            {% bootstrap_field form.first_name %}
+                            {% bootstrap_field form.last_name %}
+                            {% bootstrap_field form.ssn_lastfour %}
+                            {% bootstrap_field form.date_of_birth %}
+                        </div>
+                    </div>
+                    
+                    <div class="card card-block col-sm-12">
+                        <h4>Address details</h4>
+                        <div class="col-sm-12">
+                            {% bootstrap_field form.address1 %}
+                            {% bootstrap_field form.city %}
+                            {% bootstrap_field form.state %}
+                            {% bootstrap_field form.postal_code %}
+                        </div>
+                    </div>
+                    
                 </div>
-                <div class="col-sm-6">
-                    {% bootstrap_field form.address1 %}
-                    {% bootstrap_field form.city %}
-                    {% bootstrap_field form.state %}
-                    {% bootstrap_field form.postal_code %}
+                
+                <div class="col-sm centered-button">
+                    <button type="submit" class="btn btn-primary btn-lg">{% trans "Save and update details" %}</button>
                 </div>
-            </div>
-            <hr/>
-            <button type="submit" class="btn btn-primary btn-lg">{% trans "Update Account" %} &raquo;</button>
-        </form>
+                
+            </form>
+
+        </div>
 
     </div>
-
-</div>
 <!--
 <div class="row">
     <div class="col-12">
