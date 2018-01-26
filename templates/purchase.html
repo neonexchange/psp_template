@@ -111,7 +111,8 @@
            update_prices();
 
            $('#copy_addr_from_extension').click(function(){
-               alert("Copy address from nex")
+                window.postMessage({ type: "NEO_EXTENSION_OPEN_RECEIVE", payload:{}},"*");
+                console.log("NEO EXTENSION OPEN RECEIVE!")
            });
         });
 

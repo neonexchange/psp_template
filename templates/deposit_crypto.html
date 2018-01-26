@@ -87,11 +87,33 @@
                        }
                    ]
                };
-
                window.postMessage({ type: "NEO_EXTENSION_START_TX", payload:message},"*");
                console.log("Message to send: ", message);
 //               alert(JSON.stringify(message))
            });
+
+            window.addEventListener('message', function(event) {
+                switch (event.type) {
+                  case 'NEO_EXTENSION_TX_STATUS': {
+                    switch (event.meta.status) {
+                      case 'REJECTED':
+                        console.log('Update the UI to refelect it is rejected with the error:' + event.error);
+                        break;
+                      case 'PENDING':
+                        console.log('Update the UI to refelect it is pending with the payload' + event.payload);
+                        break;
+                      case 'COMPLETED':
+                        console.log('Update the UI to refelect it is completed with the payload' + event.payload);
+                        break;
+                      default:
+                    }
+                    break
+                  }
+                  default:
+                }
+              },
+              false
+            )
         });
     </script>
 
