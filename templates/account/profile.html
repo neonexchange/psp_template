@@ -15,12 +15,15 @@
                 {% csrf_token %}
 
                 <div class="row">
-                    
+
                     <div class="card card-block col-sm-12">
                         <h4>Account details</h4>
                         <div class="col-sm-12">
                             {% bootstrap_field form.email %}
                             {% bootstrap_field form.email %}
+
+                            <a class="btn btn-secondary" href="{% url 'password_change' %}">Change Your Password</a>
+
                         </div>
                     </div>
                     

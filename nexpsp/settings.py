@@ -144,7 +144,7 @@ STATICFILES_DIRS = [
 AUTH_USER_MODEL = 'customer.PSPUser'
 
 LOGIN_URL = '/customer/login'
-LOGIN_REDIRECT_URL = '/customer/profile'
+LOGIN_REDIRECT_URL = '/customer/purchase'
 LOGOUT_REDIRECT_URL = '/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

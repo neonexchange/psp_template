@@ -9,7 +9,7 @@ urlpatterns = [
     path('login/', views.LoginView.as_view(template_name='account/login.html'), name='login'),
     path('logout/', views.LogoutView.as_view(template_name='account/logout.html'), name='logout'),
 
-    path('password_change/', views.PasswordChangeView.as_view(template_name='account/password_change.html'), name='password_change'),
+    path('password_change/', views.PasswordChangeView.as_view(template_name='account/password_change.html',success_url='/customer/profile/'), name='password_change'),
     path('password_change/done/', views.PasswordChangeDoneView.as_view(template_name='account/password_reset_done.html'), name='password_change_done'),
 
     path('password_reset/', views.PasswordResetView.as_view(template_name='account/password_reset.html'), name='password_reset'),

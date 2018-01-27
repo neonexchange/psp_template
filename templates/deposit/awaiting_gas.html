@@ -1,6 +1,6 @@
             <div class="row justify-content-between">
                 <div class="col-sm-7">
-                    <div class="alert alert-warning"><strong>[STATUS]</strong> {% ifequal deposit.status 'pending' %}awaiting deposit{% else %}{{ deposit.status }}{% endifequal %}</div>
+                    <div class="alert alert-warning" id="transaction-alert"><strong>[STATUS]</strong> {% ifequal deposit.status 'pending' %}awaiting deposit{% else %}{{ deposit.status }}{% endifequal %}</div>
 
                     <p>Once we have received your deposit, all proceeds will be deposited to the following account:</p>
 
