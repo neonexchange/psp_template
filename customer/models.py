@@ -276,7 +276,7 @@ class Deposit(models.Model):
 
     blockchain_transfer = models.OneToOneField('blockchain.BlockchainTransfer', blank=True,null=True, on_delete=models.CASCADE)
 
-    deposit_wallet = models.OneToOneField('blockchain.DepositWallet', on_delete=models.CASCADE)
+    deposit_wallet = models.OneToOneField('blockchain.DepositWallet', on_delete=models.CASCADE,null=True)
 
     invoice_id = models.UUIDField(auto_created=True)
 
