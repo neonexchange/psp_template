@@ -1,6 +1,6 @@
 venv
 .idea
 Data
-db.sqlite3
+myprovider.db3
 __pycache__
 *.log
