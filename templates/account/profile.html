@@ -6,8 +6,7 @@
 
 {% block content %}
 <h1><i class="icon icon-user larger-icon"></i>{% trans "Profile" %}</h1>
-<p class="text-center larger-body-copy">{% trans "Edit your personal account details below" %}</p>
-<hr class="dividing-line">
+<p class="text-center larger-body-copy">{% trans "Edit your account details below" %}</p>
 
     <div class="row">
         <div class="col-sm-12">
@@ -15,39 +14,33 @@
                 {% csrf_token %}
 
                 <div class="row">
-                    
+
                     <div class="card card-block col-sm-12">
-                        <h4>Account details</h4>
-                        <div class="col-sm-12">
+                        <h6>Account details</h6>
                             {% bootstrap_field form.email %}
-                            {% bootstrap_field form.email %}
-                        </div>
+                            <a class="btn btn-secondary" href="{% url 'password_change' %}">Change password</a>
                     </div>
                     
-                    <div class="card card-block col-sm-12">
-                        <h4>General details</h4>
-                        <div class="col-sm-6">
+                    <div class="card card-block col-sm-12 mt-3">
+                        <h6>General details</h6>
                             {% bootstrap_field form.first_name %}
                             {% bootstrap_field form.last_name %}
                             {% bootstrap_field form.ssn_lastfour %}
                             {% bootstrap_field form.date_of_birth %}
-                        </div>
                     </div>
                     
-                    <div class="card card-block col-sm-12">
-                        <h4>Address details</h4>
-                        <div class="col-sm-12">
+                    <div class="card card-block col-sm-12 mt-3">
+                        <h6>Address details</h6>
                             {% bootstrap_field form.address1 %}
                             {% bootstrap_field form.city %}
                             {% bootstrap_field form.state %}
                             {% bootstrap_field form.postal_code %}
-                        </div>
                     </div>
                     
                 </div>
                 
-                <div class="col-sm centered-button">
-                    <button type="submit" class="btn btn-primary btn-lg">{% trans "Save and update details" %}</button>
+                <div class="col-sm centered-button mt-4">
+                    <button type="submit" class="btn btn-primary">{% trans "Save and update details" %}</button>
                 </div>
                 
             </form>

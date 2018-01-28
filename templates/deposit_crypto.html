@@ -87,11 +87,61 @@
                        }
                    ]
                };
-
                window.postMessage({ type: "NEO_EXTENSION_START_TX", payload:message},"*");
                console.log("Message to send: ", message);
 //               alert(JSON.stringify(message))
            });
+
+            window.addEventListener(
+              "message",
+              function(event) {
+
+                console.log("EVENT: ",event);
+                var type = event.data.type;
+                var error = event.data.error;
+                var payload = event.data.payload;
+                var status = -1;
+                if( event.data.meta){
+                    status = event.data.meta.status;
+                }
+
+                var alertMsg = $('#transaction-alert');
+
+                switch (type) {
+                  case "NEO_EXTENSION_TX_STATUS": {
+                    switch (status) {
+                      case "REJECTED":
+                        console.log(
+                          "Update the UI to refelect it is rejected with the error:", error
+                        );
+                        alertMsg.removeClass('alert-warning').addClass('alert-error');
+                        alertMsg.html("<strong>[STATUS]</strong> Error processing transaction with Nex extension: ",error);
+                        break;
+                      case "PENDING":
+                        console.log(
+                          "Update the UI to refelect it is pending with the payload",
+                            payload
+                        );
+                        alertMsg.html("<strong>[STATUS]</strong> NEX Extension has begun your transaction ...");
+                        break;
+                      case "COMPLETED":
+                        console.log(
+                          "Update the UI to refelect it is completed with the payload",
+                            payload
+                        );
+                        alertMsg.removeClass('alert-warning').addClass('alert-success');
+                        alertMsg.html("<strong>[STATUS]</strong> Your transaction has been submitted");
+                        break;
+                      default:
+                    }
+                    break;
+                  }
+                  default:
+                }
+              },
+              false
+            );
+
         });
     </script>
 

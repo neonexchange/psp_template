@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="{% static 'bootstrapv4/css/bootstrap.css' %}">
 <link rel="stylesheet" href="{% static 'app_custom.css' %}">
 <link rel="stylesheet" href="{% static 'simple-line-icons/simple-line-icons.css' %}">
-<link rel="stylesheet" href="{% static 'simple-line-icons/styles.css' %}">
+<!--<link rel="stylesheet" href="{% static 'simple-line-icons/styles.css' %}"> -->
 <script src="https://use.fontawesome.com/50333dd26e.js"></script>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -38,19 +38,24 @@
             
             <div class="card card-block">
                 <h2 class="text-center">Payment service provider template</h2>
-            {% if request.user.pk %}
-                <a href="{% url 'purchase' %}" class="btn btn-primary">Purchase Crypto</a>
-            {% else %}
-                <a href="{% url 'signup' %}" class="btn btn-primary">Sign up now</a>
-            {% endif %}
 
-            <h4>Current prices</h4>
-            <ul>
-                <li>NEO ${{ price_NEO|floatformat:2 }}</li>
-                <li>GAS ${{ price_GAS|floatformat:2 }}</li>
-                <li>RPX ${{ price_RPX|floatformat:2 }}</li>
-            </ul>
-                
+                <div class="card-text">
+                {% if request.user.pk %}
+                    <a href="{% url 'purchase' %}" class="btn btn-primary">Purchase Crypto</a>
+                {% else %}
+                    <a href="{% url 'signup' %}" class="btn btn-primary">Sign up now</a>
+                    <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+
+                {% endif %}
+
+                <h4>Current prices</h4>
+                <ul>
+                    <li>NEO ${{ price_NEO|floatformat:2 }}</li>
+                    <li>GAS ${{ price_GAS|floatformat:2 }}</li>
+                </ul>
+
+                </div>
+
             </div>
 
         {% endblock %}

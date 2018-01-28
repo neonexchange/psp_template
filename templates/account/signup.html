@@ -4,11 +4,10 @@
 {% load bootstrap4 %}
 {% block head_title %}{% trans "Signup" %}{% endblock %}
 
-{% block content %}
-<h1>{% trans "Sign Up" %}</h1>
-
-<div class="card">
-    <div class="card-block">
+        {% block content %}
+<div class="card card-block card-block-center col-sm-10">
+            <h1>{% trans "Sign Up" %}</h1>
+            <p class="text-center">{% trans "Purchase and sell cryptocurrencies with ease" %}</p>
         <form class="signup" id="signup_form" method="post" action="{% url 'signup' %}">
           {% csrf_token %}
             <div class="row">
@@ -29,20 +28,18 @@
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    <hr/>
                     {% bootstrap_field form.password1 %}
                     {% bootstrap_field form.password2 %}
-                    <hr/>
                 </div>
             </div>
           {% if redirect_field_value %}
           <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
           {% endif %}
-
-          <button type="submit" class="btn btn-success btn-lg">{% trans "Sign Up" %} <i class="fa fa-sign-in"></i></button>
+            <div class="col-sm centered-button">
+            <button type="submit" class="btn btn-primary">{% trans "Sign up" %}</button>
+            </div>
         </form>
 
-    </div>
 </div>
 
 {% endblock %}

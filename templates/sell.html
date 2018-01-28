@@ -10,19 +10,21 @@
 {% block content %}
 <h1>{% trans "Sell cryptocurrency" %}</h1>
 <p class="text-center larger-body-copy">{% trans "Deposit your cryptocurrencies and receive fiat back" %}</p>
-<!--<hr class="dividing-line">-->
 
     {% if has_bank_accounts %}
 
     {% else %}
     <div class="card card-block">
-        <h4 class="card-title">Please Add A Bank Account</h4>
+        <h5 class="card-title text-center">Before you can make a purchase...</h5>
         <div class="card-text">
-            <p><strong>Before making a deposit, you must first add a bank account</strong></p>
-            <a href="{% url 'bank_accounts_create' %}" class="btn btn-primary">Add Bank Account</a>
+            <p class="text-center">You need to add a bank account before you can make a purchase</p>
+            <div class="col-sm centered-button">
+                <a href="{% url 'bank_accounts_create' %}" class="btn btn-primary">Add a bank account</a>
+            </div>
         </div>
     </div>
     {% endif %}
+
     <div class="row">
         <div class="col-12">
 
@@ -75,7 +77,7 @@
                 <p class="alert alert-info text-center">The amount you receive may slightly differ depending on what the GAS price is when it is sold</p>
                 
                 <div class="col-sm centered-button">
-                    <button type="submit" id="id_purchase_btn" class="btn btn-primary">Sell 1 Gas</button>
+                    <button type="submit" id="id_purchase_btn" class="btn btn-primary btn-lg">Sell 1 Gas</button>
                 </div>
                     
                 </fieldset>
@@ -95,7 +97,7 @@
     {{ block.super }}
 
     <script type="text/javascript">
-        var gas_price = 40.00;
+        var gas_price = {{ price_GAS|floatformat:2 }};
 
         var fee_total = (gas_price * .05).toFixed(2);
         $('#id_fee_total').text(fee_total);

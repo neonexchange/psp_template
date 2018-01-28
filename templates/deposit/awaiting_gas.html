@@ -1,6 +1,6 @@
             <div class="row justify-content-between">
-                <div class="col-sm-7">
-                    <div class="alert alert-warning"><strong>[STATUS]</strong> {% ifequal deposit.status 'pending' %}awaiting deposit{% else %}{{ deposit.status }}{% endifequal %}</div>
+                <div class="col-sm-12">
+                    <div class="alert alert-warning" id="transaction-alert"><strong>[STATUS]</strong> {% ifequal deposit.status 'pending' %}awaiting deposit{% else %}{{ deposit.status }}{% endifequal %}</div>
 
                     <p>Once we have received your deposit, all proceeds will be deposited to the following account:</p>
 
@@ -10,8 +10,8 @@
 
                     <hr/>
 
-                    <p>Use the following button to complete this deposit via the NEX Extension</p>
-                    <button type="button" class="btn btn-lg btn-primary" id="id_open_in_nex">Initiate Deposit via NEX Extension</button>
+                    <p>Complete this deposit with the NEX extension</p>
+                    <button type="button" class="btn btn-lg btn-primary" id="id_open_in_nex">Open NEX extension</button>
                     <hr/>
 
                     <p>Alternatively, you may send the transaction from another wallet by using the following details:</p>
