@@ -7,19 +7,21 @@
 
 {% block content %}
 
-<h1>{% trans "Sign In" %}</h1>
+<div class="card card-block card-block-center col-sm-10">
+    <h1>{% trans "Sign in" %}</h1>
 
-<p>If you have not created an account yet, then please
-<a href="{% url 'signup' %}">sign up</a> first please</p>
+    <p class="text-center">Enter your details below</p>
 
-<form class="login" method="POST" action="{% url 'login' %}">
-  {% csrf_token %}
-  {% bootstrap_form form %}
-  {% if redirect_field_value %}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-  {% endif %}
-  <a class="btn btn-link" href="{% url 'password_reset' %}">{% trans "Forgot Password?" %}</a>
-  <button class="btn btn-primary" type="submit">{% trans "Sign In" %}</button>
-</form>
+    <form class="login" method="POST" action="{% url 'login' %}">
+      {% csrf_token %}
+      {% bootstrap_form form %}
+      {% if redirect_field_value %}
+      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+      {% endif %}
+      <a class="btn btn-link btn-block" href="{% url 'password_reset' %}">{% trans "I've forgotten my password" %}</a>
+      <button class="btn btn-primary btn-block" type="submit">{% trans "Sign In" %}</button>
+    </form>
+    
+</div>
 
 {% endblock %}

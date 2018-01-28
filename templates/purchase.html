@@ -16,10 +16,12 @@
 
     {% else %}
     <div class="card card-block">
-        <h4 class="card-title">Please Add A Bank Account</h4>
+        <h5 class="card-title text-center">Before you can make a purchase...</h5>
         <div class="card-text">
-            <p><strong>Before making a purchase, you must first add a bank account</strong></p>
-            <a href="{% url 'bank_accounts_create' %}" class="btn btn-primary">Add Bank Account</a>
+            <p class="text-center">You need to add a bank account before you can make a purchase</p>
+            <div class="col-sm centered-button">
+                <a href="{% url 'bank_accounts_create' %}" class="btn btn-primary">Add a bank account</a>
+            </div>
         </div>
     </div>
     {% endif %}

@@ -5,32 +5,28 @@
 
 {% block head_title %}{% trans "Bank Accounts" %}{% endblock %}
 
-
-
 {% block content %}
-<h1>{% trans "Bank Accounts" %}</h1>
-
-
-    <a href="{% url 'bank_accounts_create' %}" class="btn btn-link">Add Bank Account</a>
+<h1>{% trans "Bank accounts" %}</h1>
+<p class="text-center larger-body-copy">{% trans "See all of your added bank accounts below" %}</p>
 
     <div class="row">
         <div class="col-12">
-            <hr/>
-            <h4>Your accounts</h4>
             {% for item in funding_sources %}
 
                 {% if item.type == 'bank' %}
-
+                <div class="col-sm centered-button">
+                        <a href="{% url 'bank_accounts_create' %}" class="btn btn-primary">Add another bank account</a>
+                    </div>
                 <div class="card">
                     <div class="card-block">
                         <div class="row">
                             <div class="col-sm-6">
-                                <h4 class="card-title">{{ item.name }}</h4>
+                                <h6 class="card-title">{{ item.name }}</h6>
                                 <div class="card-text">
-                                    <p>{{ item.bankName }}</p>
-                                    <p>Status: {{ item.status }}</p>
+                                    <p class="mb-0">{{ item.bankName }}</p>
+                                    <p class="mb-0">Status: {{ item.status }}</p>
                                     <p>Id: {{ item.id }}</p>
-                                    <button type="button" class="btn btn-secondary">Manage</button>
+                                    <button type="button" class="btn btn-secondary">Manage this account</button>
                                 </div>
                             </div>
                         </div>
@@ -41,9 +37,12 @@
             {% empty %}
                 <div class="card card-block">
 
-                    <h4 class="card-title">No verified accounts at this time.</h4>
+                    <h5 class="card-title text-center">It looks like you don't have any bank account set up yet</h5>
+                    <p class="text-center">{% trans "Setting up a bank account will allow you to purchase or sell cryptocurrencies" %}</p>
                     <div class="card-text">
-                    <a href="{% url 'bank_accounts_create' %}" class="btn btn-success">Add a Bank Account</a>
+                    <div class="col-sm centered-button">
+                        <a href="{% url 'bank_accounts_create' %}" class="btn btn-primary">Add a bank account</a>
+                    </div>
                     </div>
 
                 </div>

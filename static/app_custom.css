@@ -5,7 +5,7 @@ html {
 
 body {
     font-family: 'Hind Madurai', sans-serif;
-    background: url('bootstrapv4/images/sign-in-image-02.jpg') no-repeat center center fixed;
+    background: url('bootstrapv4/images/sign-in-image-03.jpg') no-repeat center center fixed;
     background-size: cover;
 }
 
@@ -70,6 +70,16 @@ p {
     border: none;
     border-radius: 0.5rem;
     box-shadow: 0 4px 12px #E4E9EE;
+}
+
+.card-block-center {
+    box-shadow: none;
+    margin: 10% auto 0;
+}
+
+.card-block-no-shadow {
+    box-shadow: none !important;
+    margin: 0 auto;
 }
 
 .transaction-details {
@@ -301,4 +311,12 @@ Primary / secondary buttons
     background: none;
     border: 1px solid #212C90;
     font-family: 'Hind Madurai', sans-serif;
+    color: #212C90;
+}
+
+.btn-secondary:hover {
+    background: #EDF2FF;
+    border: 1px solid #4C5AD6;
+    font-family: 'Hind Madurai', sans-serif;
+    color: #4C5AD6;
 }
