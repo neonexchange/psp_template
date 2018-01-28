@@ -1,4 +1,4 @@
-     <div class="row justify-content-between">
+   <div class="row justify-content-between">
                 <div class="col-sm-12">
                     <div class="alert alert-warning" id="transaction-alert"><strong>[STATUS]</strong> {% ifequal deposit.status 'pending' %}awaiting deposit{% else %}{{ deposit.status }}{% endifequal %}</div>
 
@@ -38,16 +38,16 @@
                     <div class="row no-gutters">
                         <div class="col-sm-4 total-losenge total-losenge-left">
                             <label for="id_gas_total">Initial Gas Price</label>
-                            <p id="id_gas_total"  class="form-control">{{ price_GAS|floatformat:2 }}</p>
+                            <p id="id_gas_total"  class="text-center total-amount total-important">{{ price_GAS|floatformat:2 }}</p>
                         </div>
-                        <div class="col-sm-4 total-losenge total-losenge-left">
+                        <div class="col-sm-4 total-losenge total-losenge-middle">
                             <label for="id_fee_total">Our 5% fee</label>
-                            <p id="id_fee_total"  class="form-control"></p>
+                            <p id="id_fee_total"  class="text-center total-amount total-important"></p>
                         </div>
 
-                        <div class="col-sm-4 total-losenge total-losenge-left">
+                        <div class="col-sm-4 total-losenge total-losenge-right">
                             <label for="id_total">You will receive</label>
-                            <p id="id_total" class="form-control"></p>
+                            <p id="id_total" class="text-center total-amount total-important"></p>
                         </div>
                     </div>
                 </div>
