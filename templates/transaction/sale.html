@@ -1,4 +1,4 @@
-        <div class="card card-block">
+        <div class="card card-block mb-3">
 
 
             {% if deposit.status == 'awaiting_deposit' %}
@@ -28,17 +28,17 @@
 
 
             <div class="card-text">
-                <p>On {{ deposit.date_updated|date:'Y-m-d' }} {{ deposit.date_updated|time }}</p>
-                <p>Payment Status <em>{{ deposit.status }}</em></p>
+                <p class="mb-1"><strong>On</strong> {{ deposit.date_updated|date:'Y-m-d' }} {{ deposit.date_updated|time }}</p>
+                <p class="mb-1"><strong>Current status</strong> {{ deposit.status }}</p>
 
                 {% if deposit.blockchain_transfer.transaction_id %}
                     <hr/>
-                    <p>Received {{ deposit.amount }} {{ deposit.asset }} from {{ deposit.neo_sender_address }}</p>
-                    <p>Transaction Id: {{ deposit.blockchain_transfer.transaction_id }}</p>
-                    <p>Completed on block {{ deposit.blockchain_transfer.confirmed_block }}</p>
+                    <p class="mb-1"><strong>Received</strong> {{ deposit.amount }} {{ deposit.asset }} from {{ deposit.neo_sender_address }}</p>
+                    <p class="mb-1"><strong>Transaction Id:</strong> {{ deposit.blockchain_transfer.transaction_id }}</p>
+                    <p class="mb-1"><strong>Completed on block</strong> {{ deposit.blockchain_transfer.confirmed_block }}</p>
 
                 {% else %}
-                    <a class="btn btn-primary" href="{% url 'deposit-crypto' %}"><i class="fa fa-bank"></i> Complete this deposit</a>
+                    <a class="btn btn-primary" href="{% url 'deposit-crypto' %}">Complete this deposit</a>
                     <p>Once GAS is received, payment will be credited to <strong>{{ deposit.receiver_account.name }}</strong> at {{ deposit.receiver_account.bankName }} ({{ deposit.receiver_account.bankAccountType }})
                 {% endif %}
             </div>
