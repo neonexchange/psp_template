@@ -1,9 +1,8 @@
-
-            <div class="row justify-content-between">
+  <div class="row justify-content-between">
                 <div class="col-sm-12">
                     <div class="alert alert-warning" id="transaction-alert"><strong>[STATUS]</strong> {% ifequal deposit.status 'pending' %}awaiting deposit{% else %}{{ deposit.status }}{% endifequal %}</div>
 
-                    <p>Once we have received your deposit, all proceeds will be deposited to the following account:</p>
+                    <p>Once we have received your GAS deposit, your fiat will be credited to:</p>
 
                     <div class="form-group">
                         <input id="id_receiver_bank_account_id"  class="form-control" type="text" readonly value="{{ deposit.receiver_account.name }} at {{ deposit.receiver_account.bankName }} ({{ deposit.receiver_account.bankAccountType }})">
@@ -12,10 +11,10 @@
                     <hr/>
 
                     <p>Complete this deposit with the NEX extension</p>
-                    <button type="button" class="btn btn-lg btn-primary" id="id_open_in_nex">Open NEX extension</button>
+                    <button type="button" class="btn btn-primary" id="id_open_in_nex">Open NEX extension</button>
                     <hr/>
 
-                    <p>Alternatively, you may send the transaction from another wallet by using the following details:</p>
+                    <p>Alternatively, you may send the transaction from another wallet by using the following transaction details:</p>
                     <pre>
 {
     toAddr: "{{ deposit_wallet.address }}",
@@ -52,8 +51,32 @@
                 </div>
             </div>
 
+                    <!-- Total denoter -->
+                    <div class="col-sm-12 total-container">
+                        <div class="row no-gutters">
+                            <div class="col-sm-4 total-losenge total-losenge-left">
+                                <p class="text-center total-label">Amount of GAS</p>
+                                <p id="id_amount" class="text-center total-amount"></p>
+                            </div>
+                            <div class="col-sm-4 total-losenge total-losenge-left">
+                                <p class="text-center total-label">Initial price</p>
+                                <p id="id_gas_total"  class="form-control">{{ price_GAS|floatformat:2 }}</p>
+                            </div>
+                            <div class="col-sm-4 total-losenge total-losenge-middle">
+                                <p class="text-center total-label">Our 5% fee</p>
+                                <p id="id_fee_total"  class="form-control"></p>
+                            </div>
+
+                            <div class="col-sm-4 total-losenge total-losenge-right">
+                                <p class="text-center total-label total-important">You will recieve</p>
+                                <p id="id_total" class="form-control"></p>
+                            </div>
+
+                        </div>
+                    </div>
+
             <form method="post" action="{% url 'deposit-crypto-cancel' %}">
                 {% csrf_token %}
                 <input type="hidden" name="deposit_id" id="id_deposit_id" value="{{ deposit.id }}"/>
-                <button type="submit" class="btn btn-danger btn-lg">Cancel deposit</button>
+                <button type="submit" class="btn btn-secondary">Cancel deposit</button>
             </form>

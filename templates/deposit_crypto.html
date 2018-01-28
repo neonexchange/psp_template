@@ -3,7 +3,6 @@
 {% load humanize %}
 {% load i18n %}
 
-
 {% block head_title %}{% trans "Deposit Crypto" %}{% endblock %}
 
 {% block extrahead %}
@@ -23,15 +22,15 @@
 
 {% endblock %}
 
-
 {% block content %}
 <h1>{% trans "Deposit Crypto" %}</h1>
+<p class="text-center larger-body-copy">{% trans "Deposit your GAS below to receive funds back to your bank account" %}</p>
 
     <div class="row">
         <div class="col-12">
 
         <div class="card card-block">
-            <h4 class="card-title">Convert GAS to USD</h4>
+            <h4 class="card-title">Sell GAS for USD</h4>
 
 
             {% if deposit.status == 'awaiting_deposit' %}

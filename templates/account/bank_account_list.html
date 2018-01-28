@@ -7,7 +7,7 @@
 
 {% block content %}
 <h1>{% trans "Bank accounts" %}</h1>
-<p class="text-center larger-body-copy">{% trans "See all of your added bank accounts below" %}</p>
+<p class="text-center larger-body-copy mb-4">{% trans "See all of your added bank accounts below" %}</p>
 
     <div class="row">
         <div class="col-12">
@@ -15,18 +15,18 @@
 
                 {% if item.type == 'bank' %}
                 <div class="col-sm centered-button">
-                        <a href="{% url 'bank_accounts_create' %}" class="btn btn-primary">Add another bank account</a>
+                        <a href="{% url 'bank_accounts_create' %}" class="btn btn-primary mb-4">Add another bank account</a>
                     </div>
                 <div class="card">
                     <div class="card-block">
                         <div class="row">
                             <div class="col-sm-6">
-                                <h6 class="card-title">{{ item.name }}</h6>
+                                <h5 class="card-title">{{ item.name }}</h5>
                                 <div class="card-text">
                                     <p class="mb-0">{{ item.bankName }}</p>
-                                    <p class="mb-0">Status: {{ item.status }}</p>
-                                    <p>Id: {{ item.id }}</p>
-                                    <button type="button" class="btn btn-secondary">Manage this account</button>
+                                    <p class="mb-0"><strong>Status:</strong> {{ item.status }}</p>
+                                    <p><strong>ID:</strong> {{ item.id }}</p>
+                                    <button type="button" class="btn btn-secondary">Manage this bank account</button>
                                 </div>
                             </div>
                         </div>
