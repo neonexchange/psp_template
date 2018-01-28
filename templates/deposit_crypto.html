@@ -3,8 +3,25 @@
 {% load humanize %}
 {% load i18n %}
 
+
 {% block head_title %}{% trans "Deposit Crypto" %}{% endblock %}
 
+{% block extrahead %}
+
+    {% if deposit.status == 'awaiting_deposit' %}
+
+        <meta http-equiv="refresh" content="20">
+
+    {% elif deposit.status == 'gas_received' %}
+
+        <meta http-equiv="refresh" content="20">
+
+    {% elif deposit.status == 'pending' %}
+
+        <meta http-equiv="refresh" content="20">
+    {% endif %}
+
+{% endblock %}
 
 
 {% block content %}
