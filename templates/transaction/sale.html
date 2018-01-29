@@ -38,7 +38,7 @@
                     <p class="mb-1"><strong>Completed on block:</strong> {{ deposit.blockchain_transfer.confirmed_block }}</p>
 
                 {% else %}
-                    <a class="btn btn-primary" href="{% url 'deposit-crypto' %}">Complete this deposit</a>
+                    <a class="btn btn-primary mb-3 mt-2" href="{% url 'deposit-crypto' %}">Complete this deposit</a>
                     <p>Once GAS is received, payment will be credited to <strong>{{ deposit.receiver_account.name }}</strong> at {{ deposit.receiver_account.bankName }} ({{ deposit.receiver_account.bankAccountType }})
                 {% endif %}
             </div>
