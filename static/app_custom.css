@@ -320,3 +320,9 @@ Primary / secondary buttons
     font-family: 'Hind Madurai', sans-serif;
     color: #4C5AD6;
 }
+
+.btn-primary.disabled, .btn-primary:disabled {
+    background-color: darkgrey;
+    color: #5a5a5a;
+    border: none;
+}
