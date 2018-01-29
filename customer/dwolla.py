@@ -66,6 +66,11 @@ def dwolla_get_url(url):
         logger.error("Could not get url: %s %s " % (url, e))
     return None
 
+def dwolla_simulate_sandbox_transfers():
+
+    result = DwollaClient.instance().token.post('sandbox-simulations')
+    return result
+
 def dwolla_create_user(user):
 
     json = user.to_json()

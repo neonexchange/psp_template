@@ -16,7 +16,7 @@ from neo.Core.TX.TransactionAttribute import TransactionAttribute,TransactionAtt
 from neo.Core.Helper import Helper
 from neo.Core.Blockchain import Blockchain
 from neo.SmartContract.ContractParameterContext import ContractParametersContext
-from customer.dwolla import DwollaClient,dwolla_send_to_user
+from customer.dwolla import DwollaClient,dwolla_send_to_user,dwolla_simulate_sandbox_transfers
 import requests
 import json
 import os
@@ -30,14 +30,16 @@ LOGFILE_BACKUP_COUNT = 3  # 3 logfiles history
 settings.set_logfile(LOGFILE_FN, LOGFILE_MAX_BYTES, LOGFILE_BACKUP_COUNT)
 
 
+# This setsup crochet to be able to run twisted
+# alongside of django
 setup()
-
-
 
 wallet_file = 'myprovider.db3'
 wallet_password = 'mypassword'
 wallet_str_addr = 'AJnpZkx8HE7qSYNgbzvRuKMBDfBS1x9KvS'
 wallet_addr_uint = UInt160(data=bytearray(b'!\x168\x87\xdb\xcb\x82\x82y\x13\xd4\xc8\x07\xc1\x1f\xb45\x89\xea\r'))
+
+
 
 class BlockchainConfig(AppConfig):
     name = 'blockchain'
@@ -118,6 +120,12 @@ def monitor_wallet_loop(wallet):
     available_gas = wallet.GetBalance(Blockchain.SystemCoin().Hash)
     available_neo = wallet.GetBalance(Blockchain.SystemShare().Hash)
     logger.info("[%s] %s [GAS]: %s   [NEO] %s " % (Blockchain.Default().Height,wallet.Addresses[0], available_gas, available_neo))
+
+    try:
+        num_transfers = dwolla_simulate_sandbox_transfers().body['total']
+        logger.info("Processed %s transfers" % num_transfers)
+    except Exception as e:
+        logger.info("Could not process transfers %s " % e)
 
 def process_bank_transfers():
     from customer.models import Purchase,Deposit
