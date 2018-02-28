@@ -127,7 +127,7 @@ def monitor_wallet_loop(wallet):
     except Exception as e:
         logger.info("Could not process transfers %s " % e)
         DwollaClient.instance().refresh()
-        
+
 def process_bank_transfers():
     from customer.models import Purchase,Deposit
     from customer.dwolla import dwolla_get_url
