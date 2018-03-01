@@ -16,15 +16,18 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='DepositWallet',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
                 ('wallet_file', models.FilePathField()),
                 ('wallet_pass', models.CharField(max_length=64)),
-                ('depositor', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('depositor', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.AlterField(
             model_name='blockchaintransfer',
             name='status',
-            field=models.CharField(choices=[('pending', 'pending'), ('processed', 'processed'), ('failed', 'failed'), ('complete', 'complete')], default='pending', max_length=64),
+            field=models.CharField(choices=[('pending', 'pending'), ('processed', 'processed'), (
+                'failed', 'failed'), ('complete', 'complete')], default='pending', max_length=64),
         ),
     ]

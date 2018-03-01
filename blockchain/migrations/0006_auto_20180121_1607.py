@@ -13,6 +13,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='price',
             name='asset',
-            field=models.CharField(choices=[('GAS', 'GAS'), ('NEO', 'NEO'), ('NEX', 'NEX')], max_length=3, unique=True),
+            field=models.CharField(choices=[(
+                'GAS', 'GAS'), ('NEO', 'NEO'), ('NEX', 'NEX')], max_length=3, unique=True),
         ),
     ]

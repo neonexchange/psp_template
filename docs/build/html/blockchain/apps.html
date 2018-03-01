@@ -1,0 +1,439 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>blockchain.apps &mdash; nex_psp 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="nex_psp 0.1.0 documentation" href="../index.html"/>
+        <link rel="next" title="blockchain.models" href="models.html"/>
+        <link rel="prev" title="License" href="../license.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> nex_psp
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">blockchain.apps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">blockchain.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../customer/models.html">customer.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../customer/dwolla.html">customer.dwolla</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nexpsp/settings.html">nexpsp.settings</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">nex_psp</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>blockchain.apps</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/blockchain/apps.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="blockchain-apps">
+<h1>blockchain.apps<a class="headerlink" href="#blockchain-apps" title="Permalink to this headline">¶</a></h1>
+<p>What follows are the details of the <code class="docutils literal notranslate"><span class="pre">blockchain.apps</span></code> implementation.</p>
+<span class="target" id="module-blockchain.apps"></span><dl class="class">
+<dt id="blockchain.apps.BlockchainConfig">
+<em class="property">class </em><code class="descclassname">blockchain.apps.</code><code class="descname">BlockchainConfig</code><span class="sig-paren">(</span><em>app_name</em>, <em>app_module</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/blockchain/apps.html#BlockchainConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blockchain.apps.BlockchainConfig" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="blockchain.apps.BlockchainConfig.name">
+<code class="descname">name</code><em class="property"> = 'blockchain'</em><a class="headerlink" href="#blockchain.apps.BlockchainConfig.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="blockchain.apps.BlockchainConfig.ready">
+<code class="descname">ready</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/blockchain/apps.html#BlockchainConfig.ready"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blockchain.apps.BlockchainConfig.ready" title="Permalink to this definition">¶</a></dt>
+<dd><p>When the Blockchain django app is ready, we start the blockchain</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="blockchain.apps.check_deposit_and_tx">
+<code class="descclassname">blockchain.apps.</code><code class="descname">check_deposit_and_tx</code><span class="sig-paren">(</span><em>deposit</em>, <em>transaction</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/blockchain/apps.html#check_deposit_and_tx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blockchain.apps.check_deposit_and_tx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks the deposit object and compares with the transaction in which the PSP wallet received GAS/NEO
+If the deposit is greater than zero, we create a BlockchainTransfer object to represent it
+and use the current NEO/Gas price to calculate the amount of fiat owed to the depositor
+based on the amount of GAS/NEO received and the current price.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>deposit</strong> (<em>blockchain.models.Deposit</em>) – The Deposit model instance to check</li>
+<li><strong>transaction</strong> (<em>neo.Core.TX.Transaction.Transaction</em>) – The transaction associated with the the deposit</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="blockchain.apps.create_move_to_main_tx">
+<code class="descclassname">blockchain.apps.</code><code class="descname">create_move_to_main_tx</code><span class="sig-paren">(</span><em>deposit_wallet</em>, <em>transfer</em>, <em>deposit</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/blockchain/apps.html#create_move_to_main_tx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blockchain.apps.create_move_to_main_tx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a transaction to move Neo/Gas from a temporary ‘deposit wallet’ to the main PSP wallet</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>deposit_wallet</strong> (<em>neo.Implementations.Wallets.peewee.UserWallet.UserWallet</em>) – the wallet to transfer NEO/Gas out of</li>
+<li><strong>transfer</strong> (<a class="reference internal" href="models.html#blockchain.models.BlockchainTransfer" title="blockchain.models.BlockchainTransfer"><em>blockchain.models.BlockchainTransfer</em></a>) – the transfer object representing the transfer of NEO/Gas for fiat</li>
+<li><strong>deposit</strong> (<a class="reference internal" href="../customer/models.html#customer.models.Deposit" title="customer.models.Deposit"><em>customer.models.Deposit</em></a>) – The deposit</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the transaction to move NEO/Gas</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">neo.Core.TX.Transaction.Transaction</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="blockchain.apps.create_transaction">
+<code class="descclassname">blockchain.apps.</code><code class="descname">create_transaction</code><span class="sig-paren">(</span><em>wallet</em>, <em>purchase</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/blockchain/apps.html#create_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blockchain.apps.create_transaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>creates a transaction of crypto from the PSP wallet to a user who has paid in fiat</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>wallet</strong> (<em>neo.Implementations.Wallets.peewee.UserWallet.UserWallet</em>) – The user wallet of the PSP</li>
+<li><strong>purchase</strong> (<em>blockchain.models.Purchase</em>) – A purchase object representing a user wishing to purchase crypto</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A transaction from the PSP to the user who has purchased crypto</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">neo.Core.TX.Transaction.Transaction</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="blockchain.apps.monitor_wallet_loop">
+<code class="descclassname">blockchain.apps.</code><code class="descname">monitor_wallet_loop</code><span class="sig-paren">(</span><em>wallet</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/blockchain/apps.html#monitor_wallet_loop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blockchain.apps.monitor_wallet_loop" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a basic loop to monitor the PSP wallet and log the current balance.
+One thing that could be added here is to set some type of system event
+Indicating that more crypto is needed to be purchased or something</p>
+<p>This loop also calls the dwolla ‘simulate transfers’ method which runs
+any pending bank transfers</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>wallet</strong> (<em>neo.Implementations.Wallets.peewee.UserWallet.UserWallet</em>) – The user wallet of the PSP</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="blockchain.apps.move_deposits_to_wallet">
+<code class="descclassname">blockchain.apps.</code><code class="descname">move_deposits_to_wallet</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/blockchain/apps.html#move_deposits_to_wallet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blockchain.apps.move_deposits_to_wallet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Once crypto has been deposited to has been deposited to a wallet, we transfer
+that deposit of the temporary wallet to the main PSP wallet.  After that is complete
+we can mark that transfer as pending, waiting for it to finish on the chain</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="blockchain.apps.on_blockchain_new_block">
+<code class="descclassname">blockchain.apps.</code><code class="descname">on_blockchain_new_block</code><span class="sig-paren">(</span><em>block</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/blockchain/apps.html#on_blockchain_new_block"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blockchain.apps.on_blockchain_new_block" title="Permalink to this definition">¶</a></dt>
+<dd><p>on each block, we loop through all the tx.  If any of them have the an identifier
+in the TX Attribute (TXAttrubuteUsage.REMARK3), we’ll take a closer look at it
+:param block: a newly created block
+:type block: neo.Core.Block.Block</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="blockchain.apps.process_bank_transfers">
+<code class="descclassname">blockchain.apps.</code><code class="descname">process_bank_transfers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/blockchain/apps.html#process_bank_transfers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blockchain.apps.process_bank_transfers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loop through any purchase or deposits that are pending.  If their status has changed
+We update our model instance representing that purchase/deposit accordingly</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="blockchain.apps.process_crypto_purchases">
+<code class="descclassname">blockchain.apps.</code><code class="descname">process_crypto_purchases</code><span class="sig-paren">(</span><em>wallet</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/blockchain/apps.html#process_crypto_purchases"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blockchain.apps.process_crypto_purchases" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method loops through all dwolla purchase objects that are in the <code class="docutils literal notranslate"><span class="pre">processed</span></code> state.  If they are
+and they don’t have a BlockchainTransfer model object associated with them, then we will create one
+and initiate a transaction of crypto from the PSP wallet to the user who has just purchased crypto.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>wallet</strong> (<em>neo.Implementations.Wallets.peewee.UserWallet.UserWallet</em>) – The user wallet of the PSP</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="blockchain.apps.process_crypto_received_bank_transfers">
+<code class="descclassname">blockchain.apps.</code><code class="descname">process_crypto_received_bank_transfers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/blockchain/apps.html#process_crypto_received_bank_transfers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blockchain.apps.process_crypto_received_bank_transfers" title="Permalink to this definition">¶</a></dt>
+<dd><p>For any deposits the PSP has received from a user that have a receieved status, we will start
+a dwolla transfer of fiat to that user</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="blockchain.apps.process_pending_blockchain_transactions">
+<code class="descclassname">blockchain.apps.</code><code class="descname">process_pending_blockchain_transactions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/blockchain/apps.html#process_pending_blockchain_transactions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blockchain.apps.process_pending_blockchain_transactions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loop through any BlockchainTransfer objects that are pending.  If the transfer’s transaction id has been
+found on the blockchain, we know that the transfer of crypto is complete.  In that case we can
+mark the BlockchainTransfer model instance as complete.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="blockchain.apps.process_possible_transaction_match">
+<code class="descclassname">blockchain.apps.</code><code class="descname">process_possible_transaction_match</code><span class="sig-paren">(</span><em>transaction</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/blockchain/apps.html#process_possible_transaction_match"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blockchain.apps.process_possible_transaction_match" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a look this transaction.  If it has a TransactionAttributeUsage.Remark3, we look at that remark.
+If that remark matches a an invoice ID in our system, then we create a Deposit model out of it
+And check the deposit</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>transaction</strong> (<em>neo.Core.TX.Transaction.Transaction</em>) – a transaction with attributes that we are interested in</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="blockchain.apps.refresh_dwolla_client_token">
+<code class="descclassname">blockchain.apps.</code><code class="descname">refresh_dwolla_client_token</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/blockchain/apps.html#refresh_dwolla_client_token"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blockchain.apps.refresh_dwolla_client_token" title="Permalink to this definition">¶</a></dt>
+<dd><p>Every 10 minutes or so you want to refresh your dwolla token</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="blockchain.apps.start_blockchain">
+<code class="descclassname">blockchain.apps.</code><code class="descname">start_blockchain</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/blockchain/apps.html#start_blockchain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blockchain.apps.start_blockchain" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method sets up the blockchain and main PSP wallet, and start a number of loops to monitor incoming/outgoing
+NEO/Gas transfers as well as transfers of fiat via dwolla</p>
+<p>These loops are called in the twisted reactor in an async fashion so they do not block
+any HTTP requests processed by Django</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="blockchain.apps.update_crypto_prices">
+<code class="descclassname">blockchain.apps.</code><code class="descname">update_crypto_prices</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/blockchain/apps.html#update_crypto_prices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blockchain.apps.update_crypto_prices" title="Permalink to this definition">¶</a></dt>
+<dd><p>We monitor prices from CMC and upate them in a local model</p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="models.html" class="btn btn-neutral float-right" title="blockchain.models" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../license.html" class="btn btn-neutral" title="License" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, NEON Exchange AG.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

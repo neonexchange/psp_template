@@ -14,6 +14,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='deposit',
             name='deposit_wallet',
-            field=models.OneToOneField(null=True, on_delete=django.db.models.deletion.CASCADE, to='blockchain.DepositWallet'),
+            field=models.OneToOneField(
+                null=True, on_delete=django.db.models.deletion.CASCADE, to='blockchain.DepositWallet'),
         ),
     ]

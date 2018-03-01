@@ -1,0 +1,606 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>customer.dwolla &mdash; nex_psp 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="nex_psp 0.1.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> nex_psp
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../blockchain/apps.html">blockchain.apps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../blockchain/models.html">blockchain.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../customer/models.html">customer.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../customer/dwolla.html">customer.dwolla</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../nexpsp/settings.html">nexpsp.settings</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">nex_psp</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>customer.dwolla</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for customer.dwolla</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">dwollav2</span>
+<span class="kn">from</span> <span class="nn">logzero</span> <span class="k">import</span> <span class="n">logger</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
+<span class="c1"># Navigate to https://www.dwolla.com/applications (production) or https://dashboard-sandbox.dwolla.com/applications (Sandbox) for your application key and secret.</span>
+
+
+<div class="viewcode-block" id="DwollaClient"><a class="viewcode-back" href="../../customer/dwolla.html#customer.dwolla.DwollaClient">[docs]</a><span class="k">class</span> <span class="nc">DwollaClient</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This is a basic client implementation for the Dwolla API</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">__instance</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">_client</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">_token</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">api_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        retrieves the api url for the client to use</span>
+<span class="sd">        </span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">environment</span> <span class="o">==</span> <span class="s1">&#39;sandbox&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;https://api-sandbox.dwolla.com/&#39;</span>
+        <span class="k">return</span> <span class="s1">&#39;https://api.dwolla.com/&#39;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">funding_source_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The endpoint for funding sources</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">funding-sources/&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_url</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">customer_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        the endpoint for customers</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">customers/&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_url</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">token</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The token for this client</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_token</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">client</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The client object</span>
+<span class="sd">        Returns:</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span>
+
+<div class="viewcode-block" id="DwollaClient.refresh"><a class="viewcode-back" href="../../customer/dwolla.html#customer.dwolla.DwollaClient.refresh">[docs]</a>    <span class="k">def</span> <span class="nf">refresh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Refreshes the client token</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">Auth</span><span class="o">.</span><span class="n">client</span><span class="p">()</span>
+
+<div class="viewcode-block" id="DwollaClient.__init__"><a class="viewcode-back" href="../../customer/dwolla.html#customer.dwolla.DwollaClient.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes an instance of the DwollaClient</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_client</span> <span class="o">=</span> <span class="n">dwollav2</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">DWOLLA_KEY</span><span class="p">,</span>
+                                       <span class="n">secret</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">DWOLLA_SECRET</span><span class="p">,</span>
+                                       <span class="n">environment</span><span class="o">=</span><span class="s1">&#39;sandbox&#39;</span><span class="p">)</span>  <span class="c1"># optional - defaults to production</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+
+<div class="viewcode-block" id="DwollaClient.instance"><a class="viewcode-back" href="../../customer/dwolla.html#customer.dwolla.DwollaClient.instance">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">instance</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Singleton accessor for the client</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            customer.dwolla.DwollaClient</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">DwollaClient</span><span class="o">.</span><span class="n">__instance</span><span class="p">:</span>
+            <span class="n">DwollaClient</span><span class="o">.</span><span class="n">__instance</span> <span class="o">=</span> <span class="n">DwollaClient</span><span class="p">()</span></div></div>
+        <span class="k">return</span> <span class="n">DwollaClient</span><span class="o">.</span><span class="n">__instance</span>
+
+
+<div class="viewcode-block" id="dwolla_get_url"><a class="viewcode-back" href="../../customer/dwolla.html#customer.dwolla.dwolla_get_url">[docs]</a><span class="k">def</span> <span class="nf">dwolla_get_url</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A helper method for the DwollaClient to retreive any url</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        url (str): the url to retreive</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        response</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">DwollaClient</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">body</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not get url: </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="dwolla_simulate_sandbox_transfers"><a class="viewcode-back" href="../../customer/dwolla.html#customer.dwolla.dwolla_simulate_sandbox_transfers">[docs]</a><span class="k">def</span> <span class="nf">dwolla_simulate_sandbox_transfers</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This method is used to simulate ACH transfers for the sandbox</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">DwollaClient</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;sandbox-simulations&#39;</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<div class="viewcode-block" id="dwolla_create_user"><a class="viewcode-back" href="../../customer/dwolla.html#customer.dwolla.dwolla_create_user">[docs]</a><span class="k">def</span> <span class="nf">dwolla_create_user</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Takes a PSPUser and creates a user for them in the Dwolla API</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        user (customer.models.PSPUser): The PSPUser to create in the Dwolla API:</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: success of the operation</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">json</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">customer</span> <span class="o">=</span> <span class="n">DwollaClient</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;customers&#39;</span><span class="p">,</span> <span class="n">json</span><span class="p">)</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">customer</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">dwolla_url</span> <span class="o">=</span> <span class="n">url</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;could not get customer location </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
+</div>
+    <span class="k">return</span> <span class="kc">False</span>
+
+
+<div class="viewcode-block" id="dwolla_update_user"><a class="viewcode-back" href="../../customer/dwolla.html#customer.dwolla.dwolla_update_user">[docs]</a><span class="k">def</span> <span class="nf">dwolla_update_user</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Takes a PSPUser and updates a user for them in the Dwolla API</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        user (customer.models.PSPUser): The PSPUser to update in the Dwolla API:</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: success of the operation</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">json</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">to_update_json</span><span class="p">()</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">customer</span> <span class="o">=</span> <span class="n">DwollaClient</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="s1">&#39;customers/</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">user</span><span class="o">.</span><span class="n">dwolla_id</span><span class="p">,</span> <span class="n">json</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">customer</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;could not get customer location </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
+</div>
+    <span class="k">return</span> <span class="kc">False</span>
+
+
+<div class="viewcode-block" id="dwolla_generate_funding_source_token"><a class="viewcode-back" href="../../customer/dwolla.html#customer.dwolla.dwolla_generate_funding_source_token">[docs]</a><span class="k">def</span> <span class="nf">dwolla_generate_funding_source_token</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Takes a user and generates a token to use.  That token is used to create a funding source for this user</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        user (customer.models.PSPUser): The PSPUser to create a token for in the creation of a funding source</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: the token that was created</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">dwolla_url</span><span class="p">:</span>
+        <span class="n">funding_token_req</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/iav-token&#39;</span> <span class="o">%</span> <span class="n">user</span><span class="o">.</span><span class="n">dwolla_url</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">DwollaClient</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">funding_token_req</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">request</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;token&#39;</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;could not get dwolla account funding token </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
+</div>
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="dwolla_get_user_balance"><a class="viewcode-back" href="../../customer/dwolla.html#customer.dwolla.dwolla_get_user_balance">[docs]</a><span class="k">def</span> <span class="nf">dwolla_get_user_balance</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gets a balance for a user. Note that this is not functional in sandbox mode</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        user (customer.models.PSPUser): The PSPUser to create a token for in the creation of a funding source</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: a dictionary with balance information</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="n">dwolla_get_funding_sources</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;balance&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">item</span>
+</div>
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="dwolla_get_user_bank_accounts"><a class="viewcode-back" href="../../customer/dwolla.html#customer.dwolla.dwolla_get_user_bank_accounts">[docs]</a><span class="k">def</span> <span class="nf">dwolla_get_user_bank_accounts</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gets a list of bank accounts for a user</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        user (customer.models.PSPUser): The PSPUser to create a token for in the creation of a funding source</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: a list of bank accounts for a user</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">items</span> <span class="o">=</span> <span class="n">dwolla_get_funding_sources</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+
+    <span class="n">to_return</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">items</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;bank&#39;</span><span class="p">:</span>
+                <span class="n">to_return</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+</div>
+    <span class="k">return</span> <span class="n">to_return</span>
+
+
+<div class="viewcode-block" id="dwolla_get_funding_sources"><a class="viewcode-back" href="../../customer/dwolla.html#customer.dwolla.dwolla_get_funding_sources">[docs]</a><span class="k">def</span> <span class="nf">dwolla_get_funding_sources</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gets a list of funding sources for a user</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        user (customer.models.PSPUser): The PSPUser to create a token for in the creation of a funding source</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: A list of funding sources for a user</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">dwolla_url</span><span class="p">:</span>
+        <span class="n">sources_url</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/funding-sources&#39;</span> <span class="o">%</span> <span class="n">user</span><span class="o">.</span><span class="n">dwolla_url</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="n">DwollaClient</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sources_url</span><span class="p">)</span>
+
+            <span class="n">items</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="n">sources</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;_embedded&#39;</span><span class="p">][</span><span class="s1">&#39;funding-sources&#39;</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sources</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;verified&#39;</span><span class="p">:</span>
+
+                    <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;balance&#39;</span><span class="p">:</span>
+                        <span class="n">item</span><span class="p">[</span><span class="s1">&#39;balance&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dwolla_get_balance</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+                    <span class="n">items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">items</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;could not get funding source </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
+</div>
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="dwolla_get_balance"><a class="viewcode-back" href="../../customer/dwolla.html#customer.dwolla.dwolla_get_balance">[docs]</a><span class="k">def</span> <span class="nf">dwolla_get_balance</span><span class="p">(</span><span class="n">funding_source</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gets the balance of a users funding source.  Note that this does not work in sandbox mode.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        funding_source (str): The funding source url to get the balance of</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: A dictionary with balance information</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">balance_url</span> <span class="o">=</span> <span class="n">funding_source</span><span class="p">[</span><span class="s1">&#39;_links&#39;</span><span class="p">][</span><span class="s1">&#39;balance&#39;</span><span class="p">][</span><span class="s1">&#39;href&#39;</span><span class="p">]</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">DwollaClient</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">balance_url</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">results</span><span class="o">.</span><span class="n">body</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;could not get balance </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
+</div>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;balance&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;currency&#39;</span><span class="p">:</span> <span class="s1">&#39;USD&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;0.00&#39;</span><span class="p">}}</span>
+
+
+<div class="viewcode-block" id="dwolla_create_transfer"><a class="viewcode-back" href="../../customer/dwolla.html#customer.dwolla.dwolla_create_transfer">[docs]</a><span class="k">def</span> <span class="nf">dwolla_create_transfer</span><span class="p">(</span><span class="n">purchase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a purchase of crypto transfer from a user to the PSP</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        purchase (customer.models.Purchase): The Purchase object to use to determine what has been sent to the PSP</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: the transfer object that has been created</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">request_body</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;_links&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;href&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">%s%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">DwollaClient</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">funding_source_url</span><span class="p">,</span> <span class="n">purchase</span><span class="o">.</span><span class="n">sender_account_id</span><span class="p">)</span>
+            <span class="p">},</span>
+            <span class="s1">&#39;destination&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;href&#39;</span><span class="p">:</span> <span class="n">purchase</span><span class="o">.</span><span class="n">receiver_account_id</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;amount&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;currency&#39;</span><span class="p">:</span> <span class="s1">&#39;USD&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">%0.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">purchase</span><span class="o">.</span><span class="n">total</span><span class="p">,),</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;correlationId&#39;</span><span class="p">:</span> <span class="n">purchase</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="n">transfer</span> <span class="o">=</span> <span class="n">DwollaClient</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;transfers&#39;</span><span class="p">,</span> <span class="n">request_body</span><span class="p">)</span>
+</div>
+    <span class="k">return</span> <span class="n">transfer</span>
+
+
+<div class="viewcode-block" id="dwolla_send_to_user"><a class="viewcode-back" href="../../customer/dwolla.html#customer.dwolla.dwolla_send_to_user">[docs]</a><span class="k">def</span> <span class="nf">dwolla_send_to_user</span><span class="p">(</span><span class="n">deposit</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sends an amount of fiat to a user based on the parameters of the Deposit object sent to it.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        deposit (customer.models.Deposit): The deposit to use to determine what to send to the user</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: the transfer object that has been created</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">request_body</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;_links&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;href&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">%s%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">DwollaClient</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">funding_source_url</span><span class="p">,</span> <span class="n">deposit</span><span class="o">.</span><span class="n">sender_account_id</span><span class="p">)</span>
+            <span class="p">},</span>
+            <span class="s1">&#39;destination&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;href&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">%s%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">DwollaClient</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">funding_source_url</span><span class="p">,</span> <span class="n">deposit</span><span class="o">.</span><span class="n">receiver_account_id</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;amount&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;currency&#39;</span><span class="p">:</span> <span class="s1">&#39;USD&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">%0.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">deposit</span><span class="o">.</span><span class="n">total</span><span class="p">,),</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;correlationId&#39;</span><span class="p">:</span> <span class="n">deposit</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="n">transfer</span> <span class="o">=</span> <span class="n">DwollaClient</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;transfers&#39;</span><span class="p">,</span> <span class="n">request_body</span><span class="p">)</span>
+</div>
+    <span class="k">return</span> <span class="n">transfer</span>
+
+
+<div class="viewcode-block" id="dwolla_get_transfers"><a class="viewcode-back" href="../../customer/dwolla.html#customer.dwolla.dwolla_get_transfers">[docs]</a><span class="k">def</span> <span class="nf">dwolla_get_transfers</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gets a list of all transfers associated with a user</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        user (customer.models.PSPUser): The PSPUser to create a token for in the creation of a funding source</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: a list of all transfers associated with a user</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/transfers&#39;</span> <span class="o">%</span> <span class="n">user</span><span class="o">.</span><span class="n">dwolla_url</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">transferlist</span> <span class="o">=</span> <span class="n">DwollaClient</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">transferlist</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;_embedded&#39;</span><span class="p">][</span><span class="s1">&#39;transfers&#39;</span><span class="p">]</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;could not get transfer list: </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
+</div>
+    <span class="k">return</span> <span class="kc">None</span>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, NEON Exchange AG.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

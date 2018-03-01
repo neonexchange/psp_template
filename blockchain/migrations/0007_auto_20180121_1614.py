@@ -13,12 +13,14 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='blockchaintransfer',
             name='asset',
-            field=models.CharField(choices=[('GAS', 'GAS'), ('NEO', 'NEO'), ('NEX', 'NEX'), ('RPX', 'RPX')], default='GAS', max_length=3),
+            field=models.CharField(choices=[('GAS', 'GAS'), ('NEO', 'NEO'), (
+                'NEX', 'NEX'), ('RPX', 'RPX')], default='GAS', max_length=3),
         ),
         migrations.AlterField(
             model_name='price',
             name='asset',
-            field=models.CharField(choices=[('GAS', 'GAS'), ('NEO', 'NEO'), ('NEX', 'NEX'), ('RPX', 'RPX')], max_length=3, unique=True),
+            field=models.CharField(choices=[('GAS', 'GAS'), ('NEO', 'NEO'), (
+                'NEX', 'NEX'), ('RPX', 'RPX')], max_length=3, unique=True),
         ),
         migrations.AlterField(
             model_name='price',

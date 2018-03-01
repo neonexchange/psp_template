@@ -48,7 +48,6 @@ INSTALLED_APPS = [
 ]
 
 
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -150,6 +149,32 @@ LOGOUT_REDIRECT_URL = '/'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
+# Neo related settings
+
 NEOSCAN_URL = 'https://nex.neoscan-testnet.io/'
 
 WALLET_DEPOSIT_PATH = '%s/Data/deposits' % BASE_DIR
+
+CHAIN_DIR = "%s/Data/pspnet" % BASE_DIR
+
+# loop settings ( all in seconds )
+PERSIST_BLOCK_TIME = .1
+WALLET_LOOP_TIME = .1
+MONITOR_LOOP_TIME = 30
+TRANSFER_LOOP_TIME = 2
+CRYPTO_TRANSFER_LOOP_TIME = 3
+PENDING_CRYPTO_TRANSFER_LOOP = 4
+PENDING_GAS_TRANSFER_LOOP = 5
+DWOLLA_TOKEN_REFRESH_TIME = 60 * 10
+CMC_UPDATE_LOOP_TIME = 60 * 3
+MOVE_DEPOSITS_LOOP_TIME = 60
+
+# The following should probably be put is os.environ
+
+PROTOCOL_FILE = 'protocol.coz.json'
+
+PROVIDER_WALLET_FILE = 'new_myprovider.db3'
+PROVIDER_WALLET_PASS = 'mypassword'
+
+DWOLLA_KEY = 'AhsM66nKvorWWIwJL9WNCE3wO0FNIg0ajsB7v4lOQlUvnNGNyY'
+DWOLLA_SECRET = 'o5863B3xHXYA60DQo1Gnsrl9zKKoOyGdOrayJTOQWNRm2a18Pd'

@@ -13,11 +13,13 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='deposit',
             name='status',
-            field=models.CharField(choices=[('pending', 'pending'), ('gas_received', 'gas_received'), ('processed', 'processed'), ('failed', 'failed'), ('complete', 'complete')], default='pending', max_length=32),
+            field=models.CharField(choices=[('pending', 'pending'), ('gas_received', 'gas_received'), (
+                'processed', 'processed'), ('failed', 'failed'), ('complete', 'complete')], default='pending', max_length=32),
         ),
         migrations.AlterField(
             model_name='purchase',
             name='status',
-            field=models.CharField(choices=[('pending', 'pending'), ('gas_received', 'gas_received'), ('processed', 'processed'), ('failed', 'failed'), ('complete', 'complete')], default='pending', max_length=32),
+            field=models.CharField(choices=[('pending', 'pending'), ('gas_received', 'gas_received'), (
+                'processed', 'processed'), ('failed', 'failed'), ('complete', 'complete')], default='pending', max_length=32),
         ),
     ]

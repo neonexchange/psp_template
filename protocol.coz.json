@@ -35,10 +35,10 @@
     "NodePort": 20333,
     "WsPort": 20334,
     "UriPrefix": [ "http://*:20332"],
-    "VersionName":"/NEO-PYTHON:2.3.4/",
     "SslCert": "",
     "SslCertPassword": "",
     "BootstrapFile":"",
+    "NotificationBootstrapFile":"",
     "DebugStorage":1
   }
 }

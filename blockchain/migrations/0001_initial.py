@@ -14,13 +14,17 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='BlockchainTransfer',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
                 ('to_address', models.CharField(max_length=34)),
                 ('from_address', models.CharField(max_length=34)),
                 ('amount', models.FloatField()),
-                ('asset', models.CharField(choices=[('GAS', 'GAS'), ('NEO', 'NEO'), ('NEX', 'NEX')], default='GAS', max_length=3)),
-                ('transaction_id', models.CharField(blank=True, max_length=64, null=True)),
-                ('status', models.CharField(choices=[('GAS', 'GAS'), ('NEO', 'NEO'), ('NEX', 'NEX')], default='pending', max_length=64)),
+                ('asset', models.CharField(choices=[
+                 ('GAS', 'GAS'), ('NEO', 'NEO'), ('NEX', 'NEX')], default='GAS', max_length=3)),
+                ('transaction_id', models.CharField(
+                    blank=True, max_length=64, null=True)),
+                ('status', models.CharField(choices=[
+                 ('GAS', 'GAS'), ('NEO', 'NEO'), ('NEX', 'NEX')], default='pending', max_length=64)),
             ],
         ),
     ]

@@ -14,11 +14,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='depositwallet',
             name='transfer',
-            field=models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='blockchain.BlockchainTransfer'),
+            field=models.OneToOneField(
+                blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='blockchain.BlockchainTransfer'),
         ),
         migrations.AlterField(
             model_name='blockchaintransfer',
             name='status',
-            field=models.CharField(choices=[('awaiting_deposit', 'awaiting_deposit'), ('gas_received', 'gas_received'), ('pending', 'pending'), ('processed', 'processed'), ('failed', 'failed'), ('complete', 'complete')], default='pending', max_length=64),
+            field=models.CharField(choices=[('awaiting_deposit', 'awaiting_deposit'), ('gas_received', 'gas_received'), ('pending', 'pending'), (
+                'processed', 'processed'), ('failed', 'failed'), ('complete', 'complete')], default='pending', max_length=64),
         ),
     ]

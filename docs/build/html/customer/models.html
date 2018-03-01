@@ -1,0 +1,1161 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>customer.models &mdash; nex_psp 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="nex_psp 0.1.0 documentation" href="../index.html"/>
+        <link rel="next" title="customer.dwolla" href="dwolla.html"/>
+        <link rel="prev" title="blockchain.models" href="../blockchain/models.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> nex_psp
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../blockchain/apps.html">blockchain.apps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../blockchain/models.html">blockchain.models</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">customer.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dwolla.html">customer.dwolla</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nexpsp/settings.html">nexpsp.settings</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">nex_psp</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>customer.models</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/customer/models.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="customer-models">
+<h1>customer.models<a class="headerlink" href="#customer-models" title="Permalink to this headline">¶</a></h1>
+<p>What follows are the details of the <code class="docutils literal notranslate"><span class="pre">customer.models</span></code> implementation.</p>
+<span class="target" id="module-customer.models"></span><dl class="class">
+<dt id="customer.models.Deposit">
+<em class="property">class </em><code class="descclassname">customer.models.</code><code class="descname">Deposit</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/customer/models.html#Deposit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#customer.models.Deposit" title="Permalink to this definition">¶</a></dt>
+<dd><p>A deposit is for persisting when a user deposits crypto into the system in exchange for fiat</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>id</strong> (<em>AutoField</em>) – Id</li>
+<li><strong>invoice_id</strong> (<em>UUIDField</em>) – Invoice id</li>
+<li><strong>amount</strong> (<em>FloatField</em>) – Amount</li>
+<li><strong>user</strong> (ForeignKey to <a class="reference internal" href="#customer.models.PSPUser" title="customer.models.PSPUser"><code class="xref py py-class docutils literal notranslate"><span class="pre">PSPUser</span></code></a>) – User</li>
+<li><strong>sender_account_id</strong> (<em>CharField</em>) – Sender account id</li>
+<li><strong>receiver_account_id</strong> (<em>CharField</em>) – Receiver account id</li>
+<li><strong>neo_sender_address</strong> (<em>CharField</em>) – Neo sender address</li>
+<li><strong>asset</strong> (<em>CharField</em>) – Asset</li>
+<li><strong>gas_price</strong> (<em>FloatField</em>) – Gas price</li>
+<li><strong>fee</strong> (<em>FloatField</em>) – Fee</li>
+<li><strong>total_gas</strong> (<em>FloatField</em>) – Total gas</li>
+<li><strong>total_fee</strong> (<em>FloatField</em>) – Total fee</li>
+<li><strong>total</strong> (<em>FloatField</em>) – Total</li>
+<li><strong>status</strong> (<em>CharField</em>) – Status</li>
+<li><strong>transfer_url</strong> (<em>CharField</em>) – Transfer url</li>
+<li><strong>date_created</strong> (<em>DateTimeField</em>) – Date created</li>
+<li><strong>date_updated</strong> (<em>DateTimeField</em>) – Date updated</li>
+<li><strong>failure_reason</strong> (<em>CharField</em>) – Failure reason</li>
+<li><strong>blockchain_transfer</strong> (OneToOneField to <a class="reference internal" href="../blockchain/models.html#blockchain.models.BlockchainTransfer" title="blockchain.models.BlockchainTransfer"><code class="xref py py-class docutils literal notranslate"><span class="pre">BlockchainTransfer</span></code></a>) – Blockchain transfer</li>
+<li><strong>deposit_wallet</strong> (OneToOneField to <a class="reference internal" href="../blockchain/models.html#blockchain.models.DepositWallet" title="blockchain.models.DepositWallet"><code class="xref py py-class docutils literal notranslate"><span class="pre">DepositWallet</span></code></a>) – Deposit wallet</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="exception">
+<dt id="customer.models.Deposit.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#customer.models.Deposit.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="exception">
+<dt id="customer.models.Deposit.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#customer.models.Deposit.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Deposit.amount">
+<code class="descname">amount</code><a class="headerlink" href="#customer.models.Deposit.amount" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> amount</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Deposit.asset">
+<code class="descname">asset</code><a class="headerlink" href="#customer.models.Deposit.asset" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> asset</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Deposit.blockchain_transfer">
+<code class="descname">blockchain_transfer</code><a class="headerlink" href="#customer.models.Deposit.blockchain_transfer" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> blockchain transfer, accesses the <a class="reference internal" href="../blockchain/models.html#blockchain.models.BlockchainTransfer" title="blockchain.models.BlockchainTransfer"><code class="xref py py-class docutils literal notranslate"><span class="pre">BlockchainTransfer</span></code></a> model.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Deposit.blockchain_transfer_id">
+<code class="descname">blockchain_transfer_id</code><a class="headerlink" href="#customer.models.Deposit.blockchain_transfer_id" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> blockchain transfer</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Deposit.date_created">
+<code class="descname">date_created</code><a class="headerlink" href="#customer.models.Deposit.date_created" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> date created</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Deposit.date_updated">
+<code class="descname">date_updated</code><a class="headerlink" href="#customer.models.Deposit.date_updated" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> date updated</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Deposit.deposit_wallet">
+<code class="descname">deposit_wallet</code><a class="headerlink" href="#customer.models.Deposit.deposit_wallet" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> deposit wallet, accesses the <a class="reference internal" href="../blockchain/models.html#blockchain.models.DepositWallet" title="blockchain.models.DepositWallet"><code class="xref py py-class docutils literal notranslate"><span class="pre">DepositWallet</span></code></a> model.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Deposit.deposit_wallet_id">
+<code class="descname">deposit_wallet_id</code><a class="headerlink" href="#customer.models.Deposit.deposit_wallet_id" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> deposit wallet</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Deposit.failure_reason">
+<code class="descname">failure_reason</code><a class="headerlink" href="#customer.models.Deposit.failure_reason" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> failure reason</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Deposit.fee">
+<code class="descname">fee</code><a class="headerlink" href="#customer.models.Deposit.fee" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> fee</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Deposit.gas_price">
+<code class="descname">gas_price</code><a class="headerlink" href="#customer.models.Deposit.gas_price" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> gas price</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="customer.models.Deposit.get_asset_display">
+<code class="descname">get_asset_display</code><span class="sig-paren">(</span><em>*</em>, <em>field=&lt;django.db.models.fields.CharField: asset&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#customer.models.Deposit.get_asset_display" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Autogenerated:</strong> Shows the label of the <a class="reference internal" href="#customer.models.Deposit.asset" title="customer.models.Deposit.asset"><code class="xref py py-attr docutils literal notranslate"><span class="pre">asset</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="customer.models.Deposit.get_next_by_date_created">
+<code class="descname">get_next_by_date_created</code><span class="sig-paren">(</span><em>*</em>, <em>field=&lt;django.db.models.fields.DateTimeField: date_created&gt;</em>, <em>is_next=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#customer.models.Deposit.get_next_by_date_created" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Autogenerated:</strong> Finds next instance based on <a class="reference internal" href="#customer.models.Deposit.date_created" title="customer.models.Deposit.date_created"><code class="xref py py-attr docutils literal notranslate"><span class="pre">date_created</span></code></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="customer.models.Deposit.get_next_by_date_updated">
+<code class="descname">get_next_by_date_updated</code><span class="sig-paren">(</span><em>*</em>, <em>field=&lt;django.db.models.fields.DateTimeField: date_updated&gt;</em>, <em>is_next=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#customer.models.Deposit.get_next_by_date_updated" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Autogenerated:</strong> Finds next instance based on <a class="reference internal" href="#customer.models.Deposit.date_updated" title="customer.models.Deposit.date_updated"><code class="xref py py-attr docutils literal notranslate"><span class="pre">date_updated</span></code></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="customer.models.Deposit.get_previous_by_date_created">
+<code class="descname">get_previous_by_date_created</code><span class="sig-paren">(</span><em>*</em>, <em>field=&lt;django.db.models.fields.DateTimeField: date_created&gt;</em>, <em>is_next=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#customer.models.Deposit.get_previous_by_date_created" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Autogenerated:</strong> Finds previous instance based on <a class="reference internal" href="#customer.models.Deposit.date_created" title="customer.models.Deposit.date_created"><code class="xref py py-attr docutils literal notranslate"><span class="pre">date_created</span></code></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="customer.models.Deposit.get_previous_by_date_updated">
+<code class="descname">get_previous_by_date_updated</code><span class="sig-paren">(</span><em>*</em>, <em>field=&lt;django.db.models.fields.DateTimeField: date_updated&gt;</em>, <em>is_next=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#customer.models.Deposit.get_previous_by_date_updated" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Autogenerated:</strong> Finds previous instance based on <a class="reference internal" href="#customer.models.Deposit.date_updated" title="customer.models.Deposit.date_updated"><code class="xref py py-attr docutils literal notranslate"><span class="pre">date_updated</span></code></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="customer.models.Deposit.get_status_display">
+<code class="descname">get_status_display</code><span class="sig-paren">(</span><em>*</em>, <em>field=&lt;django.db.models.fields.CharField: status&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#customer.models.Deposit.get_status_display" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Autogenerated:</strong> Shows the label of the <a class="reference internal" href="#customer.models.Deposit.status" title="customer.models.Deposit.status"><code class="xref py py-attr docutils literal notranslate"><span class="pre">status</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Deposit.id">
+<code class="descname">id</code><a class="headerlink" href="#customer.models.Deposit.id" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> ID</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Deposit.invoice_id">
+<code class="descname">invoice_id</code><a class="headerlink" href="#customer.models.Deposit.invoice_id" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> invoice id</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Deposit.neo_sender_address">
+<code class="descname">neo_sender_address</code><a class="headerlink" href="#customer.models.Deposit.neo_sender_address" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> neo sender address</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Deposit.objects">
+<code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#customer.models.Deposit.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Deposit.pspuser_set">
+<code class="descname">pspuser_set</code><a class="headerlink" href="#customer.models.Deposit.pspuser_set" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> pending deposit, accesses the M2M <a class="reference internal" href="#customer.models.PSPUser" title="customer.models.PSPUser"><code class="xref py py-class docutils literal notranslate"><span class="pre">PSPUser</span></code></a> model.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Deposit.receiver_account">
+<code class="descname">receiver_account</code><a class="headerlink" href="#customer.models.Deposit.receiver_account" title="Permalink to this definition">¶</a></dt>
+<dd><p>The dwolla url of the reciever of this Deposit</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Deposit.receiver_account_id">
+<code class="descname">receiver_account_id</code><a class="headerlink" href="#customer.models.Deposit.receiver_account_id" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> receiver account id</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Deposit.sender_account_id">
+<code class="descname">sender_account_id</code><a class="headerlink" href="#customer.models.Deposit.sender_account_id" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> sender account id</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Deposit.status">
+<code class="descname">status</code><a class="headerlink" href="#customer.models.Deposit.status" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> status</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Deposit.total">
+<code class="descname">total</code><a class="headerlink" href="#customer.models.Deposit.total" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> total</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Deposit.total_fee">
+<code class="descname">total_fee</code><a class="headerlink" href="#customer.models.Deposit.total_fee" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> total fee</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Deposit.total_gas">
+<code class="descname">total_gas</code><a class="headerlink" href="#customer.models.Deposit.total_gas" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> total gas</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Deposit.transfer_id">
+<code class="descname">transfer_id</code><a class="headerlink" href="#customer.models.Deposit.transfer_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>The url of the dwolla transfer associated with this deposit</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Deposit.transfer_url">
+<code class="descname">transfer_url</code><a class="headerlink" href="#customer.models.Deposit.transfer_url" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> transfer url</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Deposit.user">
+<code class="descname">user</code><a class="headerlink" href="#customer.models.Deposit.user" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> user, accesses the <a class="reference internal" href="#customer.models.PSPUser" title="customer.models.PSPUser"><code class="xref py py-class docutils literal notranslate"><span class="pre">PSPUser</span></code></a> model.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Deposit.user_id">
+<code class="descname">user_id</code><a class="headerlink" href="#customer.models.Deposit.user_id" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> user</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="customer.models.PSPUser">
+<em class="property">class </em><code class="descclassname">customer.models.</code><code class="descname">PSPUser</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/customer/models.html#PSPUser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#customer.models.PSPUser" title="Permalink to this definition">¶</a></dt>
+<dd><p>PSP User is the model that represents any user on the website, whether admins or consumers. It inherits/conforms
+to the normal django user conventions</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>id</strong> (<em>AutoField</em>) – Id</li>
+<li><strong>password</strong> (<em>CharField</em>) – Password</li>
+<li><strong>is_superuser</strong> (<em>BooleanField</em>) – Designates that this user has all permissions without explicitly assigning them.</li>
+<li><strong>email</strong> (<em>EmailField</em>) – Email address</li>
+<li><strong>first_name</strong> (<em>CharField</em>) – First name</li>
+<li><strong>last_name</strong> (<em>CharField</em>) – Last name</li>
+<li><strong>is_active</strong> (<em>BooleanField</em>) – Is active</li>
+<li><strong>is_admin</strong> (<em>BooleanField</em>) – Is admin</li>
+<li><strong>date_joined</strong> (<em>DateTimeField</em>) – Date joined</li>
+<li><strong>last_login</strong> (<em>DateTimeField</em>) – Last login</li>
+<li><strong>dwolla_url</strong> (<em>URLField</em>) – Dwolla url</li>
+<li><strong>customer_type</strong> (<em>CharField</em>) – Customer type</li>
+<li><strong>address1</strong> (<em>CharField</em>) – Address1</li>
+<li><strong>address2</strong> (<em>CharField</em>) – Address2</li>
+<li><strong>city</strong> (<em>CharField</em>) – City</li>
+<li><strong>postal_code</strong> (<em>USZipCodeField</em>) – Postal code</li>
+<li><strong>state</strong> (<em>USStateField</em>) – State</li>
+<li><strong>ssn_lastfour</strong> (<em>CharField</em>) – Ssn lastfour</li>
+<li><strong>date_of_birth</strong> (<em>DateField</em>) – Date of birth</li>
+<li><strong>is_seller</strong> (<em>BooleanField</em>) – Is seller</li>
+<li><strong>pending_deposit</strong> (ForeignKey to <a class="reference internal" href="#customer.models.Deposit" title="customer.models.Deposit"><code class="xref py py-class docutils literal notranslate"><span class="pre">Deposit</span></code></a>) – Pending deposit</li>
+<li><strong>groups</strong> (<em>ManyToManyField</em>) – The groups this user belongs to. A user will get all permissions granted to each of their groups.</li>
+<li><strong>user_permissions</strong> (<em>ManyToManyField</em>) – Specific permissions for this user.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="exception">
+<dt id="customer.models.PSPUser.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#customer.models.PSPUser.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="exception">
+<dt id="customer.models.PSPUser.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#customer.models.PSPUser.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.PSPUser.REQUIRED_FIELDS">
+<code class="descname">REQUIRED_FIELDS</code><em class="property"> = ['first_name', 'last_name', 'address1', 'city', 'postal_code', 'state', 'ssn_lastfour', 'date_of_birth']</em><a class="headerlink" href="#customer.models.PSPUser.REQUIRED_FIELDS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.PSPUser.USERNAME_FIELD">
+<code class="descname">USERNAME_FIELD</code><em class="property"> = 'email'</em><a class="headerlink" href="#customer.models.PSPUser.USERNAME_FIELD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.PSPUser.address1">
+<code class="descname">address1</code><a class="headerlink" href="#customer.models.PSPUser.address1" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> address1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.PSPUser.address2">
+<code class="descname">address2</code><a class="headerlink" href="#customer.models.PSPUser.address2" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> address2</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.PSPUser.city">
+<code class="descname">city</code><a class="headerlink" href="#customer.models.PSPUser.city" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> city</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.PSPUser.customer_type">
+<code class="descname">customer_type</code><a class="headerlink" href="#customer.models.PSPUser.customer_type" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> customer type</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.PSPUser.date_joined">
+<code class="descname">date_joined</code><a class="headerlink" href="#customer.models.PSPUser.date_joined" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> date joined</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.PSPUser.date_of_birth">
+<code class="descname">date_of_birth</code><a class="headerlink" href="#customer.models.PSPUser.date_of_birth" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> date of birth</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.PSPUser.deposit_set">
+<code class="descname">deposit_set</code><a class="headerlink" href="#customer.models.PSPUser.deposit_set" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> user, accesses the M2M <a class="reference internal" href="#customer.models.Deposit" title="customer.models.Deposit"><code class="xref py py-class docutils literal notranslate"><span class="pre">Deposit</span></code></a> model.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.PSPUser.depositwallet_set">
+<code class="descname">depositwallet_set</code><a class="headerlink" href="#customer.models.PSPUser.depositwallet_set" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> depositor, accesses the M2M <a class="reference internal" href="../blockchain/models.html#blockchain.models.DepositWallet" title="blockchain.models.DepositWallet"><code class="xref py py-class docutils literal notranslate"><span class="pre">DepositWallet</span></code></a> model.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.PSPUser.dwolla_id">
+<code class="descname">dwolla_id</code><a class="headerlink" href="#customer.models.PSPUser.dwolla_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve the dwolla based id for this user
+:returns: str</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.PSPUser.dwolla_url">
+<code class="descname">dwolla_url</code><a class="headerlink" href="#customer.models.PSPUser.dwolla_url" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> dwolla url</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.PSPUser.email">
+<code class="descname">email</code><a class="headerlink" href="#customer.models.PSPUser.email" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> email address</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.PSPUser.first_name">
+<code class="descname">first_name</code><a class="headerlink" href="#customer.models.PSPUser.first_name" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> first name</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="customer.models.PSPUser.get_full_name">
+<code class="descname">get_full_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/customer/models.html#PSPUser.get_full_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#customer.models.PSPUser.get_full_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>returs full name of the user</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="customer.models.PSPUser.get_next_by_date_joined">
+<code class="descname">get_next_by_date_joined</code><span class="sig-paren">(</span><em>*</em>, <em>field=&lt;django.db.models.fields.DateTimeField: date_joined&gt;</em>, <em>is_next=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#customer.models.PSPUser.get_next_by_date_joined" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Autogenerated:</strong> Finds next instance based on <a class="reference internal" href="#customer.models.PSPUser.date_joined" title="customer.models.PSPUser.date_joined"><code class="xref py py-attr docutils literal notranslate"><span class="pre">date_joined</span></code></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="customer.models.PSPUser.get_next_by_date_of_birth">
+<code class="descname">get_next_by_date_of_birth</code><span class="sig-paren">(</span><em>*</em>, <em>field=&lt;django.db.models.fields.DateField: date_of_birth&gt;</em>, <em>is_next=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#customer.models.PSPUser.get_next_by_date_of_birth" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Autogenerated:</strong> Finds next instance based on <a class="reference internal" href="#customer.models.PSPUser.date_of_birth" title="customer.models.PSPUser.date_of_birth"><code class="xref py py-attr docutils literal notranslate"><span class="pre">date_of_birth</span></code></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="customer.models.PSPUser.get_next_by_last_login">
+<code class="descname">get_next_by_last_login</code><span class="sig-paren">(</span><em>*</em>, <em>field=&lt;django.db.models.fields.DateTimeField: last_login&gt;</em>, <em>is_next=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#customer.models.PSPUser.get_next_by_last_login" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Autogenerated:</strong> Finds next instance based on <code class="xref py py-attr docutils literal notranslate"><span class="pre">last_login</span></code>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="customer.models.PSPUser.get_previous_by_date_joined">
+<code class="descname">get_previous_by_date_joined</code><span class="sig-paren">(</span><em>*</em>, <em>field=&lt;django.db.models.fields.DateTimeField: date_joined&gt;</em>, <em>is_next=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#customer.models.PSPUser.get_previous_by_date_joined" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Autogenerated:</strong> Finds previous instance based on <a class="reference internal" href="#customer.models.PSPUser.date_joined" title="customer.models.PSPUser.date_joined"><code class="xref py py-attr docutils literal notranslate"><span class="pre">date_joined</span></code></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="customer.models.PSPUser.get_previous_by_date_of_birth">
+<code class="descname">get_previous_by_date_of_birth</code><span class="sig-paren">(</span><em>*</em>, <em>field=&lt;django.db.models.fields.DateField: date_of_birth&gt;</em>, <em>is_next=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#customer.models.PSPUser.get_previous_by_date_of_birth" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Autogenerated:</strong> Finds previous instance based on <a class="reference internal" href="#customer.models.PSPUser.date_of_birth" title="customer.models.PSPUser.date_of_birth"><code class="xref py py-attr docutils literal notranslate"><span class="pre">date_of_birth</span></code></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="customer.models.PSPUser.get_previous_by_last_login">
+<code class="descname">get_previous_by_last_login</code><span class="sig-paren">(</span><em>*</em>, <em>field=&lt;django.db.models.fields.DateTimeField: last_login&gt;</em>, <em>is_next=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#customer.models.PSPUser.get_previous_by_last_login" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Autogenerated:</strong> Finds previous instance based on <code class="xref py py-attr docutils literal notranslate"><span class="pre">last_login</span></code>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="customer.models.PSPUser.get_short_name">
+<code class="descname">get_short_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/customer/models.html#PSPUser.get_short_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#customer.models.PSPUser.get_short_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get users first name
+:returns: str</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="customer.models.PSPUser.get_state_display">
+<code class="descname">get_state_display</code><span class="sig-paren">(</span><em>*</em>, <em>field=&lt;localflavor.us.models.USStateField: state&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#customer.models.PSPUser.get_state_display" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Autogenerated:</strong> Shows the label of the <a class="reference internal" href="#customer.models.PSPUser.state" title="customer.models.PSPUser.state"><code class="xref py py-attr docutils literal notranslate"><span class="pre">state</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.PSPUser.groups">
+<code class="descname">groups</code><a class="headerlink" href="#customer.models.PSPUser.groups" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> groups, accesses the M2M <a class="reference internal" href="#customer.models.PSPUser" title="customer.models.PSPUser"><code class="xref py py-class docutils literal notranslate"><span class="pre">PSPUser</span></code></a> model.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="customer.models.PSPUser.has_module_perms">
+<code class="descname">has_module_perms</code><span class="sig-paren">(</span><em>app_label</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/customer/models.html#PSPUser.has_module_perms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#customer.models.PSPUser.has_module_perms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Does the user have permissions to view the app <cite>app_label</cite>?</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="customer.models.PSPUser.has_perm">
+<code class="descname">has_perm</code><span class="sig-paren">(</span><em>perm</em>, <em>obj=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/customer/models.html#PSPUser.has_perm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#customer.models.PSPUser.has_perm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Does the user have a specific permission?</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.PSPUser.id">
+<code class="descname">id</code><a class="headerlink" href="#customer.models.PSPUser.id" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> ID</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.PSPUser.is_admin">
+<code class="descname">is_admin</code><a class="headerlink" href="#customer.models.PSPUser.is_admin" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> is admin</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.PSPUser.is_seller">
+<code class="descname">is_seller</code><a class="headerlink" href="#customer.models.PSPUser.is_seller" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> is seller</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.PSPUser.is_staff">
+<code class="descname">is_staff</code><a class="headerlink" href="#customer.models.PSPUser.is_staff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Is this user a staff user?
+:returns: bool</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.PSPUser.last_name">
+<code class="descname">last_name</code><a class="headerlink" href="#customer.models.PSPUser.last_name" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> last name</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.PSPUser.logentry_set">
+<code class="descname">logentry_set</code><a class="headerlink" href="#customer.models.PSPUser.logentry_set" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> user, accesses the M2M <code class="xref py py-class docutils literal notranslate"><span class="pre">LogEntry</span></code> model.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.PSPUser.objects">
+<code class="descname">objects</code><em class="property"> = &lt;customer.models.PSPUserManager object&gt;</em><a class="headerlink" href="#customer.models.PSPUser.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.PSPUser.pending_deposit">
+<code class="descname">pending_deposit</code><a class="headerlink" href="#customer.models.PSPUser.pending_deposit" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> pending deposit, accesses the <a class="reference internal" href="#customer.models.Deposit" title="customer.models.Deposit"><code class="xref py py-class docutils literal notranslate"><span class="pre">Deposit</span></code></a> model.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.PSPUser.pending_deposit_id">
+<code class="descname">pending_deposit_id</code><a class="headerlink" href="#customer.models.PSPUser.pending_deposit_id" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> pending deposit</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.PSPUser.postal_code">
+<code class="descname">postal_code</code><a class="headerlink" href="#customer.models.PSPUser.postal_code" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> postal code</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.PSPUser.purchase_set">
+<code class="descname">purchase_set</code><a class="headerlink" href="#customer.models.PSPUser.purchase_set" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> user, accesses the M2M <a class="reference internal" href="#customer.models.Purchase" title="customer.models.Purchase"><code class="xref py py-class docutils literal notranslate"><span class="pre">Purchase</span></code></a> model.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.PSPUser.receiveableaccount_set">
+<code class="descname">receiveableaccount_set</code><a class="headerlink" href="#customer.models.PSPUser.receiveableaccount_set" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> user, accesses the M2M <a class="reference internal" href="#customer.models.ReceiveableAccount" title="customer.models.ReceiveableAccount"><code class="xref py py-class docutils literal notranslate"><span class="pre">ReceiveableAccount</span></code></a> model.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.PSPUser.ssn_lastfour">
+<code class="descname">ssn_lastfour</code><a class="headerlink" href="#customer.models.PSPUser.ssn_lastfour" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> ssn lastfour</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.PSPUser.state">
+<code class="descname">state</code><a class="headerlink" href="#customer.models.PSPUser.state" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> state</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="customer.models.PSPUser.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/customer/models.html#PSPUser.to_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#customer.models.PSPUser.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>output this user as a json object. The format is determined by the needs
+of the dwolla api</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="customer.models.PSPUser.to_update_json">
+<code class="descname">to_update_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/customer/models.html#PSPUser.to_update_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#customer.models.PSPUser.to_update_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>output of the user as json needed for dwolla to update a user
+:returns: dict</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.PSPUser.user_permissions">
+<code class="descname">user_permissions</code><a class="headerlink" href="#customer.models.PSPUser.user_permissions" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> user permissions, accesses the M2M <a class="reference internal" href="#customer.models.PSPUser" title="customer.models.PSPUser"><code class="xref py py-class docutils literal notranslate"><span class="pre">PSPUser</span></code></a> model.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="customer.models.PSPUserManager">
+<em class="property">class </em><code class="descclassname">customer.models.</code><code class="descname">PSPUserManager</code><a class="reference internal" href="../_modules/customer/models.html#PSPUserManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#customer.models.PSPUserManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>PSPUSer manager is a custom user manager for customer.models.PSPUser</p>
+<dl class="method">
+<dt id="customer.models.PSPUserManager.create_superuser">
+<code class="descname">create_superuser</code><span class="sig-paren">(</span><em>email</em>, <em>first_name</em>, <em>last_name</em>, <em>address1</em>, <em>city</em>, <em>postal_code</em>, <em>state</em>, <em>ssn_lastfour</em>, <em>date_of_birth</em>, <em>password</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/customer/models.html#PSPUserManager.create_superuser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#customer.models.PSPUserManager.create_superuser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates and saves a superuser with the given email, date of
+birth and password.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="customer.models.PSPUserManager.create_user">
+<code class="descname">create_user</code><span class="sig-paren">(</span><em>email</em>, <em>first</em>, <em>last</em>, <em>address1</em>, <em>city</em>, <em>postal_code</em>, <em>state</em>, <em>ssn_lastfour</em>, <em>date_of_birth</em>, <em>password=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/customer/models.html#PSPUserManager.create_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#customer.models.PSPUserManager.create_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates and saves a User with the given email, date of
+birth and password.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="customer.models.Purchase">
+<em class="property">class </em><code class="descclassname">customer.models.</code><code class="descname">Purchase</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/customer/models.html#Purchase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#customer.models.Purchase" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Purchase represents when a user sends fiat to the ReceivableAccount</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>id</strong> (<em>AutoField</em>) – Id</li>
+<li><strong>asset</strong> (<em>CharField</em>) – Asset</li>
+<li><strong>amount</strong> (<em>FloatField</em>) – Amount</li>
+<li><strong>user</strong> (ForeignKey to <a class="reference internal" href="#customer.models.PSPUser" title="customer.models.PSPUser"><code class="xref py py-class docutils literal notranslate"><span class="pre">PSPUser</span></code></a>) – User</li>
+<li><strong>sender_account_id</strong> (<em>CharField</em>) – Sender account id</li>
+<li><strong>receiver_account_id</strong> (<em>CharField</em>) – Receiver account id</li>
+<li><strong>neo_address</strong> (<em>CharField</em>) – Neo address</li>
+<li><strong>gas_price</strong> (<em>FloatField</em>) – Gas price</li>
+<li><strong>fee</strong> (<em>FloatField</em>) – Fee</li>
+<li><strong>total_gas</strong> (<em>FloatField</em>) – Total gas</li>
+<li><strong>total_fee</strong> (<em>FloatField</em>) – Total fee</li>
+<li><strong>total</strong> (<em>FloatField</em>) – Total</li>
+<li><strong>status</strong> (<em>CharField</em>) – Status</li>
+<li><strong>transfer_url</strong> (<em>CharField</em>) – Transfer url</li>
+<li><strong>date_created</strong> (<em>DateTimeField</em>) – Date created</li>
+<li><strong>date_updated</strong> (<em>DateTimeField</em>) – Date updated</li>
+<li><strong>failure_reason</strong> (<em>CharField</em>) – Failure reason</li>
+<li><strong>blockchain_transfer</strong> (OneToOneField to <a class="reference internal" href="../blockchain/models.html#blockchain.models.BlockchainTransfer" title="blockchain.models.BlockchainTransfer"><code class="xref py py-class docutils literal notranslate"><span class="pre">BlockchainTransfer</span></code></a>) – Blockchain transfer</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="exception">
+<dt id="customer.models.Purchase.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#customer.models.Purchase.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="exception">
+<dt id="customer.models.Purchase.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#customer.models.Purchase.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Purchase.amount">
+<code class="descname">amount</code><a class="headerlink" href="#customer.models.Purchase.amount" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> amount</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Purchase.asset">
+<code class="descname">asset</code><a class="headerlink" href="#customer.models.Purchase.asset" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> asset</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Purchase.blockchain_transfer">
+<code class="descname">blockchain_transfer</code><a class="headerlink" href="#customer.models.Purchase.blockchain_transfer" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> blockchain transfer, accesses the <a class="reference internal" href="../blockchain/models.html#blockchain.models.BlockchainTransfer" title="blockchain.models.BlockchainTransfer"><code class="xref py py-class docutils literal notranslate"><span class="pre">BlockchainTransfer</span></code></a> model.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Purchase.blockchain_transfer_id">
+<code class="descname">blockchain_transfer_id</code><a class="headerlink" href="#customer.models.Purchase.blockchain_transfer_id" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> blockchain transfer</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Purchase.date_created">
+<code class="descname">date_created</code><a class="headerlink" href="#customer.models.Purchase.date_created" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> date created</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Purchase.date_updated">
+<code class="descname">date_updated</code><a class="headerlink" href="#customer.models.Purchase.date_updated" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> date updated</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Purchase.failure_reason">
+<code class="descname">failure_reason</code><a class="headerlink" href="#customer.models.Purchase.failure_reason" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> failure reason</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Purchase.fee">
+<code class="descname">fee</code><a class="headerlink" href="#customer.models.Purchase.fee" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> fee</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Purchase.gas_price">
+<code class="descname">gas_price</code><a class="headerlink" href="#customer.models.Purchase.gas_price" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> gas price</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="customer.models.Purchase.get_asset_display">
+<code class="descname">get_asset_display</code><span class="sig-paren">(</span><em>*</em>, <em>field=&lt;django.db.models.fields.CharField: asset&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#customer.models.Purchase.get_asset_display" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Autogenerated:</strong> Shows the label of the <a class="reference internal" href="#customer.models.Purchase.asset" title="customer.models.Purchase.asset"><code class="xref py py-attr docutils literal notranslate"><span class="pre">asset</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="customer.models.Purchase.get_next_by_date_created">
+<code class="descname">get_next_by_date_created</code><span class="sig-paren">(</span><em>*</em>, <em>field=&lt;django.db.models.fields.DateTimeField: date_created&gt;</em>, <em>is_next=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#customer.models.Purchase.get_next_by_date_created" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Autogenerated:</strong> Finds next instance based on <a class="reference internal" href="#customer.models.Purchase.date_created" title="customer.models.Purchase.date_created"><code class="xref py py-attr docutils literal notranslate"><span class="pre">date_created</span></code></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="customer.models.Purchase.get_next_by_date_updated">
+<code class="descname">get_next_by_date_updated</code><span class="sig-paren">(</span><em>*</em>, <em>field=&lt;django.db.models.fields.DateTimeField: date_updated&gt;</em>, <em>is_next=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#customer.models.Purchase.get_next_by_date_updated" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Autogenerated:</strong> Finds next instance based on <a class="reference internal" href="#customer.models.Purchase.date_updated" title="customer.models.Purchase.date_updated"><code class="xref py py-attr docutils literal notranslate"><span class="pre">date_updated</span></code></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="customer.models.Purchase.get_previous_by_date_created">
+<code class="descname">get_previous_by_date_created</code><span class="sig-paren">(</span><em>*</em>, <em>field=&lt;django.db.models.fields.DateTimeField: date_created&gt;</em>, <em>is_next=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#customer.models.Purchase.get_previous_by_date_created" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Autogenerated:</strong> Finds previous instance based on <a class="reference internal" href="#customer.models.Purchase.date_created" title="customer.models.Purchase.date_created"><code class="xref py py-attr docutils literal notranslate"><span class="pre">date_created</span></code></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="customer.models.Purchase.get_previous_by_date_updated">
+<code class="descname">get_previous_by_date_updated</code><span class="sig-paren">(</span><em>*</em>, <em>field=&lt;django.db.models.fields.DateTimeField: date_updated&gt;</em>, <em>is_next=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#customer.models.Purchase.get_previous_by_date_updated" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Autogenerated:</strong> Finds previous instance based on <a class="reference internal" href="#customer.models.Purchase.date_updated" title="customer.models.Purchase.date_updated"><code class="xref py py-attr docutils literal notranslate"><span class="pre">date_updated</span></code></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="customer.models.Purchase.get_status_display">
+<code class="descname">get_status_display</code><span class="sig-paren">(</span><em>*</em>, <em>field=&lt;django.db.models.fields.CharField: status&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#customer.models.Purchase.get_status_display" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Autogenerated:</strong> Shows the label of the <a class="reference internal" href="#customer.models.Purchase.status" title="customer.models.Purchase.status"><code class="xref py py-attr docutils literal notranslate"><span class="pre">status</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Purchase.id">
+<code class="descname">id</code><a class="headerlink" href="#customer.models.Purchase.id" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> ID</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Purchase.neo_address">
+<code class="descname">neo_address</code><a class="headerlink" href="#customer.models.Purchase.neo_address" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> neo address</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Purchase.objects">
+<code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#customer.models.Purchase.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Purchase.receiver_account_id">
+<code class="descname">receiver_account_id</code><a class="headerlink" href="#customer.models.Purchase.receiver_account_id" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> receiver account id</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Purchase.sender_account_id">
+<code class="descname">sender_account_id</code><a class="headerlink" href="#customer.models.Purchase.sender_account_id" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> sender account id</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Purchase.status">
+<code class="descname">status</code><a class="headerlink" href="#customer.models.Purchase.status" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> status</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Purchase.total">
+<code class="descname">total</code><a class="headerlink" href="#customer.models.Purchase.total" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> total</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Purchase.total_fee">
+<code class="descname">total_fee</code><a class="headerlink" href="#customer.models.Purchase.total_fee" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> total fee</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Purchase.total_gas">
+<code class="descname">total_gas</code><a class="headerlink" href="#customer.models.Purchase.total_gas" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> total gas</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Purchase.transfer_url">
+<code class="descname">transfer_url</code><a class="headerlink" href="#customer.models.Purchase.transfer_url" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> transfer url</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Purchase.user">
+<code class="descname">user</code><a class="headerlink" href="#customer.models.Purchase.user" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> user, accesses the <a class="reference internal" href="#customer.models.PSPUser" title="customer.models.PSPUser"><code class="xref py py-class docutils literal notranslate"><span class="pre">PSPUser</span></code></a> model.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.Purchase.user_id">
+<code class="descname">user_id</code><a class="headerlink" href="#customer.models.Purchase.user_id" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> user</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="customer.models.ReceiveableAccount">
+<em class="property">class </em><code class="descclassname">customer.models.</code><code class="descname">ReceiveableAccount</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/customer/models.html#ReceiveableAccount"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#customer.models.ReceiveableAccount" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a model used to represent the main PSP user and associate them with their main
+bank account in dwolla</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>id</strong> (<em>AutoField</em>) – Id</li>
+<li><strong>user</strong> (ForeignKey to <a class="reference internal" href="#customer.models.PSPUser" title="customer.models.PSPUser"><code class="xref py py-class docutils literal notranslate"><span class="pre">PSPUser</span></code></a>) – User</li>
+<li><strong>account_id</strong> (<em>CharField</em>) – Account id</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="staticmethod">
+<dt id="customer.models.ReceiveableAccount.Default">
+<em class="property">static </em><code class="descname">Default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/customer/models.html#ReceiveableAccount.Default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#customer.models.ReceiveableAccount.Default" title="Permalink to this definition">¶</a></dt>
+<dd><p>There should only be one, so this is kind of a singleton for retrieving it
+:returns: customer.models.ReceivableAccount</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="customer.models.ReceiveableAccount.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#customer.models.ReceiveableAccount.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="exception">
+<dt id="customer.models.ReceiveableAccount.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#customer.models.ReceiveableAccount.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.ReceiveableAccount.account_id">
+<code class="descname">account_id</code><a class="headerlink" href="#customer.models.ReceiveableAccount.account_id" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> account id</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.ReceiveableAccount.customer_url">
+<code class="descname">customer_url</code><a class="headerlink" href="#customer.models.ReceiveableAccount.customer_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>The url for the receivable account customer dwolla account
+:returns: str</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.ReceiveableAccount.funding_url">
+<code class="descname">funding_url</code><a class="headerlink" href="#customer.models.ReceiveableAccount.funding_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>The url for the receivable account customer funding dwolla account</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.ReceiveableAccount.id">
+<code class="descname">id</code><a class="headerlink" href="#customer.models.ReceiveableAccount.id" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> ID</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.ReceiveableAccount.objects">
+<code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#customer.models.ReceiveableAccount.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.ReceiveableAccount.user">
+<code class="descname">user</code><a class="headerlink" href="#customer.models.ReceiveableAccount.user" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> user, accesses the <a class="reference internal" href="#customer.models.PSPUser" title="customer.models.PSPUser"><code class="xref py py-class docutils literal notranslate"><span class="pre">PSPUser</span></code></a> model.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="customer.models.ReceiveableAccount.user_id">
+<code class="descname">user_id</code><a class="headerlink" href="#customer.models.ReceiveableAccount.user_id" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> user</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="customer.models.on_pspuser_saved">
+<code class="descclassname">customer.models.</code><code class="descname">on_pspuser_saved</code><span class="sig-paren">(</span><em>sender</em>, <em>instance</em>, <em>created</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/customer/models.html#on_pspuser_saved"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#customer.models.on_pspuser_saved" title="Permalink to this definition">¶</a></dt>
+<dd><p>When a PSP user is saved, we check to see if they are associatde with the dwolla system ( dwolla_url )
+if not, we will create a dwolla user</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sender</strong> (<a class="reference internal" href="#customer.models.PSPUser" title="customer.models.PSPUser"><em>customer.models.PSPUser</em></a>) – the model class that sends this event</li>
+<li><strong>instance</strong> (<a class="reference internal" href="#customer.models.PSPUser" title="customer.models.PSPUser"><em>customer.models.PSPUser</em></a>) – the instance of the model associated with this event</li>
+<li><strong>created</strong> (<em>bool</em>) – whether this instance has just been created</li>
+<li><strong>**kwargs</strong> – </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="dwolla.html" class="btn btn-neutral float-right" title="customer.dwolla" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../blockchain/models.html" class="btn btn-neutral" title="blockchain.models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, NEON Exchange AG.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

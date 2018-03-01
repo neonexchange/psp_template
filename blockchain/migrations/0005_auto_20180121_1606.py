@@ -13,8 +13,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Price',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('asset', models.CharField(choices=[('GAS', 'GAS'), ('NEO', 'NEO'), ('NEX', 'NEX')], max_length=3)),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
+                ('asset', models.CharField(choices=[
+                 ('GAS', 'GAS'), ('NEO', 'NEO'), ('NEX', 'NEX')], max_length=3)),
                 ('usd', models.FloatField()),
                 ('updated_at', models.DateTimeField(auto_now=True)),
             ],
@@ -22,6 +24,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='blockchaintransfer',
             name='status',
-            field=models.CharField(choices=[('pending', 'pending'), ('gas_received', 'gas_received'), ('processed', 'processed'), ('failed', 'failed'), ('complete', 'complete')], default='pending', max_length=64),
+            field=models.CharField(choices=[('pending', 'pending'), ('gas_received', 'gas_received'), (
+                'processed', 'processed'), ('failed', 'failed'), ('complete', 'complete')], default='pending', max_length=64),
         ),
     ]

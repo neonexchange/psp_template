@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect,HttpResponseForbidden
+from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
 from django.views import View
@@ -6,10 +6,10 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.contrib import messages
-from .forms import PSPUserCreationForm,PSPProfileForm,BankAccountForm,PurchaseForm,DepositForm,CancelDepositForm
+from .forms import PSPUserCreationForm, PSPProfileForm, BankAccountForm, PurchaseForm, DepositForm, CancelDepositForm
 from .dwolla import *
-from .models import ReceiveableAccount,Deposit
-from blockchain.models import DepositWallet,Price
+from .models import ReceiveableAccount, Deposit
+from blockchain.models import DepositWallet, Price
 from uuid import uuid4
 import requests
 from logzero import logger
@@ -25,8 +25,9 @@ class TransactionView(View):
         deposits = request.user.deposit_set.all()
         pending_deposit = request.user.pending_deposit
         all_tx = list(purchases) + list(deposits)
-        all_tx = sorted(all_tx,key=lambda x: x.date_created, reverse=True)
-        return render(request, self.template_name,{ 'all_tx':all_tx,'pending_deposit': pending_deposit})
+        all_tx = sorted(all_tx, key=lambda x: x.date_created, reverse=True)
+        return render(request, self.template_name, {'all_tx': all_tx, 'pending_deposit': pending_deposit})
+
 
 class ProfileView(View):
     form_class = PSPProfileForm
@@ -48,7 +49,6 @@ class ProfileView(View):
         return render(request, self.template_name, {'form': form})
 
 
-
 class BankAccountListView(View):
     form_class = BankAccountForm
     template_name = 'account/bank_account_list.html'
@@ -57,7 +57,7 @@ class BankAccountListView(View):
     def get(self, request, *args, **kwargs):
         form = self.form_class()
         funding_sources = dwolla_get_user_bank_accounts(request.user)
-        return render(request, self.template_name, {'form': form, 'funding_sources':funding_sources})
+        return render(request, self.template_name, {'form': form, 'funding_sources': funding_sources})
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
@@ -70,7 +70,6 @@ class BankAccountListView(View):
         return render(request, self.template_name, {'form': form})
 
 
-
 class BankAccountView(View):
     form_class = BankAccountForm
     template_name = 'account/bank_account_add.html'
@@ -79,7 +78,7 @@ class BankAccountView(View):
     def get(self, request, *args, **kwargs):
         form = self.form_class()
         funding_token = dwolla_generate_funding_source_token(request.user)
-        return render(request, self.template_name, {'form': form, 'funding_token':funding_token})
+        return render(request, self.template_name, {'form': form, 'funding_token': funding_token})
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
@@ -109,7 +108,8 @@ class SignupView(View):
         form = self.form_class(request.POST)
         if form.is_valid():
             new_user = form.save()
-            messages.add_message(request, messages.INFO, 'Welcome %s! Please sign in' % new_user.first_name)
+            messages.add_message(
+                request, messages.INFO, 'Welcome %s! Please sign in' % new_user.first_name)
 
             return HttpResponseRedirect('/customer/login')
 
@@ -134,22 +134,21 @@ class SellView(View):
 
         form = self.form_class(accounts=bank_accounts)
 
-        return render(request, self.template_name, {'has_bank_accounts':has_bank_accounts,
-                                                    'has_pending_deposit':request.user.pending_deposit,
-                                                    'can_sell':can_sell,
-                                                    'form':form} )
-
+        return render(request, self.template_name, {'has_bank_accounts': has_bank_accounts,
+                                                    'has_pending_deposit': request.user.pending_deposit,
+                                                    'can_sell': can_sell,
+                                                    'form': form})
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
 
         bank_accounts = dwolla_get_user_bank_accounts(request.user)
 
-        form = self.form_class(request.POST,accounts=bank_accounts)
+        form = self.form_class(request.POST, accounts=bank_accounts)
 
         if form.is_valid():
 
-            deposit = form.save(commit=False) # type: Deposit
+            deposit = form.save(commit=False)  # type: Deposit
             deposit.user = request.user
             deposit.sender_account_id = ReceiveableAccount.Default().account_id
             deposit.deposit_wallet = DepositWallet.create(request.user)
@@ -159,7 +158,8 @@ class SellView(View):
             request.user.pending_deposit = deposit
             request.user.save()
 
-            messages.add_message(request, messages.INFO, 'Crypto Sale Initiated...')
+            messages.add_message(request, messages.INFO,
+                                 'Crypto Sale Initiated...')
             return HttpResponseRedirect('/customer/sell/deposit/')
 
         has_bank_accounts = False
@@ -167,10 +167,10 @@ class SellView(View):
             has_bank_accounts = True
         can_sell = has_bank_accounts and request.user.pending_deposit is None
 
-        return render(request, self.template_name, {'has_bank_accounts':has_bank_accounts,
-                                                    'has_pending_deposit':request.user.pending_deposit,
-                                                    'can_sell':can_sell,
-                                                    'form':form} )
+        return render(request, self.template_name, {'has_bank_accounts': has_bank_accounts,
+                                                    'has_pending_deposit': request.user.pending_deposit,
+                                                    'can_sell': can_sell,
+                                                    'form': form})
 
 
 class DepositCryptoView(View):
@@ -181,14 +181,16 @@ class DepositCryptoView(View):
     def get(self, request, *args, **kwargs):
 
         if not request.user.pending_deposit:
-            messages.add_message(request, messages.INFO, 'Please initiate a deposit before depositing crypto')
+            messages.add_message(
+                request, messages.INFO, 'Please initiate a deposit before depositing crypto')
             return HttpResponseRedirect('/customer/sell/')
 
         deposit = request.user.pending_deposit
         deposit_wallet = deposit.deposit_wallet
 
-        return render(request, self.template_name, {'deposit':deposit,
-                                                    'deposit_wallet':deposit_wallet} )
+        return render(request, self.template_name, {'deposit': deposit,
+                                                    'deposit_wallet': deposit_wallet})
+
 
 class CancelDepositCryptoView(View):
     form_class = CancelDepositForm
@@ -200,7 +202,8 @@ class CancelDepositCryptoView(View):
 
         if form.is_valid():
 
-            deposit = get_object_or_404(Deposit, pk=form.cleaned_data['deposit_id'])
+            deposit = get_object_or_404(
+                Deposit, pk=form.cleaned_data['deposit_id'])
             if deposit.user != request.user:
                 raise PermissionDenied
 
@@ -229,7 +232,7 @@ class PurchaseView(View):
 
         form = self.form_class(accounts=bank_accounts)
 
-        return render(request, self.template_name, {'form':form,'has_bank_accounts':has_bank_accounts} )
+        return render(request, self.template_name, {'form': form, 'has_bank_accounts': has_bank_accounts})
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
@@ -256,10 +259,15 @@ class PurchaseView(View):
                 purchase.transfer_url = transfer.headers['location']
                 purchase.save()
 
-                messages.add_message(request, messages.INFO, 'Transfer initiated')
+                messages.add_message(
+                    request, messages.INFO, 'Transfer initiated')
 
                 return HttpResponseRedirect('/customer/transactions')
             except Exception as e:
-                messages.add_message(request, messages.ERROR, 'Could not initiate purchase: %s ' % e)
 
-        return render(request, self.template_name, {'form':form,'has_bank_accounts':has_bank_accounts} )
+                #                import pdb
+                #                pdb.set_trace()
+                messages.add_message(
+                    request, messages.ERROR, 'Could not initiate purchase: %s ' % e)
+
+        return render(request, self.template_name, {'form': form, 'has_bank_accounts': has_bank_accounts})

@@ -16,8 +16,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Deposit',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('asset', models.CharField(choices=[('GAS', 'GAS'), ('NEO', 'NEO'), ('NEX', 'NEX')], default='GAS', max_length=3)),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
+                ('asset', models.CharField(choices=[
+                 ('GAS', 'GAS'), ('NEO', 'NEO'), ('NEX', 'NEX')], default='GAS', max_length=3)),
                 ('amount', models.FloatField(default=1.0)),
                 ('sender_account_id', models.CharField(max_length=128)),
                 ('receiver_account_id', models.CharField(max_length=128)),
@@ -27,13 +29,18 @@ class Migration(migrations.Migration):
                 ('total_gas', models.FloatField()),
                 ('total_fee', models.FloatField()),
                 ('total', models.FloatField()),
-                ('status', models.CharField(choices=[('pending', 'pending'), ('processed', 'processed'), ('failed', 'failed'), ('complete', 'complete')], default='pending', max_length=32)),
+                ('status', models.CharField(choices=[('pending', 'pending'), ('processed', 'processed'), (
+                    'failed', 'failed'), ('complete', 'complete')], default='pending', max_length=32)),
                 ('transfer_url', models.CharField(max_length=128)),
                 ('date_created', models.DateTimeField(auto_now_add=True)),
-                ('failure_reason', models.CharField(blank=True, max_length=1024, null=True)),
-                ('blockchain_transfer', models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='blockchain.BlockchainTransfer')),
-                ('deposit_wallet', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='blockchain.DepositWallet')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('failure_reason', models.CharField(
+                    blank=True, max_length=1024, null=True)),
+                ('blockchain_transfer', models.OneToOneField(blank=True, null=True,
+                                                             on_delete=django.db.models.deletion.CASCADE, to='blockchain.BlockchainTransfer')),
+                ('deposit_wallet', models.OneToOneField(
+                    on_delete=django.db.models.deletion.CASCADE, to='blockchain.DepositWallet')),
+                ('user', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'ordering': ['-date_created'],

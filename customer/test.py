@@ -1,8 +1,8 @@
 from django.test import TestCase
-from customer.models import PSPUser,Purchase,Deposit,ReceiveableAccount
+from customer.models import PSPUser, Purchase, Deposit, ReceiveableAccount
 from localflavor.us.us_states import US_STATES
 import random
-from datetime import date,timedelta
+from datetime import date, timedelta
 
 from faker import Faker
 fake = Faker()
@@ -19,12 +19,13 @@ fake = Faker()
             ssn_lastfour=ssn_lastfour,
             date_of_birth=date_of_birth
         )"""
+
+
 class AnimalTestCase(TestCase):
 
     email = None
 
     def setUp(self):
-
 
         self.email = fake.email()
         name = fake.name().split()
@@ -34,17 +35,16 @@ class AnimalTestCase(TestCase):
         birthdate = date.today() - timedelta(days=int(age * 365))
 
         user = PSPUser.objects.create(
-            email = self.email,
+            email=self.email,
             first_name=name[0],
-            last_name = name[1],
-            address1 = fake.address()[0:40],
-            city = city,
-            postal_code = '55402',
+            last_name=name[1],
+            address1=fake.address()[0:40],
+            city=city,
+            postal_code='55402',
             state=state,
-            ssn_lastfour=random.randrange(1000,9999),
-            date_of_birth = birthdate
+            ssn_lastfour=random.randrange(1000, 9999),
+            date_of_birth=birthdate
         )
-
 
     def test_that_user_created_ok(self):
 

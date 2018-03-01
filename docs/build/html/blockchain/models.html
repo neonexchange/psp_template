@@ -1,0 +1,635 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>blockchain.models &mdash; nex_psp 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="nex_psp 0.1.0 documentation" href="../index.html"/>
+        <link rel="next" title="customer.models" href="../customer/models.html"/>
+        <link rel="prev" title="blockchain.apps" href="apps.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> nex_psp
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="apps.html">blockchain.apps</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">blockchain.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../customer/models.html">customer.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../customer/dwolla.html">customer.dwolla</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nexpsp/settings.html">nexpsp.settings</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">nex_psp</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>blockchain.models</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/blockchain/models.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="blockchain-models">
+<h1>blockchain.models<a class="headerlink" href="#blockchain-models" title="Permalink to this headline">¶</a></h1>
+<p>What follows are the details of the <code class="docutils literal notranslate"><span class="pre">blockchain.models</span></code> implementation.</p>
+<span class="target" id="module-blockchain.models"></span><dl class="class">
+<dt id="blockchain.models.BlockchainTransfer">
+<em class="property">class </em><code class="descclassname">blockchain.models.</code><code class="descname">BlockchainTransfer</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/blockchain/models.html#BlockchainTransfer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blockchain.models.BlockchainTransfer" title="Permalink to this definition">¶</a></dt>
+<dd><p>This model represents a transfer of crypto from one address to another.  This is used for both
+when a user has purchased crypto and also when they are selling crypto.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>id</strong> (<em>AutoField</em>) – Id</li>
+<li><strong>to_address</strong> (<em>CharField</em>) – To address</li>
+<li><strong>from_address</strong> (<em>CharField</em>) – From address</li>
+<li><strong>amount</strong> (<em>FloatField</em>) – Amount</li>
+<li><strong>asset</strong> (<em>CharField</em>) – Asset</li>
+<li><strong>transaction_id</strong> (<em>CharField</em>) – Transaction id</li>
+<li><strong>status</strong> (<em>CharField</em>) – Status</li>
+<li><strong>start_block</strong> (<em>IntegerField</em>) – Start block</li>
+<li><strong>confirmed_block</strong> (<em>IntegerField</em>) – Confirmed block</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="exception">
+<dt id="blockchain.models.BlockchainTransfer.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#blockchain.models.BlockchainTransfer.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="exception">
+<dt id="blockchain.models.BlockchainTransfer.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#blockchain.models.BlockchainTransfer.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.BlockchainTransfer.amount">
+<code class="descname">amount</code><a class="headerlink" href="#blockchain.models.BlockchainTransfer.amount" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> amount</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.BlockchainTransfer.asset">
+<code class="descname">asset</code><a class="headerlink" href="#blockchain.models.BlockchainTransfer.asset" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> asset</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.BlockchainTransfer.confirmed_block">
+<code class="descname">confirmed_block</code><a class="headerlink" href="#blockchain.models.BlockchainTransfer.confirmed_block" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> confirmed block</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.BlockchainTransfer.deposit">
+<code class="descname">deposit</code><a class="headerlink" href="#blockchain.models.BlockchainTransfer.deposit" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> blockchain transfer, accesses the <a class="reference internal" href="../customer/models.html#customer.models.Deposit" title="customer.models.Deposit"><code class="xref py py-class docutils literal notranslate"><span class="pre">Deposit</span></code></a> model.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.BlockchainTransfer.depositwallet">
+<code class="descname">depositwallet</code><a class="headerlink" href="#blockchain.models.BlockchainTransfer.depositwallet" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> transfer, accesses the <a class="reference internal" href="#blockchain.models.DepositWallet" title="blockchain.models.DepositWallet"><code class="xref py py-class docutils literal notranslate"><span class="pre">DepositWallet</span></code></a> model.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.BlockchainTransfer.from_address">
+<code class="descname">from_address</code><a class="headerlink" href="#blockchain.models.BlockchainTransfer.from_address" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> from address</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="blockchain.models.BlockchainTransfer.get_asset_display">
+<code class="descname">get_asset_display</code><span class="sig-paren">(</span><em>*</em>, <em>field=&lt;django.db.models.fields.CharField: asset&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#blockchain.models.BlockchainTransfer.get_asset_display" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Autogenerated:</strong> Shows the label of the <a class="reference internal" href="#blockchain.models.BlockchainTransfer.asset" title="blockchain.models.BlockchainTransfer.asset"><code class="xref py py-attr docutils literal notranslate"><span class="pre">asset</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="blockchain.models.BlockchainTransfer.get_status_display">
+<code class="descname">get_status_display</code><span class="sig-paren">(</span><em>*</em>, <em>field=&lt;django.db.models.fields.CharField: status&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#blockchain.models.BlockchainTransfer.get_status_display" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Autogenerated:</strong> Shows the label of the <a class="reference internal" href="#blockchain.models.BlockchainTransfer.status" title="blockchain.models.BlockchainTransfer.status"><code class="xref py py-attr docutils literal notranslate"><span class="pre">status</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.BlockchainTransfer.id">
+<code class="descname">id</code><a class="headerlink" href="#blockchain.models.BlockchainTransfer.id" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> ID</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.BlockchainTransfer.main_transfer">
+<code class="descname">main_transfer</code><a class="headerlink" href="#blockchain.models.BlockchainTransfer.main_transfer" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> transfer to main, accesses the <a class="reference internal" href="#blockchain.models.DepositWallet" title="blockchain.models.DepositWallet"><code class="xref py py-class docutils literal notranslate"><span class="pre">DepositWallet</span></code></a> model.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.BlockchainTransfer.neoscan_url">
+<code class="descname">neoscan_url</code><a class="headerlink" href="#blockchain.models.BlockchainTransfer.neoscan_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>the url on neo-scan where the transaction associated with this model instance can be viewed
+:returns: str</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.BlockchainTransfer.objects">
+<code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#blockchain.models.BlockchainTransfer.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.BlockchainTransfer.purchase">
+<code class="descname">purchase</code><a class="headerlink" href="#blockchain.models.BlockchainTransfer.purchase" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> blockchain transfer, accesses the <a class="reference internal" href="../customer/models.html#customer.models.Purchase" title="customer.models.Purchase"><code class="xref py py-class docutils literal notranslate"><span class="pre">Purchase</span></code></a> model.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.BlockchainTransfer.start_block">
+<code class="descname">start_block</code><a class="headerlink" href="#blockchain.models.BlockchainTransfer.start_block" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> start block</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.BlockchainTransfer.status">
+<code class="descname">status</code><a class="headerlink" href="#blockchain.models.BlockchainTransfer.status" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> status</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.BlockchainTransfer.to_address">
+<code class="descname">to_address</code><a class="headerlink" href="#blockchain.models.BlockchainTransfer.to_address" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> to address</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.BlockchainTransfer.transaction">
+<code class="descname">transaction</code><a class="headerlink" href="#blockchain.models.BlockchainTransfer.transaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>the transaction on the blockchain that is associated with this model instance</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">neo.Core.TX.Transaction.Transaction</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.BlockchainTransfer.transaction_id">
+<code class="descname">transaction_id</code><a class="headerlink" href="#blockchain.models.BlockchainTransfer.transaction_id" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> transaction id</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.BlockchainTransfer.tx_json">
+<code class="descname">tx_json</code><a class="headerlink" href="#blockchain.models.BlockchainTransfer.tx_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>A json representation of the transaction associated with this model instance
+:returns: dict</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="blockchain.models.DepositWallet">
+<em class="property">class </em><code class="descclassname">blockchain.models.</code><code class="descname">DepositWallet</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/blockchain/models.html#DepositWallet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blockchain.models.DepositWallet" title="Permalink to this definition">¶</a></dt>
+<dd><p>A deposit wallet is used to represent a ‘temporary’ wallet that a user deposits crypto into
+this wallet is monitored so that when a user finishes a deposit, the system
+can send them fiat in exchange</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>id</strong> (<em>AutoField</em>) – Id</li>
+<li><strong>depositor</strong> (ForeignKey to <a class="reference internal" href="../customer/models.html#customer.models.PSPUser" title="customer.models.PSPUser"><code class="xref py py-class docutils literal notranslate"><span class="pre">PSPUser</span></code></a>) – Depositor</li>
+<li><strong>wallet_file</strong> (<em>FilePathField</em>) – Wallet file</li>
+<li><strong>wallet_pass</strong> (<em>CharField</em>) – Wallet pass</li>
+<li><strong>start_height</strong> (<em>IntegerField</em>) – Start height</li>
+<li><strong>transfer</strong> (OneToOneField to <a class="reference internal" href="#blockchain.models.BlockchainTransfer" title="blockchain.models.BlockchainTransfer"><code class="xref py py-class docutils literal notranslate"><span class="pre">BlockchainTransfer</span></code></a>) – Transfer</li>
+<li><strong>transfer_to_main</strong> (OneToOneField to <a class="reference internal" href="#blockchain.models.BlockchainTransfer" title="blockchain.models.BlockchainTransfer"><code class="xref py py-class docutils literal notranslate"><span class="pre">BlockchainTransfer</span></code></a>) – Transfer to main</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="exception">
+<dt id="blockchain.models.DepositWallet.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#blockchain.models.DepositWallet.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="exception">
+<dt id="blockchain.models.DepositWallet.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#blockchain.models.DepositWallet.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.DepositWallet.address">
+<code class="descname">address</code><a class="headerlink" href="#blockchain.models.DepositWallet.address" title="Permalink to this definition">¶</a></dt>
+<dd><p>The bytearray of the address of this wallet</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">bytearray</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="blockchain.models.DepositWallet.create">
+<em class="property">static </em><code class="descname">create</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/blockchain/models.html#DepositWallet.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blockchain.models.DepositWallet.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a DepositWallet instance for a user
+:param user: The user to create the DepositWallet for
+:type user: customer.models.PSPUser</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">blockchain.models.DepositWallet</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.DepositWallet.deposit">
+<code class="descname">deposit</code><a class="headerlink" href="#blockchain.models.DepositWallet.deposit" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> deposit wallet, accesses the <a class="reference internal" href="../customer/models.html#customer.models.Deposit" title="customer.models.Deposit"><code class="xref py py-class docutils literal notranslate"><span class="pre">Deposit</span></code></a> model.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.DepositWallet.depositor">
+<code class="descname">depositor</code><a class="headerlink" href="#blockchain.models.DepositWallet.depositor" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> depositor, accesses the <a class="reference internal" href="../customer/models.html#customer.models.PSPUser" title="customer.models.PSPUser"><code class="xref py py-class docutils literal notranslate"><span class="pre">PSPUser</span></code></a> model.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.DepositWallet.depositor_id">
+<code class="descname">depositor_id</code><a class="headerlink" href="#blockchain.models.DepositWallet.depositor_id" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> depositor</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.DepositWallet.id">
+<code class="descname">id</code><a class="headerlink" href="#blockchain.models.DepositWallet.id" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> ID</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="blockchain.models.DepositWallet.next_available_for_retrieval">
+<em class="property">static </em><code class="descname">next_available_for_retrieval</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/blockchain/models.html#DepositWallet.next_available_for_retrieval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blockchain.models.DepositWallet.next_available_for_retrieval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the next deposit wallet that can be processed</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">blockchain.models.DepositWallet</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.DepositWallet.objects">
+<code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#blockchain.models.DepositWallet.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.DepositWallet.start_height">
+<code class="descname">start_height</code><a class="headerlink" href="#blockchain.models.DepositWallet.start_height" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> start height</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.DepositWallet.transfer">
+<code class="descname">transfer</code><a class="headerlink" href="#blockchain.models.DepositWallet.transfer" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> transfer, accesses the <a class="reference internal" href="#blockchain.models.BlockchainTransfer" title="blockchain.models.BlockchainTransfer"><code class="xref py py-class docutils literal notranslate"><span class="pre">BlockchainTransfer</span></code></a> model.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.DepositWallet.transfer_id">
+<code class="descname">transfer_id</code><a class="headerlink" href="#blockchain.models.DepositWallet.transfer_id" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> transfer</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.DepositWallet.transfer_to_main">
+<code class="descname">transfer_to_main</code><a class="headerlink" href="#blockchain.models.DepositWallet.transfer_to_main" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> transfer to main, accesses the <a class="reference internal" href="#blockchain.models.BlockchainTransfer" title="blockchain.models.BlockchainTransfer"><code class="xref py py-class docutils literal notranslate"><span class="pre">BlockchainTransfer</span></code></a> model.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.DepositWallet.transfer_to_main_id">
+<code class="descname">transfer_to_main_id</code><a class="headerlink" href="#blockchain.models.DepositWallet.transfer_to_main_id" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> transfer to main</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.DepositWallet.wallet">
+<code class="descname">wallet</code><a class="headerlink" href="#blockchain.models.DepositWallet.wallet" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Returns</em> – neo.Implementations.Wallets.peewee.UserWallet.UserWallet</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.DepositWallet.wallet_file">
+<code class="descname">wallet_file</code><a class="headerlink" href="#blockchain.models.DepositWallet.wallet_file" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> wallet file</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.DepositWallet.wallet_pass">
+<code class="descname">wallet_pass</code><a class="headerlink" href="#blockchain.models.DepositWallet.wallet_pass" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> wallet pass</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="blockchain.models.Price">
+<em class="property">class </em><code class="descclassname">blockchain.models.</code><code class="descname">Price</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/blockchain/models.html#Price"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blockchain.models.Price" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a class to represent fiat values of different crypto currencies</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>id</strong> (<em>AutoField</em>) – Id</li>
+<li><strong>asset</strong> (<em>CharField</em>) – Asset</li>
+<li><strong>usd</strong> (<em>FloatField</em>) – Usd</li>
+<li><strong>updated_at</strong> (<em>DateTimeField</em>) – Updated at</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="exception">
+<dt id="blockchain.models.Price.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#blockchain.models.Price.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="exception">
+<dt id="blockchain.models.Price.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#blockchain.models.Price.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.Price.asset">
+<code class="descname">asset</code><a class="headerlink" href="#blockchain.models.Price.asset" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> asset</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="blockchain.models.Price.get_asset_display">
+<code class="descname">get_asset_display</code><span class="sig-paren">(</span><em>*</em>, <em>field=&lt;django.db.models.fields.CharField: asset&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#blockchain.models.Price.get_asset_display" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Autogenerated:</strong> Shows the label of the <a class="reference internal" href="#blockchain.models.Price.asset" title="blockchain.models.Price.asset"><code class="xref py py-attr docutils literal notranslate"><span class="pre">asset</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="blockchain.models.Price.get_next_by_updated_at">
+<code class="descname">get_next_by_updated_at</code><span class="sig-paren">(</span><em>*</em>, <em>field=&lt;django.db.models.fields.DateTimeField: updated_at&gt;</em>, <em>is_next=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#blockchain.models.Price.get_next_by_updated_at" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Autogenerated:</strong> Finds next instance based on <a class="reference internal" href="#blockchain.models.Price.updated_at" title="blockchain.models.Price.updated_at"><code class="xref py py-attr docutils literal notranslate"><span class="pre">updated_at</span></code></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="blockchain.models.Price.get_previous_by_updated_at">
+<code class="descname">get_previous_by_updated_at</code><span class="sig-paren">(</span><em>*</em>, <em>field=&lt;django.db.models.fields.DateTimeField: updated_at&gt;</em>, <em>is_next=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#blockchain.models.Price.get_previous_by_updated_at" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Autogenerated:</strong> Finds previous instance based on <a class="reference internal" href="#blockchain.models.Price.updated_at" title="blockchain.models.Price.updated_at"><code class="xref py py-attr docutils literal notranslate"><span class="pre">updated_at</span></code></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.Price.id">
+<code class="descname">id</code><a class="headerlink" href="#blockchain.models.Price.id" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> ID</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.Price.objects">
+<code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#blockchain.models.Price.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.Price.updated_at">
+<code class="descname">updated_at</code><a class="headerlink" href="#blockchain.models.Price.updated_at" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> updated at</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blockchain.models.Price.usd">
+<code class="descname">usd</code><a class="headerlink" href="#blockchain.models.Price.usd" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Model field:</strong> usd</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../customer/models.html" class="btn btn-neutral float-right" title="customer.models" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="apps.html" class="btn btn-neutral" title="blockchain.apps" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, NEON Exchange AG.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

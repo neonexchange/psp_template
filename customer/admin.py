@@ -1,8 +1,9 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .forms import PSPUserCreationForm,PSPUserChangeForm
-from .models import PSPUser,ReceiveableAccount,Purchase,Deposit
+from .forms import PSPUserCreationForm, PSPUserChangeForm
+from .models import PSPUser, ReceiveableAccount, Purchase, Deposit
+
 
 class PSPUserAdmin(BaseUserAdmin):
     # The forms to add and change user instances
@@ -16,7 +17,8 @@ class PSPUserAdmin(BaseUserAdmin):
     list_filter = ('is_admin',)
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Personal info', {'fields': ('first_name','last_name', 'customer_type','is_seller','pending_deposit',)}),
+        ('Personal info', {'fields': ('first_name', 'last_name',
+                                      'customer_type', 'is_seller', 'pending_deposit',)}),
         ('Permissions', {'fields': ('is_admin',)}),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
@@ -24,25 +26,28 @@ class PSPUserAdmin(BaseUserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2','first_name','last_name')}
-        ),
+            'fields': ('email', 'password1', 'password2', 'first_name', 'last_name')}
+         ),
     )
-    search_fields = ('email','first_name','last_name')
-    ordering = ('email','first_name','last_name')
+    search_fields = ('email', 'first_name', 'last_name')
+    ordering = ('email', 'first_name', 'last_name')
     filter_horizontal = ()
 
 
 class ReceiveableAdmin(admin.ModelAdmin):
     model = ReceiveableAccount
-    list_display = ('user','account_id',)
+    list_display = ('user', 'account_id',)
+
 
 class PurchaseAdmin(admin.ModelAdmin):
     model = Purchase
-    list_display = ('user','transfer_url','amount')
+    list_display = ('user', 'transfer_url', 'amount')
+
 
 class DepositAdmin(admin.ModelAdmin):
     model = Deposit
-    list_display = ('user','date_created','status',)
+    list_display = ('user', 'date_created', 'status',)
+
 
 # Now register the new UserAdmin...
 admin.site.register(PSPUser, PSPUserAdmin)

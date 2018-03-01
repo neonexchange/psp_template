@@ -1,0 +1,763 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>blockchain.apps &mdash; nex_psp 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="nex_psp 0.1.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> nex_psp
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../blockchain/apps.html">blockchain.apps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../blockchain/models.html">blockchain.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../customer/models.html">customer.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../customer/dwolla.html">customer.dwolla</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../nexpsp/settings.html">nexpsp.settings</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">nex_psp</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>blockchain.apps</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for blockchain.apps</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">django.apps</span> <span class="k">import</span> <span class="n">AppConfig</span>
+<span class="kn">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span> <span class="k">as</span> <span class="n">dj_settings</span>
+
+<span class="kn">from</span> <span class="nn">crochet</span> <span class="k">import</span> <span class="n">setup</span><span class="p">,</span> <span class="n">run_in_reactor</span>
+
+<span class="kn">from</span> <span class="nn">logzero</span> <span class="k">import</span> <span class="n">logger</span>
+<span class="kn">from</span> <span class="nn">twisted.internet</span> <span class="k">import</span> <span class="n">reactor</span><span class="p">,</span> <span class="n">task</span>
+
+<span class="kn">from</span> <span class="nn">neo.Network.NodeLeader</span> <span class="k">import</span> <span class="n">NodeLeader</span>
+<span class="kn">from</span> <span class="nn">neo.Implementations.Blockchains.LevelDB.LevelDBBlockchain</span> <span class="k">import</span> <span class="n">LevelDBBlockchain</span>
+<span class="kn">from</span> <span class="nn">neo.Settings</span> <span class="k">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">neo.Implementations.Wallets.peewee.UserWallet</span> <span class="k">import</span> <span class="n">UserWallet</span>
+<span class="kn">from</span> <span class="nn">neocore.Fixed8</span> <span class="k">import</span> <span class="n">Fixed8</span>
+<span class="kn">from</span> <span class="nn">neocore.UInt160</span> <span class="k">import</span> <span class="n">UInt160</span>
+<span class="kn">from</span> <span class="nn">neocore.Cryptography.Crypto</span> <span class="k">import</span> <span class="n">Crypto</span>
+<span class="kn">from</span> <span class="nn">neo.Core.TX.Transaction</span> <span class="k">import</span> <span class="n">TransactionOutput</span><span class="p">,</span> <span class="n">ContractTransaction</span><span class="p">,</span> <span class="n">Transaction</span><span class="p">,</span> <span class="n">TransactionType</span>
+<span class="kn">from</span> <span class="nn">neo.Core.TX.TransactionAttribute</span> <span class="k">import</span> <span class="n">TransactionAttribute</span><span class="p">,</span> <span class="n">TransactionAttributeUsage</span>
+<span class="kn">from</span> <span class="nn">neo.Core.Helper</span> <span class="k">import</span> <span class="n">Helper</span>
+<span class="kn">from</span> <span class="nn">neo.Core.Blockchain</span> <span class="k">import</span> <span class="n">Blockchain</span>
+<span class="kn">from</span> <span class="nn">neo.Wallets.utils</span> <span class="k">import</span> <span class="n">to_aes_key</span>
+<span class="kn">from</span> <span class="nn">neo.SmartContract.ContractParameterContext</span> <span class="k">import</span> <span class="n">ContractParametersContext</span>
+<span class="kn">from</span> <span class="nn">customer.dwolla</span> <span class="k">import</span> <span class="n">DwollaClient</span><span class="p">,</span> <span class="n">dwolla_send_to_user</span><span class="p">,</span> <span class="n">dwolla_simulate_sandbox_transfers</span>
+
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<span class="c1"># Logfile settings &amp; setup</span>
+<span class="n">LOGFILE_FN</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dj_settings</span><span class="o">.</span><span class="n">BASE_DIR</span><span class="p">,</span> <span class="s1">&#39;psp.log&#39;</span><span class="p">)</span>
+<span class="n">LOGFILE_MAX_BYTES</span> <span class="o">=</span> <span class="mf">5e7</span>  <span class="c1"># 50 MB</span>
+<span class="n">LOGFILE_BACKUP_COUNT</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># 3 logfiles history</span>
+<span class="n">settings</span><span class="o">.</span><span class="n">set_logfile</span><span class="p">(</span><span class="n">LOGFILE_FN</span><span class="p">,</span> <span class="n">LOGFILE_MAX_BYTES</span><span class="p">,</span> <span class="n">LOGFILE_BACKUP_COUNT</span><span class="p">)</span>
+
+
+<span class="c1"># This setsup crochet to be able to run twisted</span>
+<span class="c1"># alongside of django</span>
+<span class="n">setup</span><span class="p">()</span>
+
+
+<span class="c1"># these are the settings for the main PSP wallet that holds crypto</span>
+<span class="c1"># that it will sell to users and will receive crypto from users</span>
+<span class="n">wallet_file</span> <span class="o">=</span> <span class="n">dj_settings</span><span class="o">.</span><span class="n">PROVIDER_WALLET_FILE</span>
+<span class="n">wallet_password</span> <span class="o">=</span> <span class="n">to_aes_key</span><span class="p">(</span><span class="n">dj_settings</span><span class="o">.</span><span class="n">PROVIDER_WALLET_PASS</span><span class="p">)</span>
+
+<span class="n">wallet_str_addr</span> <span class="o">=</span> <span class="s1">&#39;AJnpZkx8HE7qSYNgbzvRuKMBDfBS1x9KvS&#39;</span>
+<span class="n">wallet_addr_uint</span> <span class="o">=</span> <span class="n">UInt160</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="nb">bytearray</span><span class="p">(</span>
+    <span class="sa">b</span><span class="s1">&#39;!</span><span class="se">\x16</span><span class="s1">8</span><span class="se">\x87\xdb\xcb\x82\x82</span><span class="s1">y</span><span class="se">\x13\xd4\xc8\x07\xc1\x1f\xb4</span><span class="s1">5</span><span class="se">\x89\xea\r</span><span class="s1">&#39;</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="BlockchainConfig"><a class="viewcode-back" href="../../blockchain/apps.html#blockchain.apps.BlockchainConfig">[docs]</a><span class="k">class</span> <span class="nc">BlockchainConfig</span><span class="p">(</span><span class="n">AppConfig</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;blockchain&#39;</span>
+
+<div class="viewcode-block" id="BlockchainConfig.ready"><a class="viewcode-back" href="../../blockchain/apps.html#blockchain.apps.BlockchainConfig.ready">[docs]</a>    <span class="k">def</span> <span class="nf">ready</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        When the Blockchain django app is ready, we start the blockchain</span>
+<span class="sd">        &quot;&quot;&quot;</span></div></div>
+        <span class="n">start_blockchain</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="start_blockchain"><a class="viewcode-back" href="../../blockchain/apps.html#blockchain.apps.start_blockchain">[docs]</a><span class="nd">@run_in_reactor</span>
+<span class="k">def</span> <span class="nf">start_blockchain</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    This method sets up the blockchain and main PSP wallet, and start a number of loops to monitor incoming/outgoing</span>
+<span class="sd">    NEO/Gas transfers as well as transfers of fiat via dwolla</span>
+
+<span class="sd">    These loops are called in the twisted reactor in an async fashion so they do not block</span>
+<span class="sd">    any HTTP requests processed by Django</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">settings</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">dj_settings</span><span class="o">.</span><span class="n">PROTOCOL_FILE</span><span class="p">)</span>
+        <span class="n">settings</span><span class="o">.</span><span class="n">set_log_smart_contract_events</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Data path: </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="n">dj_settings</span><span class="o">.</span><span class="n">CHAIN_DIR</span><span class="p">)</span>
+
+        <span class="c1"># Start `neo-python`</span>
+        <span class="n">blockchain</span> <span class="o">=</span> <span class="n">LevelDBBlockchain</span><span class="p">(</span><span class="n">dj_settings</span><span class="o">.</span><span class="n">CHAIN_DIR</span><span class="p">)</span>
+        <span class="n">Blockchain</span><span class="o">.</span><span class="n">RegisterBlockchain</span><span class="p">(</span><span class="n">blockchain</span><span class="p">)</span>
+        <span class="n">dbloop</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">LoopingCall</span><span class="p">(</span><span class="n">Blockchain</span><span class="o">.</span><span class="n">Default</span><span class="p">()</span><span class="o">.</span><span class="n">PersistBlocks</span><span class="p">)</span>
+        <span class="n">dbloop</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">dj_settings</span><span class="o">.</span><span class="n">PERSIST_BLOCK_TIME</span><span class="p">)</span>
+        <span class="n">NodeLeader</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span><span class="o">.</span><span class="n">Start</span><span class="p">()</span>
+
+        <span class="c1"># subscribe to on new block created event</span>
+        <span class="n">Blockchain</span><span class="o">.</span><span class="n">PersistCompleted</span><span class="o">.</span><span class="n">on_change</span> <span class="o">+=</span> <span class="n">on_blockchain_new_block</span>
+
+        <span class="c1"># open the wallet and start sync</span>
+        <span class="n">wallet</span> <span class="o">=</span> <span class="n">UserWallet</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">wallet_file</span><span class="p">,</span> <span class="n">wallet_password</span><span class="p">)</span>
+        <span class="n">wallet_loop</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">LoopingCall</span><span class="p">(</span><span class="n">wallet</span><span class="o">.</span><span class="n">ProcessBlocks</span><span class="p">)</span>
+        <span class="n">wallet_loop</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">dj_settings</span><span class="o">.</span><span class="n">WALLET_LOOP_TIME</span><span class="p">)</span>
+
+        <span class="n">monitor_loop</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">LoopingCall</span><span class="p">(</span><span class="n">monitor_wallet_loop</span><span class="p">,</span> <span class="n">wallet</span><span class="p">)</span>
+        <span class="n">monitor_loop</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">dj_settings</span><span class="o">.</span><span class="n">MONITOR_LOOP_TIME</span><span class="p">)</span>
+
+        <span class="c1"># start loop to process bank transfers that have been received</span>
+        <span class="n">sync_bank_transfer_loop</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">LoopingCall</span><span class="p">(</span><span class="n">process_bank_transfers</span><span class="p">)</span>
+        <span class="n">sync_bank_transfer_loop</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">dj_settings</span><span class="o">.</span><span class="n">TRANSFER_LOOP_TIME</span><span class="p">)</span>
+
+        <span class="c1"># start loop to send out gas for bank transfers that have been received</span>
+        <span class="n">crypto_transfer_loop</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">LoopingCall</span><span class="p">(</span>
+            <span class="n">process_crypto_purchases</span><span class="p">,</span> <span class="n">wallet</span><span class="p">)</span>
+        <span class="n">crypto_transfer_loop</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">dj_settings</span><span class="o">.</span><span class="n">CRYPTO_TRANSFER_LOOP_TIME</span><span class="p">)</span>
+
+        <span class="c1"># start loop to check for gas that has been sent to make sure it actually gets confirmed</span>
+        <span class="n">pending_crypto_tx_loop</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">LoopingCall</span><span class="p">(</span>
+            <span class="n">process_pending_blockchain_transactions</span><span class="p">)</span>
+        <span class="n">pending_crypto_tx_loop</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">dj_settings</span><span class="o">.</span><span class="n">PENDING_CRYPTO_TRANSFER_LOOP</span><span class="p">)</span>
+
+        <span class="c1"># start loop to create bank transfers for deposits of crypto</span>
+        <span class="n">process_gas_received_tranfer</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">LoopingCall</span><span class="p">(</span>
+            <span class="n">process_crypto_received_bank_transfers</span><span class="p">)</span>
+        <span class="n">process_gas_received_tranfer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span>
+            <span class="n">dj_settings</span><span class="o">.</span><span class="n">PENDING_GAS_TRANSFER_LOOP</span><span class="p">)</span>
+
+        <span class="c1"># every 10 minutes, refresh dwolla client token</span>
+        <span class="n">dwolla_client_refresh_loop</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">LoopingCall</span><span class="p">(</span>
+            <span class="n">refresh_dwolla_client_token</span><span class="p">)</span>
+        <span class="n">dwolla_client_refresh_loop</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">dj_settings</span><span class="o">.</span><span class="n">DWOLLA_TOKEN_REFRESH_TIME</span><span class="p">)</span>
+
+        <span class="c1"># every 3 minutes, update gas price</span>
+        <span class="n">price_update_looop</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">LoopingCall</span><span class="p">(</span><span class="n">update_crypto_prices</span><span class="p">)</span>
+        <span class="n">price_update_looop</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">dj_settings</span><span class="o">.</span><span class="n">CMC_UPDATE_LOOP_TIME</span><span class="p">)</span>
+
+        <span class="c1"># start loop to move assets sold to the system to deposit wallets into the main wallet</span>
+        <span class="n">move_deposits_to_main_wallet</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">LoopingCall</span><span class="p">(</span>
+            <span class="n">move_deposits_to_wallet</span><span class="p">)</span>
+        <span class="n">move_deposits_to_main_wallet</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">dj_settings</span><span class="o">.</span><span class="n">MOVE_DEPOSITS_LOOP_TIME</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">traceback</span>
+        <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span></div>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not start blockchain: </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="monitor_wallet_loop"><a class="viewcode-back" href="../../blockchain/apps.html#blockchain.apps.monitor_wallet_loop">[docs]</a><span class="k">def</span> <span class="nf">monitor_wallet_loop</span><span class="p">(</span><span class="n">wallet</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This is a basic loop to monitor the PSP wallet and log the current balance.</span>
+<span class="sd">    One thing that could be added here is to set some type of system event</span>
+<span class="sd">    Indicating that more crypto is needed to be purchased or something</span>
+
+<span class="sd">    This loop also calls the dwolla &#39;simulate transfers&#39; method which runs</span>
+<span class="sd">    any pending bank transfers</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        wallet (neo.Implementations.Wallets.peewee.UserWallet.UserWallet): The user wallet of the PSP</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">available_gas</span> <span class="o">=</span> <span class="n">wallet</span><span class="o">.</span><span class="n">GetBalance</span><span class="p">(</span><span class="n">Blockchain</span><span class="o">.</span><span class="n">SystemCoin</span><span class="p">()</span><span class="o">.</span><span class="n">Hash</span><span class="p">)</span>
+    <span class="n">available_neo</span> <span class="o">=</span> <span class="n">wallet</span><span class="o">.</span><span class="n">GetBalance</span><span class="p">(</span><span class="n">Blockchain</span><span class="o">.</span><span class="n">SystemShare</span><span class="p">()</span><span class="o">.</span><span class="n">Hash</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[</span><span class="si">%s</span><span class="s2">] </span><span class="si">%s</span><span class="s2"> [GAS]: </span><span class="si">%s</span><span class="s2">   [NEO] </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="p">(</span>
+        <span class="n">Blockchain</span><span class="o">.</span><span class="n">Default</span><span class="p">()</span><span class="o">.</span><span class="n">Height</span><span class="p">,</span> <span class="n">wallet</span><span class="o">.</span><span class="n">Addresses</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">available_gas</span><span class="p">,</span> <span class="n">available_neo</span><span class="p">))</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">num_transfers</span> <span class="o">=</span> <span class="n">dwolla_simulate_sandbox_transfers</span><span class="p">()</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;total&#39;</span><span class="p">]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Processed </span><span class="si">%s</span><span class="s2"> transfers&quot;</span> <span class="o">%</span> <span class="n">num_transfers</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Could not process transfers </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span></div>
+        <span class="n">DwollaClient</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="process_bank_transfers"><a class="viewcode-back" href="../../blockchain/apps.html#blockchain.apps.process_bank_transfers">[docs]</a><span class="k">def</span> <span class="nf">process_bank_transfers</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Loop through any purchase or deposits that are pending.  If their status has changed</span>
+<span class="sd">    We update our model instance representing that purchase/deposit accordingly</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">customer.models</span> <span class="k">import</span> <span class="n">Purchase</span><span class="p">,</span> <span class="n">Deposit</span>
+    <span class="kn">from</span> <span class="nn">customer.dwolla</span> <span class="k">import</span> <span class="n">dwolla_get_url</span>
+
+    <span class="c1"># loop through incomplete purchases</span>
+    <span class="k">for</span> <span class="n">purchase</span> <span class="ow">in</span> <span class="n">Purchase</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">status</span><span class="o">=</span><span class="s1">&#39;pending&#39;</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">transfer</span> <span class="o">=</span> <span class="n">dwolla_get_url</span><span class="p">(</span><span class="n">purchase</span><span class="o">.</span><span class="n">transfer_url</span><span class="p">)</span>
+            <span class="c1"># if this transfer status has changed, update the database status</span>
+            <span class="k">if</span> <span class="n">transfer</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">purchase</span><span class="o">.</span><span class="n">status</span><span class="p">:</span>
+                <span class="n">purchase</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">transfer</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span>
+                <span class="n">purchase</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;could not process transfer </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
+
+    <span class="c1"># loop through incomplete deposits</span>
+    <span class="k">for</span> <span class="n">deposit</span> <span class="ow">in</span> <span class="n">Deposit</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">status</span><span class="o">=</span><span class="s1">&#39;pending&#39;</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">transfer</span> <span class="o">=</span> <span class="n">dwolla_get_url</span><span class="p">(</span><span class="n">deposit</span><span class="o">.</span><span class="n">transfer_url</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">transfer</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">deposit</span><span class="o">.</span><span class="n">status</span><span class="p">:</span>
+                <span class="n">deposit</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">transfer</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span>
+                <span class="n">deposit</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                <span class="n">deposit</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">pending_deposit</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">deposit</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span></div>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not process deposit transfer </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="process_crypto_purchases"><a class="viewcode-back" href="../../blockchain/apps.html#blockchain.apps.process_crypto_purchases">[docs]</a><span class="k">def</span> <span class="nf">process_crypto_purchases</span><span class="p">(</span><span class="n">wallet</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This method loops through all dwolla purchase objects that are in the ``processed`` state.  If they are</span>
+<span class="sd">    and they don&#39;t have a BlockchainTransfer model object associated with them, then we will create one</span>
+<span class="sd">    and initiate a transaction of crypto from the PSP wallet to the user who has just purchased crypto.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        wallet (neo.Implementations.Wallets.peewee.UserWallet.UserWallet): The user wallet of the PSP</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">customer.models</span> <span class="k">import</span> <span class="n">Purchase</span>
+    <span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">BlockchainTransfer</span>
+
+    <span class="c1"># below here requires the blockchain.  If there are no connected peers we won&#39;t do anything</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">NodeLeader</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span><span class="o">.</span><span class="n">Peers</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Not connected yet&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="n">current_height</span> <span class="o">=</span> <span class="n">Blockchain</span><span class="o">.</span><span class="n">Default</span><span class="p">()</span><span class="o">.</span><span class="n">Height</span>
+
+    <span class="c1"># loop though the purchases that are processed and the ones that dont have a blockchain</span>
+    <span class="c1"># transfer associated with them</span>
+    <span class="k">for</span> <span class="n">purchase</span> <span class="ow">in</span> <span class="n">Purchase</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">status</span><span class="o">=</span><span class="s1">&#39;processed&#39;</span><span class="p">,</span> <span class="n">blockchain_transfer__amount__isnull</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+        <span class="c1"># we try to create a transaction with the purchase information</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">create_transaction</span><span class="p">(</span><span class="n">wallet</span><span class="p">,</span> <span class="n">purchase</span><span class="p">)</span>
+
+        <span class="c1"># if the transaction was created we make BlockchainTransfer model object</span>
+        <span class="k">if</span> <span class="n">transaction</span><span class="p">:</span>
+            <span class="n">bc</span> <span class="o">=</span> <span class="n">BlockchainTransfer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+                <span class="n">to_address</span><span class="o">=</span><span class="n">purchase</span><span class="o">.</span><span class="n">neo_address</span><span class="p">,</span>
+                <span class="n">from_address</span><span class="o">=</span><span class="n">UserWallet</span><span class="o">.</span><span class="n">ToAddress</span><span class="p">(</span>
+                    <span class="n">wallet</span><span class="o">.</span><span class="n">GetStandardAddress</span><span class="p">()</span><span class="o">.</span><span class="n">Data</span><span class="p">),</span>
+                <span class="n">amount</span><span class="o">=</span><span class="n">purchase</span><span class="o">.</span><span class="n">amount</span><span class="p">,</span>
+                <span class="n">asset</span><span class="o">=</span><span class="s1">&#39;GAS&#39;</span><span class="p">,</span>
+                <span class="n">transaction_id</span><span class="o">=</span><span class="n">transaction</span><span class="o">.</span><span class="n">Hash</span><span class="o">.</span><span class="n">ToString</span><span class="p">(),</span>
+                <span class="n">status</span><span class="o">=</span><span class="s1">&#39;pending&#39;</span><span class="p">,</span>
+                <span class="n">start_block</span><span class="o">=</span><span class="n">current_height</span>
+            <span class="p">)</span>
+            <span class="n">purchase</span><span class="o">.</span><span class="n">blockchain_transfer</span> <span class="o">=</span> <span class="n">bc</span></div>
+            <span class="n">purchase</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="process_pending_blockchain_transactions"><a class="viewcode-back" href="../../blockchain/apps.html#blockchain.apps.process_pending_blockchain_transactions">[docs]</a><span class="k">def</span> <span class="nf">process_pending_blockchain_transactions</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Loop through any BlockchainTransfer objects that are pending.  If the transfer&#39;s transaction id has been</span>
+<span class="sd">    found on the blockchain, we know that the transfer of crypto is complete.  In that case we can</span>
+<span class="sd">    mark the BlockchainTransfer model instance as complete.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">BlockchainTransfer</span>
+
+    <span class="c1"># Loop through BlockchainTransfer model objects that haven&#39;t been</span>
+    <span class="c1"># confirmed on the blockchain, and check if they&#39;ve been synced</span>
+    <span class="c1"># if so, we&#39;ll mark the BlockchainTransfer as complete and save the current block</span>
+    <span class="k">for</span> <span class="n">transfer</span> <span class="ow">in</span> <span class="n">BlockchainTransfer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">status</span><span class="o">=</span><span class="s1">&#39;pending&#39;</span><span class="p">):</span>
+        <span class="n">txid</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="n">Blockchain</span><span class="o">.</span><span class="n">Default</span><span class="p">()</span><span class="o">.</span><span class="n">GetTransaction</span><span class="p">(</span><span class="n">transfer</span><span class="o">.</span><span class="n">transaction_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">txid</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">transfer</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s1">&#39;complete&#39;</span>
+            <span class="n">transfer</span><span class="o">.</span><span class="n">confirmed_block</span> <span class="o">=</span> <span class="n">height</span></div>
+            <span class="n">transfer</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="create_transaction"><a class="viewcode-back" href="../../blockchain/apps.html#blockchain.apps.create_transaction">[docs]</a><span class="k">def</span> <span class="nf">create_transaction</span><span class="p">(</span><span class="n">wallet</span><span class="p">,</span> <span class="n">purchase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    creates a transaction of crypto from the PSP wallet to a user who has paid in fiat</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        wallet (neo.Implementations.Wallets.peewee.UserWallet.UserWallet): The user wallet of the PSP</span>
+<span class="sd">        purchase (blockchain.models.Purchase): A purchase object representing a user wishing to purchase crypto</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        neo.Core.TX.Transaction.Transaction: A transaction from the PSP to the user who has purchased crypto</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">asset_id</span> <span class="o">=</span> <span class="n">Blockchain</span><span class="o">.</span><span class="n">Default</span><span class="p">()</span><span class="o">.</span><span class="n">SystemCoin</span><span class="p">()</span><span class="o">.</span><span class="n">Hash</span>
+        <span class="n">amount</span> <span class="o">=</span> <span class="n">Fixed8</span><span class="o">.</span><span class="n">FromDecimal</span><span class="p">(</span><span class="n">purchase</span><span class="o">.</span><span class="n">amount</span><span class="p">)</span>
+
+        <span class="n">to_script_hash</span> <span class="o">=</span> <span class="n">Helper</span><span class="o">.</span><span class="n">AddrStrToScriptHash</span><span class="p">(</span><span class="n">purchase</span><span class="o">.</span><span class="n">neo_address</span><span class="p">)</span>
+
+        <span class="n">output</span> <span class="o">=</span> <span class="n">TransactionOutput</span><span class="p">(</span>
+            <span class="n">AssetId</span><span class="o">=</span><span class="n">asset_id</span><span class="p">,</span>
+            <span class="n">Value</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span>
+            <span class="n">script_hash</span><span class="o">=</span><span class="n">to_script_hash</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">tx</span> <span class="o">=</span> <span class="n">ContractTransaction</span><span class="p">()</span>
+        <span class="n">tx</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">output</span><span class="p">]</span>
+        <span class="n">tx</span> <span class="o">=</span> <span class="n">wallet</span><span class="o">.</span><span class="n">MakeTransaction</span><span class="p">(</span><span class="n">tx</span><span class="p">)</span>
+
+        <span class="n">tx</span><span class="o">.</span><span class="n">Attributes</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">TransactionAttribute</span><span class="p">(</span>
+                <span class="n">TransactionAttributeUsage</span><span class="o">.</span><span class="n">Remark1</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;Sent by Payment Service Provider&#39;</span><span class="p">),</span>
+            <span class="n">TransactionAttribute</span><span class="p">(</span><span class="n">TransactionAttributeUsage</span><span class="o">.</span><span class="n">Remark2</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;Purchase Price USD </span><span class="si">%0.2f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="n">purchase</span><span class="o">.</span><span class="n">total</span><span class="p">,))</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+        <span class="p">]</span>
+
+        <span class="n">context</span> <span class="o">=</span> <span class="n">ContractParametersContext</span><span class="p">(</span><span class="n">tx</span><span class="p">)</span>
+
+        <span class="n">wallet</span><span class="o">.</span><span class="n">Sign</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">context</span><span class="o">.</span><span class="n">Completed</span><span class="p">:</span>
+            <span class="n">tx</span><span class="o">.</span><span class="n">scripts</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">GetScripts</span><span class="p">()</span>
+            <span class="n">relayed</span> <span class="o">=</span> <span class="n">NodeLeader</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span><span class="o">.</span><span class="n">Relay</span><span class="p">(</span><span class="n">tx</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">relayed</span><span class="p">:</span>
+                <span class="n">wallet</span><span class="o">.</span><span class="n">SaveTransaction</span><span class="p">(</span><span class="n">tx</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">tx</span>
+
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span></div>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Could not create transaction </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="refresh_dwolla_client_token"><a class="viewcode-back" href="../../blockchain/apps.html#blockchain.apps.refresh_dwolla_client_token">[docs]</a><span class="k">def</span> <span class="nf">refresh_dwolla_client_token</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Every 10 minutes or so you want to refresh your dwolla token</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Refreshing Dwolla client token&quot;</span><span class="p">)</span></div>
+    <span class="n">DwollaClient</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="update_crypto_prices"><a class="viewcode-back" href="../../blockchain/apps.html#blockchain.apps.update_crypto_prices">[docs]</a><span class="k">def</span> <span class="nf">update_crypto_prices</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    We monitor prices from CMC and upate them in a local model</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="kn">from</span> <span class="nn">blockchain.models</span> <span class="k">import</span> <span class="n">Price</span>
+    <span class="n">req</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+        <span class="s1">&#39;https://api.coinmarketcap.com/v1/ticker/?limit=0&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">prices_wanted</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;NEO&#39;</span><span class="p">,</span> <span class="s1">&#39;GAS&#39;</span><span class="p">,</span> <span class="s1">&#39;RPX&#39;</span><span class="p">,</span> <span class="p">]</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">req</span><span class="o">.</span><span class="n">json</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;symbol&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">prices_wanted</span><span class="p">:</span>
+            <span class="n">symbol</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;symbol&#39;</span><span class="p">]</span>
+            <span class="n">usd_price</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;price_usd&#39;</span><span class="p">]</span>
+            <span class="n">price</span><span class="p">,</span> <span class="n">created</span> <span class="o">=</span> <span class="n">Price</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">asset</span><span class="o">=</span><span class="n">symbol</span><span class="p">)</span>
+            <span class="n">price</span><span class="o">.</span><span class="n">usd</span> <span class="o">=</span> <span class="n">usd_price</span></div>
+            <span class="n">price</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="on_blockchain_new_block"><a class="viewcode-back" href="../../blockchain/apps.html#blockchain.apps.on_blockchain_new_block">[docs]</a><span class="k">def</span> <span class="nf">on_blockchain_new_block</span><span class="p">(</span><span class="n">block</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    on each block, we loop through all the tx.  If any of them have the an identifier</span>
+<span class="sd">    in the TX Attribute (TXAttrubuteUsage.REMARK3), we&#39;ll take a closer look at it</span>
+<span class="sd">    Args:</span>
+<span class="sd">        block (neo.Core.Block.Block): a newly created block</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">contract_tx_type</span> <span class="o">=</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span>
+        <span class="n">TransactionType</span><span class="o">.</span><span class="n">ContractTransaction</span><span class="p">,</span> <span class="s1">&#39;little&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">tx</span> <span class="ow">in</span> <span class="n">block</span><span class="o">.</span><span class="n">FullTransactions</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">tx</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="n">contract_tx_type</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tx</span><span class="o">.</span><span class="n">Attributes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">tx</span><span class="o">.</span><span class="n">Attributes</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">attr</span><span class="o">.</span><span class="n">Usage</span> <span class="o">==</span> <span class="n">TransactionAttributeUsage</span><span class="o">.</span><span class="n">Remark3</span><span class="p">:</span></div>
+                        <span class="n">process_possible_transaction_match</span><span class="p">(</span><span class="n">tx</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="process_possible_transaction_match"><a class="viewcode-back" href="../../blockchain/apps.html#blockchain.apps.process_possible_transaction_match">[docs]</a><span class="k">def</span> <span class="nf">process_possible_transaction_match</span><span class="p">(</span><span class="n">transaction</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Take a look this transaction.  If it has a TransactionAttributeUsage.Remark3, we look at that remark.</span>
+<span class="sd">    If that remark matches a an invoice ID in our system, then we create a Deposit model out of it</span>
+<span class="sd">    And check the deposit</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        transaction (neo.Core.TX.Transaction.Transaction): a transaction with attributes that we are interested in</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">customer.models</span> <span class="k">import</span> <span class="n">Deposit</span>
+
+    <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">transaction</span><span class="o">.</span><span class="n">Attributes</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">attr</span><span class="o">.</span><span class="n">Usage</span> <span class="o">==</span> <span class="n">TransactionAttributeUsage</span><span class="o">.</span><span class="n">Remark3</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">invoice_id</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">Data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+                <span class="n">deposit</span> <span class="o">=</span> <span class="n">Deposit</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                    <span class="n">invoice_id</span><span class="o">=</span><span class="n">invoice_id</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="s1">&#39;awaiting_deposit&#39;</span><span class="p">)</span>
+                <span class="n">check_deposit_and_tx</span><span class="p">(</span><span class="n">deposit</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">Deposit</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="s2">&quot;Could not find deposit with invoice </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="n">attr</span><span class="o">.</span><span class="n">Data</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Could not generate deposit/tx </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span></div>
+                            <span class="p">(</span><span class="n">attr</span><span class="o">.</span><span class="n">Data</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="check_deposit_and_tx"><a class="viewcode-back" href="../../blockchain/apps.html#blockchain.apps.check_deposit_and_tx">[docs]</a><span class="k">def</span> <span class="nf">check_deposit_and_tx</span><span class="p">(</span><span class="n">deposit</span><span class="p">,</span> <span class="n">transaction</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    Checks the deposit object and compares with the transaction in which the PSP wallet received GAS/NEO</span>
+<span class="sd">    If the deposit is greater than zero, we create a BlockchainTransfer object to represent it</span>
+<span class="sd">    and use the current NEO/Gas price to calculate the amount of fiat owed to the depositor</span>
+<span class="sd">    based on the amount of GAS/NEO received and the current price.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        deposit (blockchain.models.Deposit): The Deposit model instance to check</span>
+<span class="sd">        transaction (neo.Core.TX.Transaction.Transaction): The transaction associated with the the deposit</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">blockchain.models</span> <span class="k">import</span> <span class="n">BlockchainTransfer</span><span class="p">,</span> <span class="n">Price</span>
+    <span class="n">price_gas</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">Price</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">asset</span><span class="o">=</span><span class="s1">&#39;GAS&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">usd</span><span class="p">)</span>
+    <span class="n">deposit_total</span> <span class="o">=</span> <span class="n">Fixed8</span><span class="o">.</span><span class="n">Zero</span><span class="p">()</span>
+    <span class="n">sender_addr</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">transaction</span><span class="o">.</span><span class="n">outputs</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">ScriptHash</span> <span class="o">==</span> <span class="n">deposit</span><span class="o">.</span><span class="n">deposit_wallet</span><span class="o">.</span><span class="n">wallet</span><span class="o">.</span><span class="n">GetStandardAddress</span><span class="p">():</span>
+            <span class="n">deposit_total</span> <span class="o">+=</span> <span class="n">output</span><span class="o">.</span><span class="n">Value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sender_addr</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">ScriptHash</span>
+
+    <span class="k">if</span> <span class="n">deposit_total</span> <span class="o">&gt;</span> <span class="n">Fixed8</span><span class="o">.</span><span class="n">Zero</span><span class="p">():</span>
+
+        <span class="n">current_block</span> <span class="o">=</span> <span class="n">Blockchain</span><span class="o">.</span><span class="n">Default</span><span class="p">()</span><span class="o">.</span><span class="n">Height</span>
+        <span class="n">amount</span> <span class="o">=</span> <span class="n">deposit_total</span><span class="o">.</span><span class="n">value</span> <span class="o">/</span> <span class="n">Fixed8</span><span class="o">.</span><span class="n">D</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">bc_transfer</span> <span class="o">=</span> <span class="n">BlockchainTransfer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+                <span class="n">to_address</span><span class="o">=</span><span class="n">deposit</span><span class="o">.</span><span class="n">deposit_wallet</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+                <span class="n">from_address</span><span class="o">=</span><span class="n">Crypto</span><span class="o">.</span><span class="n">ToAddress</span><span class="p">(</span><span class="n">sender_addr</span><span class="p">),</span>
+                <span class="n">amount</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span>
+                <span class="n">transaction_id</span><span class="o">=</span><span class="n">transaction</span><span class="o">.</span><span class="n">Hash</span><span class="o">.</span><span class="n">ToString</span><span class="p">(),</span>
+                <span class="n">status</span><span class="o">=</span><span class="s1">&#39;gas_received&#39;</span><span class="p">,</span>
+                <span class="n">start_block</span><span class="o">=</span><span class="n">current_block</span><span class="p">,</span>
+                <span class="n">confirmed_block</span><span class="o">=</span><span class="n">current_block</span>
+            <span class="p">)</span>
+            <span class="n">deposit</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s1">&#39;gas_received&#39;</span>
+            <span class="n">deposit</span><span class="o">.</span><span class="n">blockchain_transfer</span> <span class="o">=</span> <span class="n">bc_transfer</span>
+            <span class="n">deposit</span><span class="o">.</span><span class="n">neo_sender_address</span> <span class="o">=</span> <span class="n">bc_transfer</span><span class="o">.</span><span class="n">from_address</span>
+            <span class="n">deposit</span><span class="o">.</span><span class="n">amount</span> <span class="o">=</span> <span class="n">amount</span>
+            <span class="n">deposit</span><span class="o">.</span><span class="n">gas_price</span> <span class="o">=</span> <span class="n">price_gas</span>
+            <span class="n">deposit</span><span class="o">.</span><span class="n">total_gas</span> <span class="o">=</span> <span class="n">price_gas</span> <span class="o">*</span> <span class="n">amount</span>
+            <span class="n">deposit</span><span class="o">.</span><span class="n">total_fee</span> <span class="o">=</span> <span class="n">deposit</span><span class="o">.</span><span class="n">fee</span> <span class="o">*</span> <span class="n">deposit</span><span class="o">.</span><span class="n">total_gas</span>
+            <span class="n">deposit</span><span class="o">.</span><span class="n">total</span> <span class="o">=</span> <span class="n">deposit</span><span class="o">.</span><span class="n">total_gas</span> <span class="o">-</span> <span class="n">deposit</span><span class="o">.</span><span class="n">total_fee</span>
+            <span class="n">deposit</span><span class="o">.</span><span class="n">deposit_wallet</span><span class="o">.</span><span class="n">transfer</span> <span class="o">=</span> <span class="n">bc_transfer</span>
+            <span class="n">deposit</span><span class="o">.</span><span class="n">deposit_wallet</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">deposit</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span></div>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not create transfer... </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="process_crypto_received_bank_transfers"><a class="viewcode-back" href="../../blockchain/apps.html#blockchain.apps.process_crypto_received_bank_transfers">[docs]</a><span class="k">def</span> <span class="nf">process_crypto_received_bank_transfers</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    For any deposits the PSP has received from a user that have a receieved status, we will start</span>
+<span class="sd">    a dwolla transfer of fiat to that user</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">customer.models</span> <span class="k">import</span> <span class="n">Deposit</span>
+    <span class="k">for</span> <span class="n">deposit</span> <span class="ow">in</span> <span class="n">Deposit</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">status</span><span class="o">=</span><span class="s1">&#39;gas_received&#39;</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">transfer</span> <span class="o">=</span> <span class="n">dwolla_send_to_user</span><span class="p">(</span><span class="n">deposit</span><span class="p">)</span>
+            <span class="n">deposit</span><span class="o">.</span><span class="n">transfer_url</span> <span class="o">=</span> <span class="n">transfer</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]</span>
+            <span class="n">deposit</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s1">&#39;pending&#39;</span>
+            <span class="n">deposit</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span></div>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not create transfer </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="move_deposits_to_wallet"><a class="viewcode-back" href="../../blockchain/apps.html#blockchain.apps.move_deposits_to_wallet">[docs]</a><span class="k">def</span> <span class="nf">move_deposits_to_wallet</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    Once crypto has been deposited to has been deposited to a wallet, we transfer</span>
+<span class="sd">    that deposit of the temporary wallet to the main PSP wallet.  After that is complete</span>
+<span class="sd">    we can mark that transfer as pending, waiting for it to finish on the chain</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">blockchain.models</span> <span class="k">import</span> <span class="n">DepositWallet</span><span class="p">,</span> <span class="n">BlockchainTransfer</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">NodeLeader</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span><span class="o">.</span><span class="n">Peers</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="n">to_move</span> <span class="o">=</span> <span class="n">DepositWallet</span><span class="o">.</span><span class="n">next_available_for_retrieval</span><span class="p">()</span>  <span class="c1"># type:DepositWallet</span>
+
+    <span class="k">if</span> <span class="n">to_move</span><span class="p">:</span>
+
+        <span class="n">wallet</span> <span class="o">=</span> <span class="n">UserWallet</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span>
+            <span class="n">to_move</span><span class="o">.</span><span class="n">wallet_file</span><span class="p">,</span> <span class="n">to_aes_key</span><span class="p">(</span><span class="n">to_move</span><span class="o">.</span><span class="n">wallet_pass</span><span class="p">))</span>
+        <span class="n">transfer</span> <span class="o">=</span> <span class="n">to_move</span><span class="o">.</span><span class="n">transfer</span>
+
+        <span class="n">tx</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="n">Blockchain</span><span class="o">.</span><span class="n">Default</span><span class="p">()</span><span class="o">.</span><span class="n">GetTransaction</span><span class="p">(</span><span class="n">transfer</span><span class="o">.</span><span class="n">transaction_id</span><span class="p">)</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="n">Blockchain</span><span class="o">.</span><span class="n">Default</span><span class="p">()</span><span class="o">.</span><span class="n">GetBlockByHeight</span><span class="p">(</span><span class="n">height</span><span class="p">)</span>
+        <span class="n">wallet</span><span class="o">.</span><span class="n">ProcessNewBlock</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+
+        <span class="n">move_tx</span> <span class="o">=</span> <span class="n">create_move_to_main_tx</span><span class="p">(</span><span class="n">wallet</span><span class="p">,</span> <span class="n">transfer</span><span class="p">,</span> <span class="n">to_move</span><span class="o">.</span><span class="n">deposit</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">move_tx</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">bc_transfer</span> <span class="o">=</span> <span class="n">BlockchainTransfer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+                    <span class="n">to_address</span><span class="o">=</span><span class="n">wallet_str_addr</span><span class="p">,</span>
+                    <span class="n">from_address</span><span class="o">=</span><span class="n">to_move</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+                    <span class="n">amount</span><span class="o">=</span><span class="n">transfer</span><span class="o">.</span><span class="n">amount</span><span class="p">,</span>
+                    <span class="n">transaction_id</span><span class="o">=</span><span class="n">move_tx</span><span class="o">.</span><span class="n">Hash</span><span class="o">.</span><span class="n">ToString</span><span class="p">(),</span>
+                    <span class="n">status</span><span class="o">=</span><span class="s1">&#39;pending&#39;</span><span class="p">,</span>
+                    <span class="n">start_block</span><span class="o">=</span><span class="n">Blockchain</span><span class="o">.</span><span class="n">Default</span><span class="p">()</span><span class="o">.</span><span class="n">Height</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">to_move</span><span class="o">.</span><span class="n">transfer_to_main</span> <span class="o">=</span> <span class="n">bc_transfer</span>
+                <span class="n">to_move</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="s2">&quot;Could not transfer funds from deposit wallet </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
+</div>
+        <span class="n">wallet</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="create_move_to_main_tx"><a class="viewcode-back" href="../../blockchain/apps.html#blockchain.apps.create_move_to_main_tx">[docs]</a><span class="k">def</span> <span class="nf">create_move_to_main_tx</span><span class="p">(</span><span class="n">deposit_wallet</span><span class="p">,</span> <span class="n">transfer</span><span class="p">,</span> <span class="n">deposit</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a transaction to move Neo/Gas from a temporary &#39;deposit wallet&#39; to the main PSP wallet</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        deposit_wallet (neo.Implementations.Wallets.peewee.UserWallet.UserWallet): the wallet to transfer NEO/Gas out of</span>
+<span class="sd">        transfer (blockchain.models.BlockchainTransfer): the transfer object representing the transfer of NEO/Gas for fiat</span>
+<span class="sd">        deposit (customer.models.Deposit): The deposit</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        neo.Core.TX.Transaction.Transaction: the transaction to move NEO/Gas</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tx</span> <span class="o">=</span> <span class="n">ContractTransaction</span><span class="p">()</span>
+
+    <span class="n">amount</span> <span class="o">=</span> <span class="n">Fixed8</span><span class="o">.</span><span class="n">FromDecimal</span><span class="p">(</span><span class="n">transfer</span><span class="o">.</span><span class="n">amount</span><span class="p">)</span>
+    <span class="n">tx</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">TransactionOutput</span><span class="p">(</span>
+        <span class="n">AssetId</span><span class="o">=</span><span class="n">Blockchain</span><span class="o">.</span><span class="n">SystemCoin</span><span class="p">()</span><span class="o">.</span><span class="n">Hash</span><span class="p">,</span>
+        <span class="n">Value</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span>
+        <span class="n">script_hash</span><span class="o">=</span><span class="n">wallet_addr_uint</span><span class="p">,</span>
+    <span class="p">)]</span>
+
+    <span class="c1"># annotate the tx with attributes to make invoice tracking easier</span>
+    <span class="n">tx</span><span class="o">.</span><span class="n">Attributes</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">TransactionAttribute</span><span class="p">(</span><span class="n">TransactionAttributeUsage</span><span class="o">.</span><span class="n">Remark1</span><span class="p">,</span>
+                             <span class="p">(</span><span class="s1">&#39;For deposit invoice </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">deposit</span><span class="o">.</span><span class="n">invoice_id</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)),</span>
+        <span class="n">TransactionAttribute</span><span class="p">(</span><span class="n">TransactionAttributeUsage</span><span class="o">.</span><span class="n">Remark2</span><span class="p">,</span>
+                             <span class="p">(</span><span class="s1">&#39;Sale price USD </span><span class="si">%0.2f</span><span class="s1"> &#39;</span> <span class="o">%</span> <span class="n">deposit</span><span class="o">.</span><span class="n">total</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+    <span class="p">]</span>
+
+    <span class="n">tx</span> <span class="o">=</span> <span class="n">deposit_wallet</span><span class="o">.</span><span class="n">MakeTransaction</span><span class="p">(</span><span class="n">tx</span><span class="p">)</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="n">ContractParametersContext</span><span class="p">(</span><span class="n">tx</span><span class="p">)</span>
+    <span class="n">deposit_wallet</span><span class="o">.</span><span class="n">Sign</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">context</span><span class="o">.</span><span class="n">Completed</span><span class="p">:</span>
+        <span class="n">tx</span><span class="o">.</span><span class="n">scripts</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">GetScripts</span><span class="p">()</span>
+        <span class="n">relayed</span> <span class="o">=</span> <span class="n">NodeLeader</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span><span class="o">.</span><span class="n">Relay</span><span class="p">(</span><span class="n">tx</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">relayed</span><span class="p">:</span>
+            <span class="n">deposit_wallet</span><span class="o">.</span><span class="n">SaveTransaction</span><span class="p">(</span><span class="n">tx</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">tx</span>
+</div>
+    <span class="k">return</span> <span class="kc">None</span>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, NEON Exchange AG.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

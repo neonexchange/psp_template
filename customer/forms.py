@@ -1,30 +1,34 @@
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from customer.models import PSPUser,Purchase,Deposit
+from customer.models import PSPUser, Purchase, Deposit
 from neo.Core.Helper import Helper
 from neocore.Cryptography.Crypto import Crypto
 from localflavor.us.us_states import STATE_CHOICES
 from localflavor.us.forms import USStateField
 from django.forms import ValidationError
 
+
 class PSPUserCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
+    password2 = forms.CharField(
+        label='Password confirmation', widget=forms.PasswordInput)
 
     class Meta:
         model = PSPUser
-        fields = ('email','first_name','last_name','address1','city','state','postal_code','ssn_lastfour','date_of_birth',)
-
+        fields = ('email', 'first_name', 'last_name', 'address1', 'city',
+                  'state', 'postal_code', 'ssn_lastfour', 'date_of_birth',)
 
     def __init__(self, *args, **kwargs):
         super(PSPUserCreationForm, self).__init__(*args, **kwargs)
 
         choices = list(STATE_CHOICES)
         choices[0] = ('', 'Select a State')
-        self.fields['state'] = USStateField(widget=forms.Select(choices=choices))
-        self.fields['date_of_birth'].widget.attrs = {'placeholder':'Date of birth: YYYY-MM-DD'}
+        self.fields['state'] = USStateField(
+            widget=forms.Select(choices=choices))
+        self.fields['date_of_birth'].widget.attrs = {
+            'placeholder': 'Date of birth: YYYY-MM-DD'}
 
     def clean_password2(self):
         # Check that the two password entries match
@@ -52,7 +56,8 @@ class PSPUserChangeForm(forms.ModelForm):
 
     class Meta:
         model = PSPUser
-        fields = ('email','first_name','last_name','address1','city','state','postal_code','ssn_lastfour','date_of_birth',)
+        fields = ('email', 'first_name', 'last_name', 'address1', 'city',
+                  'state', 'postal_code', 'ssn_lastfour', 'date_of_birth',)
 
     def clean_password(self):
         # Regardless of what the user provides, return the initial value.
@@ -69,8 +74,8 @@ class PSPProfileForm(forms.ModelForm):
 
     class Meta:
         model = PSPUser
-        fields = ('email','first_name','last_name','address1','city','state','postal_code','ssn_lastfour','date_of_birth',)
-
+        fields = ('email', 'first_name', 'last_name', 'address1', 'city',
+                  'state', 'postal_code', 'ssn_lastfour', 'date_of_birth',)
 
 
 class BankAccountForm(forms.Form):
@@ -82,8 +87,7 @@ class PurchaseForm(forms.ModelForm):
 
     class Meta:
         model = Purchase
-        fields = ['neo_address','amount','sender_account_id',]
-
+        fields = ['neo_address', 'amount', 'sender_account_id', ]
 
     def __init__(self, *args, **kwargs):
         accounts = None
@@ -96,11 +100,12 @@ class PurchaseForm(forms.ModelForm):
         if accounts:
             choices = []
             for acct in accounts:
-                choices.append( (acct['id'], acct['name']))
-            self.fields['sender_account_id'] = forms.ChoiceField(choices=choices, label='Bank Account')
+                choices.append((acct['id'], acct['name']))
+            self.fields['sender_account_id'] = forms.ChoiceField(
+                choices=choices, label='Bank Account')
 
-        self.fields['neo_address'].widget.attrs = {'placeholder':'Axxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'}
-
+        self.fields['neo_address'].widget.attrs = {
+            'placeholder': 'Axxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'}
 
     def clean_neo_address(self):
 
@@ -118,7 +123,6 @@ class PurchaseForm(forms.ModelForm):
 
         return self.cleaned_data['neo_address']
 
-
     def clean_amount(self):
         amt = self.cleaned_data['amount']
         if amt <= 0:
@@ -129,9 +133,10 @@ class PurchaseForm(forms.ModelForm):
 class DepositForm(forms.ModelForm):
 
     deposit_wallet = None
+
     class Meta:
         model = Deposit
-        fields = ['amount','receiver_account_id',]
+        fields = ['amount', 'receiver_account_id', ]
 
     def __init__(self, *args, **kwargs):
         accounts = None
@@ -146,8 +151,9 @@ class DepositForm(forms.ModelForm):
         if accounts:
             choices = []
             for acct in accounts:
-                choices.append( (acct['id'], acct['name']))
-            self.fields['receiver_account_id'] = forms.ChoiceField(choices=choices, label='Deposit To Bank Account:')
+                choices.append((acct['id'], acct['name']))
+            self.fields['receiver_account_id'] = forms.ChoiceField(
+                choices=choices, label='Deposit To Bank Account:')
 
 
 class CancelDepositForm(forms.Form):

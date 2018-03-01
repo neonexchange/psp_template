@@ -14,7 +14,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='purchase',
             name='date_created',
-            field=models.DateTimeField(auto_now_add=True, default=datetime.datetime(2018, 1, 19, 4, 28, 38, 411462)),
+            field=models.DateTimeField(
+                auto_now_add=True, default=datetime.datetime(2018, 1, 19, 4, 28, 38, 411462)),
             preserve_default=False,
         ),
     ]

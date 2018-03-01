@@ -13,11 +13,13 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='deposit',
             name='asset',
-            field=models.CharField(choices=[('GAS', 'GAS'), ('NEO', 'NEO'), ('NEX', 'NEX'), ('RPX', 'RPX')], default='GAS', max_length=3),
+            field=models.CharField(choices=[('GAS', 'GAS'), ('NEO', 'NEO'), (
+                'NEX', 'NEX'), ('RPX', 'RPX')], default='GAS', max_length=3),
         ),
         migrations.AlterField(
             model_name='purchase',
             name='asset',
-            field=models.CharField(choices=[('GAS', 'GAS'), ('NEO', 'NEO'), ('NEX', 'NEX'), ('RPX', 'RPX')], default='GAS', max_length=3),
+            field=models.CharField(choices=[('GAS', 'GAS'), ('NEO', 'NEO'), (
+                'NEX', 'NEX'), ('RPX', 'RPX')], default='GAS', max_length=3),
         ),
     ]

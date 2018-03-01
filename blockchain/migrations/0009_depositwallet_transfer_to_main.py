@@ -14,6 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='depositwallet',
             name='transfer_to_main',
-            field=models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='main_transfer', to='blockchain.BlockchainTransfer'),
+            field=models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL,
+                                       related_name='main_transfer', to='blockchain.BlockchainTransfer'),
         ),
     ]

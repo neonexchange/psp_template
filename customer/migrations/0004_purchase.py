@@ -15,8 +15,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Purchase',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('asset', models.CharField(choices=[('GAS', 'GAS'), ('NEO', 'NEO'), ('NEX', 'NEX')], default='GAS', max_length=3)),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
+                ('asset', models.CharField(choices=[
+                 ('GAS', 'GAS'), ('NEO', 'NEO'), ('NEX', 'NEX')], default='GAS', max_length=3)),
                 ('amount', models.FloatField(default=1.0)),
                 ('sender_account_id', models.CharField(max_length=128)),
                 ('receiver_account_id', models.CharField(max_length=128)),
@@ -26,8 +28,10 @@ class Migration(migrations.Migration):
                 ('total_gas', models.FloatField()),
                 ('total_fee', models.FloatField()),
                 ('total', models.FloatField()),
-                ('status', models.CharField(choices=[('STARTED', 'STARTED'), ('SUBMITTED', 'SUBMITTED'), ('CONFIRMED', 'CONFIRMED')], default='STARTED', max_length=32)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('status', models.CharField(choices=[('STARTED', 'STARTED'), ('SUBMITTED', 'SUBMITTED'), (
+                    'CONFIRMED', 'CONFIRMED')], default='STARTED', max_length=32)),
+                ('user', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
     ]
