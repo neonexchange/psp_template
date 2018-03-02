@@ -47,7 +47,7 @@ mmh3==2.5.1
 mock==2.0.0
 mpmath==1.0.0
 neo-python-rpc==0.1.8
--e git+git@github.com:CityOfZion/neo-python.git@v0.4.10#egg=neo_python
+-e git+https://github.com/CityOfZion/neo-python.git@v0.4.10#egg=neo_python
 neocore==0.3.6
 numpy==1.14.1
 oauthlib==2.0.6
