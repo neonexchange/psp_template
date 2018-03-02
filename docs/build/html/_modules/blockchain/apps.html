@@ -220,7 +220,6 @@
 <span class="sd">        &quot;&quot;&quot;</span></div></div>
         <span class="n">start_blockchain</span><span class="p">()</span>
 
-
 <div class="viewcode-block" id="start_blockchain"><a class="viewcode-back" href="../../blockchain/apps.html#blockchain.apps.start_blockchain">[docs]</a><span class="nd">@run_in_reactor</span>
 <span class="k">def</span> <span class="nf">start_blockchain</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -419,6 +418,10 @@
 <div class="viewcode-block" id="create_transaction"><a class="viewcode-back" href="../../blockchain/apps.html#blockchain.apps.create_transaction">[docs]</a><span class="k">def</span> <span class="nf">create_transaction</span><span class="p">(</span><span class="n">wallet</span><span class="p">,</span> <span class="n">purchase</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    creates a transaction of crypto from the PSP wallet to a user who has paid in fiat</span>
+
+<span class="sd">    Note: Ideally this will be done for more than 1 tx at a time.. would have a basket of tx ready to go</span>
+<span class="sd">    and then they will all go out in one TX with all the outputs.  Then the system wont have to wait</span>
+<span class="sd">    for the TX to clear to get its change back before doing the next batch</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        wallet (neo.Implementations.Wallets.peewee.UserWallet.UserWallet): The user wallet of the PSP</span>

@@ -260,6 +260,10 @@
             <span class="n">wallet_pass</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid4</span><span class="p">())</span>
             <span class="n">wallet_path</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">WALLET_DEPOSIT_PATH</span><span class="p">,</span> <span class="n">wallet_name</span><span class="p">)</span>
 
+            <span class="c1"># In the future, it would be best to store this user wallet as a raw file in the database</span>
+            <span class="c1"># rather than on the file system</span>
+            <span class="c1"># so that it can be scaled across servers</span>
+
             <span class="n">wallet</span> <span class="o">=</span> <span class="n">UserWallet</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">wallet_path</span><span class="p">,</span> <span class="n">to_aes_key</span><span class="p">(</span><span class="n">wallet_pass</span><span class="p">))</span>
             <span class="n">deposit_wallet</span> <span class="o">=</span> <span class="n">DepositWallet</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
                 <span class="n">depositor</span><span class="o">=</span><span class="n">user</span><span class="p">,</span>
@@ -267,6 +271,7 @@
                 <span class="n">wallet_pass</span><span class="o">=</span><span class="n">wallet_pass</span><span class="p">,</span>
                 <span class="n">start_height</span><span class="o">=</span><span class="n">Blockchain</span><span class="o">.</span><span class="n">Default</span><span class="p">()</span><span class="o">.</span><span class="n">Height</span>
             <span class="p">)</span>
+
             <span class="k">return</span> <span class="n">deposit_wallet</span>
 
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>

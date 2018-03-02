@@ -21,9 +21,8 @@ import os
 import sys
 
 import django
-sys.path.append('/Users/thomassaunders/Workshop/nex_psp/')
 
-#sys.path.insert(0, os.path.abspath('..'))
+sys.path.insert(0, os.path.abspath('../..'))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'nexpsp.settings'
 django.setup()
 
