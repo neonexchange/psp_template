@@ -19,7 +19,7 @@ class DwollaClient():
     def api_url(self):
         """
         retrieves the api url for the client to use
-        
+
 
         Returns:
             str

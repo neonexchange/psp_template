@@ -83,11 +83,17 @@ WSGI_APPLICATION = 'nexpsp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
+# Probably better to use postgres
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'psp',
+    },
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#    }
 }
 
 
@@ -151,7 +157,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Neo related settings
 
-NEOSCAN_URL = 'https://nex.neoscan-testnet.io/'
+NEOSCAN_URL = 'https://coz.neoscan-testnet.io/'
 
 WALLET_DEPOSIT_PATH = '%s/Data/deposits' % BASE_DIR
 

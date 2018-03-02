@@ -96,6 +96,10 @@ class DepositWallet(models.Model):
             wallet_pass = str(uuid4())
             wallet_path = '%s/%s' % (settings.WALLET_DEPOSIT_PATH, wallet_name)
 
+            # In the future, it would be best to store this user wallet as a raw file in the database
+            # rather than on the file system
+            # so that it can be scaled across servers
+
             wallet = UserWallet.Create(wallet_path, to_aes_key(wallet_pass))
             deposit_wallet = DepositWallet.objects.create(
                 depositor=user,
@@ -103,6 +107,7 @@ class DepositWallet(models.Model):
                 wallet_pass=wallet_pass,
                 start_height=Blockchain.Default().Height
             )
+
             return deposit_wallet
 
         except Exception as e:

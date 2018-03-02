@@ -56,7 +56,6 @@ class BlockchainConfig(AppConfig):
         """
         start_blockchain()
 
-
 @run_in_reactor
 def start_blockchain():
     """
@@ -255,6 +254,10 @@ def process_pending_blockchain_transactions():
 def create_transaction(wallet, purchase):
     """
     creates a transaction of crypto from the PSP wallet to a user who has paid in fiat
+
+    Note: Ideally this will be done for more than 1 tx at a time.. would have a basket of tx ready to go
+    and then they will all go out in one TX with all the outputs.  Then the system wont have to wait
+    for the TX to clear to get its change back before doing the next batch
 
     Args:
         wallet (neo.Implementations.Wallets.peewee.UserWallet.UserWallet): The user wallet of the PSP
