@@ -25,7 +25,7 @@ class TransactionView(View):
         deposits = request.user.deposit_set.all()
         pending_deposit = request.user.pending_deposit
         all_tx = list(purchases) + list(deposits)
-        all_tx = sorted(all_tx, key=lambda x: x.date_created, reverse=True)
+        all_tx.sort(key=lambda x: x.date_updated, reverse=True)
         return render(request, self.template_name, {'all_tx': all_tx, 'pending_deposit': pending_deposit})
 
 

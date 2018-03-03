@@ -1,7 +1,7 @@
        <div class="card card-block mb-3">
             <h4 class="card-title"><i class="icon icon-arrow-down-circle"></i> Purchased {{ tx.amount }} {{ tx.asset }} for ${{ tx.total|floatformat:2 }}</h4>
             <div class="card-text">
-                <p class="mb-1"><strong>On</strong> {{ tx.date_created|date:'Y-m-d' }} {{ tx.date_created|time }}</p>
+                <p class="mb-1"><strong>On</strong> {{ tx.date_updated|date:'Y-m-d' }} {{ tx.date_updated|time }}</p>
                 <p class="mb-1"><strong>Current status:</strong> {{ tx.status }}</p>
 
                 <hr/>

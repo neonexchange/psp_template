@@ -67,7 +67,12 @@
 
     {{ block.super }}
 
+
     <script type="text/javascript">
+
+
+        const nexExtApi = new NEXExtensionClient();
+
         var gas_price = {{ price_GAS|floatformat:2 }};
         var receiver_addr = '{{ deposit_wallet.address }}';
         var invoice_id = '{{ deposit.invoice_id }}';
@@ -89,22 +94,23 @@
 
 
            $('#id_open_in_nex').click(function(){
-               var currenttotal = $('#id_amount').val();
-               var tenToEigth = 100000000;
-               var actualGasAmount = currenttotal * tenToEigth;
-               var message = {
-                   toAddr: receiver_addr,
-                   assetId: '602c79718b16e442de58778e148d0b1084e3b2dffd5de6b7b16cee7969282de7',
-                   amount: actualGasAmount,
-                   transactionAttributes:[
-                       {
-                           usage:243,
-                           data:invoice_id
-                       }
-                   ]
-               };
-               window.postMessage({ type: "NEO_EXTENSION_START_TX", payload:message},"*");
-               console.log("Message to send: ", message);
+                var currenttotal = $('#id_amount').val();
+
+                nexExtApi.startTx({
+                    amount: currenttotal,
+                    symbol: 'GAS',
+                    toAddr: receiver_addr,
+                    transactionAttributes:[
+                    {
+                        usage:243,
+                        data:invoice_id
+                    }
+                    ]
+                });
+
+                nexExtApi.openReceive();
+//               window.postMessage({ type: "NEO_EXTENSION_START_TX", payload:message},"*");
+//               console.log("Message to send: ", message);
 //               alert(JSON.stringify(message))
            });
 
